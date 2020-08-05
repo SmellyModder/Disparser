@@ -1,5 +1,5 @@
 ![Logo](https://cdn.discordapp.com/attachments/667088262287851551/740454473415262288/disparser_logo.png)
-# About Disparsr
+# About Disparser
 Disparser is a simple WIP command parser for JDA, the Java Discord API.
 It allows for easy and performant usage of commands with multiple aliases and various arguments.
 Disparser was originally made for some JDA bots I made so I could easily have a nice simple command framework, and I've now decided to have it here separately.
