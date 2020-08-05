@@ -33,10 +33,10 @@ public class TextChannelArgument implements Argument<TextChannel> {
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					return ParsedArgument.parseError("Text channel with id " + "`" + arg + "`" + " could not be found");
+					return ParsedArgument.parseError("Text channel with id " + "`" + arg + "` could not be found");
 				}
 			} catch (NumberFormatException exception) {
-				return ParsedArgument.parseError("`" + arg + "`" + " is not a valid channel id");
+				return ParsedArgument.parseError("`" + arg + "` is not a valid channel id");
 			}
 		});
 	}
