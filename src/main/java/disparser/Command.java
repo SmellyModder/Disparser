@@ -1,7 +1,9 @@
 package disparser;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -18,20 +20,44 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
  * @author Luke Tonon
  */
 public abstract class Command {
+	private Set<String> aliases;
+	private Set<Permission> requiredPermissions;
 	private final List<Argument<?>> arguments;
-	private final String[] aliases;
 	
 	public Command(String name) {
 		this(name, new Argument[0]);
 	}
 	
 	public Command(String name, Argument<?>... args) {
-		this(new String[] {name}, args);
+		this(new HashSet<>(Arrays.asList(name)), new HashSet<>(Arrays.asList(Permission.EMPTY_PERMISSIONS)), args);
 	}
 	
-	public Command(String[] aliases, Argument<?>... args) {
+	public Command(Set<String> aliases, Set<Permission> permissions, Argument<?>... args) {
 		this.aliases = aliases;
+		this.requiredPermissions = permissions;
 		this.arguments = Arrays.asList(args);
+	}
+	
+	public void setAliases(Set<String> aliases) {
+		this.aliases = aliases;
+	}
+	
+	/**
+	 * @return This command's aliases.
+	 */
+	public Set<String> getAliases() {
+		return this.aliases;
+	}
+	
+	public void setRequiredPermissions(Set<Permission> requiredPermissions) {
+		this.requiredPermissions = requiredPermissions;
+	}
+	
+	/**
+	 * @return This command's required permissions.
+	 */
+	public Set<Permission> getRequiredPermissions() {
+		return this.requiredPermissions;
 	}
 	
 	/**
@@ -43,18 +69,15 @@ public abstract class Command {
 	}
 	
 	/**
-	 * @return This command's aliases.
-	 */
-	public String[] getAliases() {
-		return this.aliases;
-	}
-	
-	/**
 	 * Used for processing this command.
 	 * 
 	 * @param context - The {@link CommandContext} for this command, use this to get the parsed arguments and make use of the {@link GuildMessageReceivedEvent} event
 	 */
 	public abstract void processCommand(CommandContext context);
+	
+	public boolean hasPermissions(Member member) {
+		return member.hasPermission(this.getRequiredPermissions());
+	}
 	
 	protected boolean testForAdmin(Message message) {
 		if (this.isMessageFromAdmin(message)) {

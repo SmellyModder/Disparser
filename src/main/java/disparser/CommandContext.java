@@ -36,6 +36,11 @@ public class CommandContext {
 	 * @return An {@link Optional} {@link CommandContext} made from {@link Argument}s, empty if an error occurs when parsing the arguments
 	 */
 	public static Optional<CommandContext> createContext(final GuildMessageReceivedEvent event, final Command command, final ArgumentReader reader) {
+		if (!command.hasPermissions(event.getMember())) {
+			event.getChannel().sendMessage(MessageUtil.createErrorMessage("You do not have permission to execute this command!")).queue();
+			return Optional.ofNullable(null);
+		}
+		
 		List<Argument<?>> commandArguments = command.getArguments();
 		if (commandArguments.size() > 0) {
 			boolean hasOptionalArguments = !getOptionalArguments(commandArguments).isEmpty();

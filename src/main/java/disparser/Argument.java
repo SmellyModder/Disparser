@@ -1,5 +1,7 @@
 package disparser;
 
+import disparser.annotations.Optional;
+
 /**
  * Implemented on classes to be used as arguments in {@link Command}.
  * 
@@ -22,7 +24,9 @@ public interface Argument<T> {
 	 * <b> IMPORTANT: When this is true any command that uses this argument can have this argument's parsed result be null </b>
 	 * @return If this argument is optional
 	 */
-	public default boolean isOptional() { return false; }
+	public default boolean isOptional() {
+		return this.getClass().getAnnotation(Optional.class) != null;
+	}
 	
 	/**
 	 * Creates a new optional instance of this argument
