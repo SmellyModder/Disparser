@@ -37,7 +37,7 @@ public class CommandContext {
 	 */
 	public static Optional<CommandContext> createContext(final GuildMessageReceivedEvent event, final Command command, final ArgumentReader reader) {
 		if (!command.hasPermissions(event.getMember())) {
-			event.getChannel().sendMessage(MessageUtil.createErrorMessage("You do not have permission to execute this command!")).queue();
+			event.getChannel().sendMessage(MessageUtil.createErrorMessage("You do not have permission to run this command!")).queue();
 			return Optional.ofNullable(null);
 		}
 		

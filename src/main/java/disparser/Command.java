@@ -1,5 +1,6 @@
 package disparser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import disparser.annotations.Optional;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -35,7 +37,11 @@ public abstract class Command {
 	public Command(Set<String> aliases, Set<Permission> permissions, Argument<?>... args) {
 		this.aliases = aliases;
 		this.requiredPermissions = permissions;
-		this.arguments = Arrays.asList(args);
+		List<Argument<?>> setupArguments = new ArrayList<>();
+		for (Argument<?> argument : args) {
+			setupArguments.add(argument.getClass().isAnnotationPresent(Optional.class) ? argument.asOptional() : argument);
+		}
+		this.arguments = setupArguments;
 	}
 	
 	public void setAliases(Set<String> aliases) {
@@ -79,17 +85,12 @@ public abstract class Command {
 		return member.hasPermission(this.getRequiredPermissions());
 	}
 	
-	protected boolean testForAdmin(Message message) {
-		if (this.isMessageFromAdmin(message)) {
+	public boolean testForPermissions(Message message, Permission... permission) {
+		if (message.getMember().hasPermission(permission)) {
 			return true;
 		}
 		this.sendMessage(message.getTextChannel(), MessageUtil.createErrorMessage("You do not have permission to run this command"));
 		return false;
-	}
-	
-	protected boolean isMessageFromAdmin(Message message) {
-		Member member = message.getMember();
-		return message.getMember().isOwner() || member.hasPermission(Permission.ADMINISTRATOR);
 	}
 	
 	protected void sendMessage(TextChannel channel, CharSequence message) {
