@@ -2,19 +2,14 @@ package disparser;
 
 import javax.security.auth.login.LoginException;
 
-import disparser.annotations.Aliases;
-import disparser.annotations.Permissions;
+import disparser.commands.Commands;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public final class TestBot {
-	@Permissions({Permission.ADMINISTRATOR})
-	@Aliases(value = {"optional", "test_optional"}, mergeAliases = true)
-	private static final OptionalTestCommand OPTIONAL_TEST = new OptionalTestCommand();
 	
 	public static void main(String[] args) throws LoginException {
 		JDABuilder botBuilder = JDABuilder.create(args[0], GatewayIntent.getIntents(GatewayIntent.DEFAULT));
@@ -22,9 +17,13 @@ public final class TestBot {
 		botBuilder.setActivity(Activity.of(ActivityType.DEFAULT, "Testing"));
 		botBuilder.addEventListeners(
 			new CommandHandler("!",
-				OPTIONAL_TEST
-			).applyAnnotations(TestBot.class)
+				Commands.OPTIONAL_TEST,
+				Commands.TEST_COMMAND,
+				Commands.COMPLEX_TEST,
+				Commands.ENUM_TEST
+			).applyAnnotations(Commands.class)
 		);
 		botBuilder.build();
 	}
+	
 }

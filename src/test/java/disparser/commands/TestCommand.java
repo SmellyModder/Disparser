@@ -1,4 +1,7 @@
-package disparser;
+package disparser.commands;
+
+import disparser.Command;
+import disparser.CommandContext;
 
 public class TestCommand extends Command {
 
