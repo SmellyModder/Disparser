@@ -39,8 +39,12 @@ public final class ParsedArgument<A> {
 		return this.result == null ? other : (A) this.result;
 	}
 	
+	public boolean hasResult() {
+		return this.result != null;
+	}
+	
 	public void ifHasResult(Consumer<A> consumer) {
-		if (this.result != null) consumer.accept(this.result);
+		if (this.hasResult()) consumer.accept(this.result);
 	}
 	
 	public static <A> ParsedArgument<A> parse(@Nonnull final A result) {
