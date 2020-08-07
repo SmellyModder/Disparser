@@ -1,6 +1,8 @@
 package disparser.commands;
 
 import disparser.annotations.Aliases;
+import disparser.annotations.Permissions;
+import net.dv8tion.jda.api.Permission;
 
 public class Commands {
 	@Aliases(value = {"optional", "test_optional"}, mergeAliases = true)
@@ -11,6 +13,10 @@ public class Commands {
 	
 	@Aliases(value = {"enum_test"}, mergeAliases = true)
 	public static final EnumTestCommand ENUM_TEST = new EnumTestCommand();
+	
+	@Permissions(Permission.ADMINISTRATOR)
+	@Aliases(value = {"rename_test"}, mergeAliases = true)
+	public static final RenameChannelTestCommand RENAME_CHANNEL_TEST = new RenameChannelTestCommand();
 	
 	@Aliases(value = {"normal_test"}, mergeAliases = true)
 	public static final TestCommand TEST_COMMAND = new TestCommand();

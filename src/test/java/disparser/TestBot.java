@@ -20,7 +20,8 @@ public final class TestBot {
 				Commands.OPTIONAL_TEST,
 				Commands.TEST_COMMAND,
 				Commands.COMPLEX_TEST,
-				Commands.ENUM_TEST
+				Commands.ENUM_TEST,
+				Commands.RENAME_CHANNEL_TEST
 			).applyAnnotations(Commands.class)
 		);
 		botBuilder.build();
