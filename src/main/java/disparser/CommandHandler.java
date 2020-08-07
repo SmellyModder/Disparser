@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import disparser.annotations.Aliases;
 import disparser.annotations.Permissions;
@@ -23,7 +24,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  * @author Luke Tonon
  */
 public class CommandHandler extends ListenerAdapter {
-	private final Map<String, Command> COMMANDS = Collections.synchronizedMap(new HashMap<String, Command>());
+	private final Map<String, Command> aliasMap = Collections.synchronizedMap(new HashMap<String, Command>());
 	private String prefix = "!";
 	
 	public CommandHandler() {}
@@ -42,24 +43,24 @@ public class CommandHandler extends ListenerAdapter {
 	}
 	
 	protected void registerCommands(List<Command> commands) {
-		synchronized (COMMANDS) {
+		synchronized (this.aliasMap) {
 			commands.forEach(command -> {
 				this.applyAliases(command, command.getClass().getAnnotation(Aliases.class));
 				this.applyPermissions(command, command.getClass().getAnnotation(Permissions.class));
-				for (String alias : command.getAliases()) COMMANDS.put(alias, command);
+				for (String alias : command.getAliases()) this.aliasMap.put(alias, command);
 			});
 		}
 	}
 	
 	protected void registerCommand(String commandName, Command command) {
-		synchronized (COMMANDS) {
-			COMMANDS.put(commandName, command);
+		synchronized (this.aliasMap) {
+			this.aliasMap.put(commandName, command);
 		}
 	}
 	
 	protected void registerCommand(Command command) {
-		synchronized (COMMANDS) {
-			command.getAliases().forEach(alias -> COMMANDS.put(alias, command));
+		synchronized (this.aliasMap) {
+			command.getAliases().forEach(alias -> this.aliasMap.put(alias, command));
 		}
 	}
 	
@@ -86,6 +87,7 @@ public class CommandHandler extends ListenerAdapter {
 	}
 	
 	private void applyAliases(Command command, Aliases aliases) {
+		this.aliasMap.entrySet().stream().filter(entry -> entry.getValue() == command).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).forEach((alias, value) -> this.aliasMap.remove(alias));
 		if (aliases != null) {
 			Set<String> newAliases = aliases.mergeAliases() ? command.getAliases() : new HashSet<>();
 			newAliases.addAll(Arrays.asList(aliases.value()));
@@ -109,8 +111,8 @@ public class CommandHandler extends ListenerAdapter {
 		String firstComponent = reader.getCurrentMessageComponent();
 		String prefix = this.getPrefix(event.getGuild());
 		if (firstComponent.startsWith(prefix)) {
-			synchronized (COMMANDS) {
-				Command command = COMMANDS.get(firstComponent.substring(prefix.length()).toLowerCase());
+			synchronized (this.aliasMap) {
+				Command command = this.aliasMap.get(firstComponent.substring(prefix.length()).toLowerCase());
 				if (command != null) CommandContext.createContext(event, command, reader).ifPresent(command::processCommand);
 			}
 		}
