@@ -34,10 +34,10 @@ public final class GuildArgument implements Argument<Guild> {
 				if (guild != null) {
 					return ParsedArgument.parse(guild);
 				} else {
-					return ParsedArgument.parseError("Guild with id " + "`" + arg + "` could not be found");
+					return ParsedArgument.parseError("Guild with id `%s` could not be found");
 				}
 			} catch (NumberFormatException exception) {
-				return ParsedArgument.parseError("`" + arg + "` is not a valid guild id");
+				return ParsedArgument.parseError("`%s` is not a valid guild id", arg);
 			}
 		});
 	}

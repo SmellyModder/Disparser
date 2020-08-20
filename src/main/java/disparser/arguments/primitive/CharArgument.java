@@ -23,7 +23,7 @@ public final class CharArgument implements Argument<Character> {
 	@Override
 	public ParsedArgument<Character> parse(ArgumentReader reader) {
 		Character character = reader.nextChar();
-		return character != null ? ParsedArgument.parse(character) : ParsedArgument.parseError("`" + reader.getCurrentMessageComponent() + "` exceeds one character");
+		return character != null ? ParsedArgument.parse(character) : ParsedArgument.parseError("`%s` exceeds one character", reader.getCurrentMessageComponent());
 	}
 
 }

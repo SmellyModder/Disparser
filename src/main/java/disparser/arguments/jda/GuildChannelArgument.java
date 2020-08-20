@@ -46,10 +46,10 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					return ParsedArgument.parseError("Channel with id " + "`" + arg + "` could not be found");
+					return ParsedArgument.parseError("Channel with id `%s` could not be found", arg);
 				}
 			} catch (NumberFormatException exception) {
-				return ParsedArgument.parseError("`" + arg + "` is not a valid channel id");
+				return ParsedArgument.parseError("`%s` is not a valid channel id", arg);
 			}
 		});
 	}

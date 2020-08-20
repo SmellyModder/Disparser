@@ -54,4 +54,8 @@ public final class ParsedArgument<A> {
 	public static <A> ParsedArgument<A> parseError(@Nonnull final String errorMessage) {
 		return new ParsedArgument<>(null, errorMessage);
 	}
+	
+	public static <A> ParsedArgument<A> parseError(@Nonnull final String errorMessage, final Object... args) {
+		return new ParsedArgument<>(null, String.format(errorMessage, args));
+	}
 }

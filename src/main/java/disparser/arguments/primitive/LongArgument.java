@@ -23,7 +23,7 @@ public final class LongArgument implements Argument<Long> {
 	@Override
 	public ParsedArgument<Long> parse(ArgumentReader reader) {
 		Long nextLong = reader.nextLong();
-		return nextLong != null ? ParsedArgument.parse(nextLong) : ParsedArgument.parseError("`" + reader.getCurrentMessageComponent() + "` is not a valid long");
+		return nextLong != null ? ParsedArgument.parse(nextLong) : ParsedArgument.parseError("`%s` is not a valid long", reader.getCurrentMessageComponent());
 	}
 
 }

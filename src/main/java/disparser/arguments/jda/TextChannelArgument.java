@@ -52,7 +52,7 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					return ParsedArgument.parseError("Text channel with id " + "`" + arg + "` could not be found");
+					return ParsedArgument.parseError("Text channel with id `%d` could not be found", parsedLong);
 				}
 			} catch (NumberFormatException exception) {
 				Matcher matcher = MENTION_PATTERN.matcher(arg);
@@ -66,7 +66,7 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 					}
 				}
 				
-				return ParsedArgument.parseError("`" + arg + "` is not a valid channel id");
+				return ParsedArgument.parseError("`%s` is not a valid channel id", arg);
 			}
 		});
 	}

@@ -47,11 +47,12 @@ public final class UserArgument implements Argument<User> {
 	public ParsedArgument<User> parse(ArgumentReader reader) {
 		return reader.parseNextArgument((arg) -> {
 			try {
-				User foundUser = this.findUserWithId(reader, Long.parseLong(arg));
+				long id = Long.parseLong(arg);
+				User foundUser = this.findUserWithId(reader, id);
 				if (foundUser != null) {
 					return ParsedArgument.parse(foundUser);
 				} else {
-					return ParsedArgument.parseError("Member with id " + "`" + arg + "` could not be found");
+					return ParsedArgument.parseError("Member with id `%d` could not be found", id);
 				}
 			} catch (NumberFormatException exception) {
 				Matcher matcher = MENTION_PATTERN.matcher(arg);
@@ -65,7 +66,7 @@ public final class UserArgument implements Argument<User> {
 					}
 				}
 				
-				return ParsedArgument.parseError("`" + arg + "` is not a valid member id or valid user mention");
+				return ParsedArgument.parseError("`%s` is not a valid member id or valid user mention", arg);
 			}
 		});
 	}

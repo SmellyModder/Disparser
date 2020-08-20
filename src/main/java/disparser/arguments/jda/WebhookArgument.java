@@ -51,13 +51,13 @@ public final class WebhookArgument implements Argument<Webhook> {
 					if (foundWebhook != null) {
 						return ParsedArgument.parse(foundWebhook);
 					} else {
-						return ParsedArgument.parseError("Text channel with id `" + arg + "` could not be found");
+						return ParsedArgument.parseError("Text channel with id `%d` could not be found", parsedLong);
 					}
 				} catch (InterruptedException | ExecutionException e) {
-					return ParsedArgument.parseError("An exception occured when trying to process the webhook with id `" + arg + "`");
+					return ParsedArgument.parseError("An exception occured when trying to process the webhook with id `%d`", parsedLong);
 				}
 			} catch (NumberFormatException exception) {
-				return ParsedArgument.parseError("`" + arg + "` is not a valid channel id");
+				return ParsedArgument.parseError("`%s` is not a valid channel id", arg);
 			}
 		});
 	}

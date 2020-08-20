@@ -33,7 +33,7 @@ public final class EnumArgument<E extends Enum<?>> implements Argument<E> {
 					return ParsedArgument.parse(type);
 				}
 			}
-			return ParsedArgument.parseError(arg + " is not a valid type");
+			return ParsedArgument.parseError("`%s` is not a valid type", arg);
 		});
 	}
 }

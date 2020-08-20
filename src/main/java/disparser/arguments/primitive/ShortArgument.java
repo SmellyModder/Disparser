@@ -23,7 +23,7 @@ public final class ShortArgument implements Argument<Short> {
 	@Override
 	public ParsedArgument<Short> parse(ArgumentReader reader) {
 		Short nextShort = reader.nextShort();
-		return nextShort != null ? ParsedArgument.parse(nextShort) : ParsedArgument.parseError("`" + reader.getCurrentMessageComponent() + "` is not a valid short");
+		return nextShort != null ? ParsedArgument.parse(nextShort) : ParsedArgument.parseError("`%s` is not a valid short", reader.getCurrentMessageComponent());
 	}
 
 }
