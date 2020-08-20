@@ -4,10 +4,18 @@ import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
 
-public class StringArgument implements Argument<String> {
+/**
+ * A simple argument for parsing strings.
+ * 
+ * @author Luke Tonon
+ */
+public final class StringArgument implements Argument<String> {
 
 	private StringArgument() {}
 	
+	/**
+	 * @return The default instance.
+	 */
 	public static StringArgument get() {
 		return new StringArgument();
 	}

@@ -4,10 +4,18 @@ import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
 
-public class ShortArgument implements Argument<Short> {
+/**
+ * A simple argument for parsing shorts.
+ * 
+ * @author Luke Tonon
+ */
+public final class ShortArgument implements Argument<Short> {
 
 	private ShortArgument() {}
 	
+	/**
+	 * @return The default instance.
+	 */
 	public static ShortArgument get() {
 		return new ShortArgument();
 	}

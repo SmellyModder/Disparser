@@ -4,10 +4,18 @@ import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
 
-public class IntegerArgument implements Argument<Integer> {
+/**
+ * A simple argument for parsing integers.
+ * 
+ * @author Luke Tonon
+ */
+public final class IntegerArgument implements Argument<Integer> {
 
 	private IntegerArgument() {}
 	
+	/**
+	 * @return The default instance.
+	 */
 	public static IntegerArgument get() {
 		return new IntegerArgument();
 	}

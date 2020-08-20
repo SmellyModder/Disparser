@@ -12,6 +12,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 
 /**
+ * An argument that can parse users by their ID or a mention of the user.
+ * Define a JDA to get the User from or leave null to use the JDA of the message that was sent.
+ * 
  * @author Luke Tonon
  */
 public final class UserArgument implements Argument<User> {
@@ -24,10 +27,18 @@ public final class UserArgument implements Argument<User> {
 		this.jda = jda;
 	}
 	
+	/**
+	 * @return A default instance.
+	 */
 	public static UserArgument get() {
 		return new UserArgument(null);
 	}
 	
+	/**
+	 * If you only want to get users of the guild that the message was sent from then use {@link #get()}.
+	 * @param jda - JDA to get the user from.
+	 * @return An instance of this argument with a JDA.
+	 */
 	public static UserArgument create(JDA jda) {
 		return new UserArgument(jda);
 	}

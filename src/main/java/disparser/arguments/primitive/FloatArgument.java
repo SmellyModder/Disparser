@@ -4,10 +4,18 @@ import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
 
-public class FloatArgument implements Argument<Float> {
+/**
+ * A simple argument for parsing bytes.
+ * 
+ * @author Luke Tonon
+ */
+public final class FloatArgument implements Argument<Float> {
 
 	private FloatArgument() {}
 	
+	/**
+	 * @return The default instance.
+	 */
 	public static FloatArgument get() {
 		return new FloatArgument();
 	}

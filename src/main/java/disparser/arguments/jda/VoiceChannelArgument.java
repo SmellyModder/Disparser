@@ -9,6 +9,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 
 /**
+ * An argument that can parse voice channels by their ID.
+ * Define a JDA to get the voice channel from or leave null to use the JDA of the message that was sent.
+ * 
  * @author Luke Tonon
  */
 public final class VoiceChannelArgument implements Argument<VoiceChannel> {
@@ -19,10 +22,18 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 		this.jda = jda;
 	}
 	
+	/**
+	 * @return A default instance.
+	 */
 	public static VoiceChannelArgument get() {
 		return new VoiceChannelArgument(null);
 	}
 	
+	/**
+	 * If you only want to get voice channels of the guild that the message was sent from then use {@link #get()}.
+	 * @param jda - JDA to get the channel from.
+	 * @return An instance of this argument with a JDA.
+	 */
 	public static VoiceChannelArgument create(JDA jda) {
 		return new VoiceChannelArgument(jda);
 	}

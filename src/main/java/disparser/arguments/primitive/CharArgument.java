@@ -4,10 +4,18 @@ import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
 
-public class CharArgument implements Argument<Character> {
+/**
+ * A simple argument for parsing characters.
+ * 
+ * @author Luke Tonon
+ */
+public final class CharArgument implements Argument<Character> {
 
 	private CharArgument() {}
 	
+	/**
+	 * @return The default instance.
+	 */
 	public static CharArgument get() {
 		return new CharArgument();
 	}

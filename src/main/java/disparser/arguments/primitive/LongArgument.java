@@ -4,10 +4,18 @@ import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
 
-public class LongArgument implements Argument<Long> {
+/**
+ * A simple argument for parsing longs.
+ * 
+ * @author Luke Tonon
+ */
+public final class LongArgument implements Argument<Long> {
 
 	private LongArgument() {}
 	
+	/**
+	 * @return The default instance.
+	 */
 	public static LongArgument get() {
 		return new LongArgument();
 	}

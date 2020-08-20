@@ -2,6 +2,8 @@ package disparser.arguments.jda;
 
 import java.util.concurrent.ExecutionException;
 
+import javax.annotation.Nullable;
+
 import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
@@ -9,16 +11,32 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Webhook;
 
 /**
+ * An argument that can parse webhooks by their ID.
+ * Define a JDA to get the webhook from or leave null to use the JDA of the message that was sent.
+ * 
  * @author Luke Tonon
  */
 public final class WebhookArgument implements Argument<Webhook> {
+	@Nullable
 	private final JDA jda;
 	
 	private WebhookArgument(JDA jda) {
 		this.jda = jda;
 	}
 	
-	public static WebhookArgument get(JDA jda) {
+	/**
+	 * @return A default instance.
+	 */
+	public static WebhookArgument get() {
+		return new WebhookArgument(null);
+	}
+	
+	/**
+	 * If you only want to get webhooks of the guild that the message was sent from then use {@link #get()}.
+	 * @param jda - JDA to get the webhook from.
+	 * @return An instance of this argument with a JDA.
+	 */
+	public static WebhookArgument create(JDA jda) {
 		return new WebhookArgument(jda);
 	}
 	
@@ -29,7 +47,7 @@ public final class WebhookArgument implements Argument<Webhook> {
 				long parsedLong = Long.parseLong(arg);
 				Webhook foundWebhook;
 				try {
-					foundWebhook = this.jda.retrieveWebhookById(parsedLong).submit().get();
+					foundWebhook = this.jda == null ? reader.getChannel().getJDA().retrieveWebhookById(parsedLong).submit().get() : this.jda.retrieveWebhookById(parsedLong).submit().get();
 					if (foundWebhook != null) {
 						return ParsedArgument.parse(foundWebhook);
 					} else {

@@ -4,10 +4,18 @@ import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
 
-public class DoubleArgument implements Argument<Double> {
+/**
+ * A simple argument for parsing doubles.
+ * 
+ * @author Luke Tonon
+ */
+public final class DoubleArgument implements Argument<Double> {
 
 	private DoubleArgument() {}
 	
+	/**
+	 * @return The default instance.
+	 */
 	public static DoubleArgument get() {
 		return new DoubleArgument();
 	}

@@ -12,6 +12,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 /**
+ * An argument that can parse text channels by their ID or a mention of the text channel.
+ * Define a JDA to get the text channel from or leave null to use the JDA of the message that was sent.
+ * 
  * @author Luke Tonon
  */
 public final class TextChannelArgument implements Argument<TextChannel> {
@@ -24,10 +27,18 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 		this.jda = jda;
 	}
 	
+	/**
+	 * @return A default instance.
+	 */
 	public static TextChannelArgument get() {
 		return new TextChannelArgument(null);
 	}
 	
+	/**
+	 * If you only want to get text channels of the guild that the message was sent from then use {@link #get()}.
+	 * @param jda - JDA to get the channel from.
+	 * @return An instance of this argument with a JDA.
+	 */
 	public static TextChannelArgument create(JDA jda) {
 		return new TextChannelArgument(jda);
 	}

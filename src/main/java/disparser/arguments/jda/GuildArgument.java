@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 
 /**
+ * An argument that can parse guilds by their ID for a JDA.
+ * 
  * @author Luke Tonon
  */
 public final class GuildArgument implements Argument<Guild> {
@@ -16,6 +18,10 @@ public final class GuildArgument implements Argument<Guild> {
 		this.jda = jda;
 	}
 	
+	/**
+	 * @param jda - The JDA to get the guild from.
+	 * @return An instance of this argument with a JDA.
+	 */
 	public static GuildArgument get(JDA jda) {
 		return new GuildArgument(jda);
 	}

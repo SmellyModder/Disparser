@@ -4,10 +4,18 @@ import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
 
-public class BooleanArgument implements Argument<Boolean> {
+/**
+ * A simple argument for parsing booleans.
+ * 
+ * @author Luke Tonon
+ */
+public final class BooleanArgument implements Argument<Boolean> {
 	
 	private BooleanArgument() {}
 	
+	/**
+	 * @return The default instance.
+	 */
 	public static BooleanArgument get() {
 		return new BooleanArgument();
 	}

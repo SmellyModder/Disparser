@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.GuildChannel;
 
 /**
+ * An argument that can parse guilds by their ID for a JDA or the message sent's guild.
+ * 
  * @author Luke Tonon
  */
 public final class GuildChannelArgument implements Argument<GuildChannel> {
@@ -19,10 +21,18 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 		this.jda = jda;
 	}
 	
+	/**
+	 * @return A default instance.
+	 */
 	public static GuildChannelArgument get() {
 		return new GuildChannelArgument(null);
 	}
 	
+	/**
+	 * If you only want to get channels of the guild that the message was sent from then use {@link #get()}.
+	 * @param jda - JDA to get the guild from.
+	 * @return An instance of this argument with a JDA.
+	 */
 	public static GuildChannelArgument create(JDA jda) {
 		return new GuildChannelArgument(jda);
 	}
