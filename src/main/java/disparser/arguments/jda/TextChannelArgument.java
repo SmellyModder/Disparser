@@ -1,5 +1,8 @@
 package disparser.arguments.jda;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.annotation.Nullable;
 
 import disparser.Argument;
@@ -8,7 +11,12 @@ import disparser.ParsedArgument;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-public class TextChannelArgument implements Argument<TextChannel> {
+/**
+ * @author Luke Tonon
+ */
+public final class TextChannelArgument implements Argument<TextChannel> {
+	private static final Pattern MENTION_PATTERN = Pattern.compile("^<#(\\d+)>$");
+	
 	@Nullable
 	private final JDA jda;
 	
@@ -36,6 +44,17 @@ public class TextChannelArgument implements Argument<TextChannel> {
 					return ParsedArgument.parseError("Text channel with id " + "`" + arg + "` could not be found");
 				}
 			} catch (NumberFormatException exception) {
+				Matcher matcher = MENTION_PATTERN.matcher(arg);
+				
+				if (matcher.matches()) {
+					TextChannel channel = this.jda.getTextChannelById(Long.parseLong(matcher.group(1)));
+					if (channel != null) {
+						return ParsedArgument.parse(channel);
+					} else {
+						return ParsedArgument.parseError("Text Channel in mention could not be found");
+					}
+				}
+				
 				return ParsedArgument.parseError("`" + arg + "` is not a valid channel id");
 			}
 		});

@@ -18,6 +18,9 @@ public class Commands {
 	@Aliases(value = {"rename_test"}, mergeAliases = true)
 	public static final RenameChannelTestCommand RENAME_CHANNEL_TEST = new RenameChannelTestCommand();
 	
+	@Aliases(value = {"pfp"}, mergeAliases = true)
+	public static final UserProfileTestCommand USER_PROFILE_TEST = new UserProfileTestCommand();
+	
 	@Aliases(value = {"normal_test"}, mergeAliases = true)
 	public static final TestCommand TEST_COMMAND = new TestCommand();
 }

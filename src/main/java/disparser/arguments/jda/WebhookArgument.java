@@ -8,7 +8,10 @@ import disparser.ParsedArgument;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Webhook;
 
-public class WebhookArgument implements Argument<Webhook> {
+/**
+ * @author Luke Tonon
+ */
+public final class WebhookArgument implements Argument<Webhook> {
 	private final JDA jda;
 	
 	private WebhookArgument(JDA jda) {

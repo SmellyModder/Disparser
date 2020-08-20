@@ -6,7 +6,10 @@ import disparser.ParsedArgument;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 
-public class GuildArgument implements Argument<Guild> {
+/**
+ * @author Luke Tonon
+ */
+public final class GuildArgument implements Argument<Guild> {
 	private final JDA jda;
 	
 	private GuildArgument(JDA jda) {

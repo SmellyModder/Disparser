@@ -8,7 +8,10 @@ import disparser.ParsedArgument;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 
-public class VoiceChannelArgument implements Argument<VoiceChannel> {
+/**
+ * @author Luke Tonon
+ */
+public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 	@Nullable
 	private final JDA jda;
 	

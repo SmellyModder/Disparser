@@ -8,7 +8,10 @@ import disparser.ParsedArgument;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.GuildChannel;
 
-public class GuildChannelArgument implements Argument<GuildChannel> {
+/**
+ * @author Luke Tonon
+ */
+public final class GuildChannelArgument implements Argument<GuildChannel> {
 	@Nullable
 	private final JDA jda;
 	
