@@ -2,19 +2,30 @@ package disparser.commands;
 
 import disparser.Command;
 import disparser.CommandContext;
-import disparser.arguments.EnumTestArgument;
-import disparser.arguments.EnumTestArgument.ArgumentEnum;
+import disparser.arguments.primitive.EnumArgument;
 
 public class EnumTestCommand extends Command {
 
 	public EnumTestCommand() {
-		super("enum", new EnumTestArgument());
+		super("enum", EnumArgument.get(TestEnum.class));
 	}
 
 	@Override
 	public void processCommand(CommandContext context) {
-		ArgumentEnum argumentEnum = context.getParsedResult(0);
-		context.getEvent().getChannel().sendMessage(argumentEnum.message).queue();
+		TestEnum testEnum = context.getParsedResult(0);
+		context.getEvent().getChannel().sendMessage(testEnum.message).queue();
 	}
 
+	enum TestEnum {
+		A("Alphabet Soup"),
+		B("Bees..."),
+		C("Chad");
+		
+		private final String message;
+		
+		private TestEnum(String message) {
+			this.message = message;
+		}
+	}
+	
 }
