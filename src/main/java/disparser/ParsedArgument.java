@@ -1,5 +1,7 @@
 package disparser;
 
+import disparser.annotations.NullWhenErrored;
+
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
@@ -15,7 +17,7 @@ import javax.annotation.Nullable;
  * @param <A> - The type for this parsed argument.
  */
 public final class ParsedArgument<A> {
-	@Nullable
+	@NullWhenErrored
 	private final A result;
 	@Nullable
 	private final String errorMessage;
@@ -25,7 +27,7 @@ public final class ParsedArgument<A> {
 		this.errorMessage = errorMessage;
 	}
 	
-	@Nullable
+	@NullWhenErrored
 	public A getResult() {
 		return this.result;
 	}

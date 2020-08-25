@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import disparser.annotations.NullWhenErrored;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -162,7 +163,7 @@ public class CommandContext {
 		return (ParsedArgument<A>) this.parsedArguments.get(argument);
 	}
 	
-	@Nullable
+	@NullWhenErrored
 	public <A> A getParsedResult(int argument) {
 		ParsedArgument<A> parsedArgument = this.getParsedArgument(argument);
 		return parsedArgument != null ? parsedArgument.getResult() : null;
