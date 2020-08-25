@@ -57,11 +57,11 @@ public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argum
 			this.second = second;
 		}
 		
-		public static <F> Either<F, ?> first(@Nonnull F first) {
+		public static <F, S> Either<F, S> first(@Nonnull F first) {
 			return new Either<>(first, null);
 		}
 		
-		public static <S> Either<?, S> second(@Nonnull S second) {
+		public static <F, S> Either<F, S> second(@Nonnull S second) {
 			return new Either<>(null, second);
 		}
 		
