@@ -1,12 +1,12 @@
 package disparser.arguments.jda;
 
-import javax.annotation.Nullable;
-
 import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.GuildChannel;
+
+import javax.annotation.Nullable;
 
 /**
  * An argument that can parse guilds by their ID for a JDA or the message sent's guild.

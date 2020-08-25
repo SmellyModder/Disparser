@@ -1,15 +1,14 @@
 package disparser.arguments.jda;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Nullable;
-
 import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
+
+import javax.annotation.Nullable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * An argument that can parse users by their ID or a mention of the user.
