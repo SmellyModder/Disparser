@@ -2,10 +2,9 @@ package disparser;
 
 import disparser.annotations.NullWhenErrored;
 
-import java.util.function.Consumer;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 /**
  * A class holding a parsed result from an {@link Argument} and possibly an error message.

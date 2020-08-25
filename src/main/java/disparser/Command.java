@@ -1,9 +1,5 @@
 package disparser;
 
-import java.util.*;
-
-import javax.annotation.Nullable;
-
 import disparser.annotations.Optional;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -11,6 +7,9 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * Abstract class for a command.

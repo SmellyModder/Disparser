@@ -1,12 +1,12 @@
 package disparser;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import disparser.arguments.primitive.StringArgument;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple base command for an info command.

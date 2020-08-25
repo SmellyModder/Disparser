@@ -1,9 +1,9 @@
 package disparser;
 
-import javax.annotation.Nullable;
-
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+
+import javax.annotation.Nullable;
 
 /**
  * Used to read {@link Argument}s from a message

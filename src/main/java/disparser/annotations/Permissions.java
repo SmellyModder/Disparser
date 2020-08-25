@@ -1,15 +1,15 @@
 package disparser.annotations;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import disparser.CommandHandler;
+import net.dv8tion.jda.api.Permission;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import disparser.CommandHandler;
-import net.dv8tion.jda.api.Permission;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Used to merge or overwrite a command instance's permissions when registering it to a {@link CommandHandler}.

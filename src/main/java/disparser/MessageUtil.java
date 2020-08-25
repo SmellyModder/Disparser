@@ -1,9 +1,9 @@
 package disparser;
 
-import java.util.Collection;
-
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+
+import java.util.Collection;
 
 /**
  * A class that holds some useful message functions, all of which are used in Disparser.

@@ -1,17 +1,15 @@
 package disparser;
 
+import disparser.annotations.NullWhenErrored;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
-import disparser.annotations.NullWhenErrored;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 /**
  * Holds an {@link ArgumentReader} for reading arguments of a message a list of parsed arguments, and the {@link GuildMessageReceivedEvent} that the command was sent from.

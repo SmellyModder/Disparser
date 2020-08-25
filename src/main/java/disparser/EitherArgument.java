@@ -1,11 +1,10 @@
 package disparser;
 
-import java.util.function.Function;
+import disparser.EitherArgument.Either;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import disparser.EitherArgument.Either;
+import java.util.function.Function;
 
 /**
  * A class to hold two arguments in which it will attempt to parse the first argument and then if it fails to do so then attempt to parse the next argument.
