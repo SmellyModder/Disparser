@@ -1,10 +1,6 @@
 package disparser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.Nullable;
 
@@ -31,7 +27,7 @@ public abstract class Command {
 	}
 	
 	public Command(String name, Argument<?>... args) {
-		this(new HashSet<>(Arrays.asList(name)), new HashSet<>(Arrays.asList(Permission.EMPTY_PERMISSIONS)), args);
+		this(new HashSet<>(Collections.singletonList(name)), new HashSet<>(Arrays.asList(Permission.EMPTY_PERMISSIONS)), args);
 	}
 	
 	public Command(Set<String> aliases, Set<Permission> permissions, Argument<?>... args) {
@@ -86,7 +82,8 @@ public abstract class Command {
 	}
 	
 	public boolean testForPermissions(Message message, Permission... permission) {
-		if (message.getMember().hasPermission(permission)) {
+		Member member = message.getMember();
+		if (member != null && member.hasPermission(permission)) {
 			return true;
 		}
 		this.sendMessage(message.getTextChannel(), MessageUtil.createErrorMessage("You do not have permission to run this command"));

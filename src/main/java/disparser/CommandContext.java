@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
@@ -30,15 +31,20 @@ public class CommandContext {
 	
 	/**
 	 * Parses arguments with an {@link ArgumentReader} to create a new {@link CommandContext} instance.
-	 * When a parsing error occurs it will send a message to the reader's channel {@link ArgumentReader#getChannel()}
-	 * @param reader - The {@link ArgumentReader} to parse the arguments
-	 * @param arguments - A list of {@link Argument}s to be parsed by the {@link ArgumentReader}
+	 * When a parsing error occurs it will send a message to the reader's channel {@link ArgumentReader#getChannel()}.
+	 *
+	 * @param event - The {@link GuildMessageReceivedEvent} that the message was sent from.
+	 * @param command - The {@link Command} to create the context for.
+	 * @param reader - The {@link ArgumentReader} to parse the arguments.
 	 * @return An {@link Optional} {@link CommandContext} made from {@link Argument}s, empty if an error occurs when parsing the arguments
 	 */
 	public static Optional<CommandContext> createContext(final GuildMessageReceivedEvent event, final Command command, final ArgumentReader reader) {
-		if (!command.hasPermissions(event.getMember())) {
+		Member member = event.getMember();
+		if (member == null) return Optional.empty();
+
+		if (!command.hasPermissions(member)) {
 			event.getChannel().sendMessage(MessageUtil.createErrorMessage("You do not have permission to run this command!")).queue();
-			return Optional.ofNullable(null);
+			return Optional.empty();
 		}
 		
 		List<Argument<?>> commandArguments = command.getArguments();
@@ -56,13 +62,13 @@ public class CommandContext {
 							if (!reader.hasNextArg()) {
 								int nextArg = i + 1;
 								reader.getChannel().sendMessage(MessageUtil.createErrorMessage(nextArg + MessageUtil.getOrdinalForInteger(nextArg) + " argument is missing")).queue();
-								return Optional.ofNullable(null);
+								return Optional.empty();
 							}
 							ParsedArgument<?> parsedArg = argument.parse(reader);
 							String errorMessage = parsedArg.getErrorMessage();
 							if (errorMessage != null) {
 								reader.getChannel().sendMessage(MessageUtil.createErrorMessage(errorMessage)).queue();
-								return Optional.ofNullable(null);
+								return Optional.empty();
 							}
 							parsedArguments.add(parsedArg);
 						}
@@ -73,14 +79,14 @@ public class CommandContext {
 						String errorMessage = parsedArg.getErrorMessage();
 						if (errorMessage != null) {
 							reader.getChannel().sendMessage(MessageUtil.createErrorMessage(errorMessage)).queue();
-							return Optional.ofNullable(null);
+							return Optional.empty();
 						}
 						parsedArguments.add(parsedArg);
 					}
 				}
 				return Optional.of(new CommandContext(event, reader, parsedArguments));
 			}
-			return Optional.ofNullable(null);
+			return Optional.empty();
 		}
 		return Optional.of(new CommandContext(event, reader, new ArrayList<>()));
 	}
@@ -89,8 +95,9 @@ public class CommandContext {
 	 * Tests to check if all the command's arguments are present in the message.
 	 * A message will be sent to the reader's channel {@link ArgumentReader#getChannel()} if an argument or multiple arguments are missing.
 	 * 
-	 * @param reader - The {@link ArgumentReader} to read the arguments
-	 * @param arguments - A list of {@link Argument}s to read with the {@link ArgumentReader}
+	 * @param reader - The {@link ArgumentReader} to read the arguments.
+	 * @param commandArguments - The list of {@link Argument}s for a command.
+	 * @param hasOptionalArguments - If the command has {@link disparser.annotations.Optional} {@link Argument}s.
 	 * @return True if no arguments and false if an argument or multiple arguments are missing
 	 */
 	public static boolean testForPresentArgs(final ArgumentReader reader, final List<Argument<?>> commandArguments, boolean hasOptionalArguments) {
@@ -139,7 +146,7 @@ public class CommandContext {
 	}
 	
 	public static List<Argument<?>> getOptionalArguments(List<Argument<?>> arguments) {
-		return arguments.stream().filter(arg -> arg.isOptional()).collect(Collectors.toList());
+		return arguments.stream().filter(Argument::isOptional).collect(Collectors.toList());
 	}
 	
 	public GuildMessageReceivedEvent getEvent() {
@@ -158,7 +165,7 @@ public class CommandContext {
 	@Nullable
 	public <A> A getParsedResult(int argument) {
 		ParsedArgument<A> parsedArgument = this.getParsedArgument(argument);
-		return parsedArgument != null ? (A) parsedArgument.getResult() : null;
+		return parsedArgument != null ? parsedArgument.getResult() : null;
 	}
 	
 	@SuppressWarnings("unchecked")

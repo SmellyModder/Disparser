@@ -48,7 +48,7 @@ public final class MessageUtil {
 		StringBuilder builder = new StringBuilder();
 		int size = collection.size();
 		for (int i = 0; i < size; i++) {
-			builder.append(collection.toArray()[i] + (i == size - 2 ? (size > 2 ? ", and " : " and ") : i == size - 1 ? "" : ", "));
+			builder.append(collection.toArray()[i]).append(i == size - 2 ? (size > 2 ? ", and " : " and ") : i == size - 1 ? "" : ", ");
 		}
 		return builder.toString();
 	}

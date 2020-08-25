@@ -24,7 +24,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  * @author Luke Tonon
  */
 public class CommandHandler extends ListenerAdapter {
-	private final Map<String, Command> aliasMap = Collections.synchronizedMap(new HashMap<String, Command>());
+	private final Map<String, Command> aliasMap = Collections.synchronizedMap(new HashMap<>());
 	private String prefix = "!";
 	
 	public CommandHandler() {}

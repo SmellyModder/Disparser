@@ -33,7 +33,7 @@ public class InfoCommand extends Command {
 	}
 	
 	public InfoCommand putCommandInfo(String commandName, MessageEmbed commandInfo) {
-		if (this.commandInfoMessages == null) this.commandInfoMessages = Collections.synchronizedMap(new HashMap<String, MessageEmbed>());
+		if (this.commandInfoMessages == null) this.commandInfoMessages = Collections.synchronizedMap(new HashMap<>());
 		this.commandInfoMessages.put(commandName, commandInfo);
 		return this;
 	}

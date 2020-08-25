@@ -111,7 +111,7 @@ public final class ArgumentReader {
 	
 	/**
 	 * Used to convert strings to non-primitive type arguments.
-	 * @param reader - {@link Parser} for the object
+	 * @param parser - {@link Parser} for the object
 	 * @return The object({@link A}) read from the reader
 	 */
 	public <A> ParsedArgument<A> parseNextArgument(final Parser<A> parser) {
@@ -134,7 +134,7 @@ public final class ArgumentReader {
 	
 	/**
 	 * Gets the next argument in the message's components.
-	 * <p> Should ideally only be called once in {@link Argument#parse()} </p>
+	 * <p> Should ideally only be called once in {@link Argument#parse(ArgumentReader)} </p>
 	 * @return The next argument.
 	 */
 	public String nextArgument() {
@@ -155,6 +155,6 @@ public final class ArgumentReader {
 	
 	@FunctionalInterface
 	public interface Parser<A> {
-		public ParsedArgument<A> parse(String string);
+		ParsedArgument<A> parse(String string);
 	}
 }

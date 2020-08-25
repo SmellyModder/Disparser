@@ -17,7 +17,7 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 	@Nullable
 	private final JDA jda;
 	
-	private GuildChannelArgument(JDA jda) {
+	private GuildChannelArgument(@Nullable JDA jda) {
 		this.jda = jda;
 	}
 	

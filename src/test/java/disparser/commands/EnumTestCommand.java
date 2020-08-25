@@ -23,7 +23,7 @@ public class EnumTestCommand extends Command {
 		
 		private final String message;
 		
-		private TestEnum(String message) {
+		TestEnum(String message) {
 			this.message = message;
 		}
 	}

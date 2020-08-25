@@ -23,10 +23,10 @@ public @interface Aliases {
 	 * This will merge or overwrite the command's existing aliases depending on the value of {@link #mergeAliases()}.
 	 * @return The aliases for the command.
 	 */
-	public String[] value();
+	String[] value();
 	
 	/**
 	 * @return If it should merge these aliases with the existing aliases.
 	 */
-	public boolean mergeAliases() default false;
+	boolean mergeAliases() default false;
 }

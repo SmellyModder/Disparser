@@ -25,9 +25,7 @@ public class ComplexTestCommand extends Command {
 		Either<Integer, Long> either = context.getParsedResult(1);
 		float afloat = context.getParsedResult(2);
 		char character = context.getParsedResultOrElse(3, 'X');
-		channel.sendMessage(either.convertTo((eitherIn) -> {
-			return eitherIn.first != null ? "#" + either.first : event.getGuild().getMemberById(eitherIn.second).getAsMention();
-		}) + " got a " + afloat + " accuracy score " + "for the character " + character).queue();
+		channel.sendMessage(either.convertTo((eitherIn) -> eitherIn.first != null ? "#" + either.first : event.getGuild().getMemberById(eitherIn.second).getAsMention()) + String.format(" got a %f accuracy score for the character %c", afloat, character)).queue();
 	}
 
 }

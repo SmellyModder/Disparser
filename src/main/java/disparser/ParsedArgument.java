@@ -36,7 +36,7 @@ public final class ParsedArgument<A> {
 	}
 	
 	public A getOrOtherResult(@Nonnull A other) {
-		return this.result == null ? other : (A) this.result;
+		return this.result == null ? other : this.result;
 	}
 	
 	public boolean hasResult() {

@@ -24,10 +24,10 @@ public @interface Permissions {
 	 * This will merge or overwrite the command's existing permissions depending on the value of {@link #mergePermissions()}.
 	 * @return - The permissions for the command.
 	 */
-	public Permission[] value();
+	Permission[] value();
 	
 	/**
 	 * @return - If it should merge these permissions with the existing permissions.
 	 */
-	public boolean mergePermissions() default false;
+	 boolean mergePermissions() default false;
 }
