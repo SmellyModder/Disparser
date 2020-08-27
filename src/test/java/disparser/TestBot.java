@@ -22,7 +22,8 @@ public final class TestBot {
 				Commands.COMPLEX_TEST,
 				Commands.ENUM_TEST,
 				Commands.RENAME_CHANNEL_TEST,
-				Commands.USER_PROFILE_TEST
+				Commands.USER_PROFILE_TEST,
+				Commands.NUMBER_TEST
 			).applyAnnotations(Commands.class)
 		);
 		botBuilder.build();

@@ -20,6 +20,9 @@ public class Commands {
 	
 	@Aliases(value = {"pfp"}, mergeAliases = true)
 	public static final UserProfileTestCommand USER_PROFILE_TEST = new UserProfileTestCommand();
+
+	@Aliases(value = {"number_test"}, mergeAliases = true)
+	public static final NumberTestCommand NUMBER_TEST = new NumberTestCommand();
 	
 	@Aliases(value = {"normal_test"}, mergeAliases = true)
 	public static final TestCommand TEST_COMMAND = new TestCommand();
