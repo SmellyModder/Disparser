@@ -143,35 +143,75 @@ public class CommandContext {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * @param arguments - A list of arguments to filter.
+	 * @return A filtered optional list of arguments.
+	 */
 	public static List<Argument<?>> getOptionalArguments(List<Argument<?>> arguments) {
 		return arguments.stream().filter(Argument::isOptional).collect(Collectors.toList());
 	}
-	
+
+	/**
+	 * @return The {@link GuildMessageReceivedEvent} the message creating this {@link CommandContext} was sent from.
+	 */
 	public GuildMessageReceivedEvent getEvent() {
 		return this.event;
 	}
 
+	/**
+	 * @return The {@link ArgumentReader} for this {@link CommandContext}.
+	 */
 	public ArgumentReader getArgumentReader() {
 		return this.reader;
 	}
-	
+
+	/**
+	 * Gets a {@link ParsedArgument} for this {@link CommandContext} by an index.
+	 * The list of {@link #parsedArguments} matches the {@link Command#getArguments()} for this {@link CommandContext}.
+	 * @param argument - The index of the argument.
+	 * @param <A> - The type of the {@link ParsedArgument}.
+	 * @return The {@link ParsedArgument} for an index.
+	 */
 	@SuppressWarnings("unchecked")
 	public <A> ParsedArgument<A> getParsedArgument(int argument) {
 		return (ParsedArgument<A>) this.parsedArguments.get(argument);
 	}
-	
+
+	/**
+	 * Gets the {@link ParsedArgument#getResult()} for a {@link ParsedArgument} for this {@link CommandContext} by an index.
+	 * @see {@link #getParsedArgument(int)}
+	 * @param argument - The index of the {@link ParsedArgument} to get its {@link ParsedArgument#getResult()}.
+	 * @param <A> - The type of the {@link ParsedArgument#getResult()}.
+	 * @return - The {@link ParsedArgument#getResult()} for an index.
+	 */
 	@NullWhenErrored
 	public <A> A getParsedResult(int argument) {
 		ParsedArgument<A> parsedArgument = this.getParsedArgument(argument);
 		return parsedArgument != null ? parsedArgument.getResult() : null;
 	}
-	
+
+	/**
+	 * Gets the {@link ParsedArgument#getResult()} for a {@link ParsedArgument} for this {@link CommandContext} by an index.
+	 * If the result of {@link ParsedArgument#getResult()} is null then it will return {@param other}.
+	 * This should only be used for optional arguments. Moreover, arguments that have {@link Argument#isOptional()} return true.
+	 * @see {@link #getParsedArgument(int)}
+	 * @param argument - The index of the {@link ParsedArgument#getResult()}.
+	 * @param other - The result to return if {@link ParsedArgument#getResult()} is null.
+	 * @param <A> - The type of the {@link ParsedArgument#getResult()}.
+	 * @return - The {@link ParsedArgument#getResult()} for an index or if it's not present then returns the other result.
+	 */
 	@SuppressWarnings("unchecked")
 	public <A> A getParsedResultOrElse(int argument, A other) {
 		return (A) this.getParsedArgument(argument).getOrOtherResult(other);
 	}
-	
+
+	/**
+	 * Checks if a {@link ParsedArgument#getResult()} for an index is present and then accepts a consumer on that result.
+	 * @param argument - The index of the {@link ParsedArgument#getResult()}.
+	 * @param consumer - The consumer to accept on the result if it's present.
+	 * @param <A> - The type of the {@link ParsedArgument#getResult()}.
+	 */
 	@SuppressWarnings("unchecked")
 	public <A> void ifParsedResultPresent(int argument, Consumer<A> consumer) {
 		((ParsedArgument<A>) this.getParsedArgument(argument)).ifHasResult(consumer);
