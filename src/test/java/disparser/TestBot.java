@@ -14,7 +14,7 @@ public final class TestBot {
 	public static void main(String[] args) throws LoginException {
 		JDABuilder botBuilder = JDABuilder.create(args[0], GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS & ~GatewayIntent.getRaw(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_TYPING, GatewayIntent.DIRECT_MESSAGE_TYPING)));
 		botBuilder.setStatus(OnlineStatus.ONLINE);
-		botBuilder.setActivity(Activity.of(ActivityType.DEFAULT, "Testing"));
+		botBuilder.setActivity(Activity.of(ActivityType.DEFAULT, "Disparsing!"));
 		botBuilder.addEventListeners(
 			new CommandHandler("!",
 				Commands.OPTIONAL_TEST,
