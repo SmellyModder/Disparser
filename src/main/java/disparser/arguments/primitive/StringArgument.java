@@ -4,25 +4,43 @@ import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
 
+import javax.annotation.Nullable;
+
 /**
  * A simple argument for parsing strings.
  * 
  * @author Luke Tonon
  */
 public final class StringArgument implements Argument<String> {
+	@Nullable
+	private final Integer maxChars;
 
-	private StringArgument() {}
+	private StringArgument(@Nullable Integer maxChars) {
+		this.maxChars = maxChars;
+	}
 	
 	/**
 	 * @return The default instance.
 	 */
 	public static StringArgument get() {
-		return new StringArgument();
+		return new StringArgument(null);
+	}
+
+	/**
+	 * @param maxChars - The max length of a string this argument can parse.
+	 * @return An instance that has a set max length for the strings it can parse.
+	 */
+	public static StringArgument create(int maxChars) {
+		return new StringArgument(maxChars);
 	}
 	
 	@Override
 	public ParsedArgument<String> parse(ArgumentReader reader) {
-		return ParsedArgument.parse(reader.nextArgument());
+		String nextArgument = reader.nextArgument();
+		Integer maxChars = this.maxChars;
+		if (maxChars != null && nextArgument.length() > maxChars) {
+			ParsedArgument.parseError("The argument `%s` exceeds the character length of %o", nextArgument, maxChars);
+		}
+		return ParsedArgument.parse(nextArgument);
 	}
-
 }
