@@ -2,7 +2,7 @@ package disparser.commands;
 
 import disparser.Command;
 import disparser.CommandContext;
-import disparser.MessageUtil;
+import disparser.util.MessageUtil;
 import disparser.arguments.OptionalTestArgument;
 
 public class OptionalTestCommand extends Command {

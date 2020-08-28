@@ -2,14 +2,13 @@ package disparser.commands;
 
 import disparser.Command;
 import disparser.CommandContext;
-import disparser.EitherArgument;
-import disparser.EitherArgument.Either;
+import disparser.arguments.EitherArgument;
+import disparser.arguments.EitherArgument.Either;
 import disparser.arguments.jda.TextChannelArgument;
 import disparser.arguments.jda.UserArgument;
 import disparser.arguments.primitive.CharArgument;
 import disparser.arguments.primitive.FloatArgument;
 import disparser.arguments.primitive.IntegerArgument;
-import disparser.arguments.primitive.LongArgument;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;

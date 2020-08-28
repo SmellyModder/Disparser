@@ -1,5 +1,7 @@
-package disparser;
+package disparser.util;
 
+import disparser.Command;
+import disparser.CommandContext;
 import disparser.arguments.primitive.StringArgument;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;

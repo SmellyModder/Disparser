@@ -1,5 +1,6 @@
 package disparser;
 
+import disparser.util.MessageUtil;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 

@@ -1,6 +1,9 @@
-package disparser;
+package disparser.arguments;
 
-import disparser.EitherArgument.Either;
+import disparser.Argument;
+import disparser.ArgumentReader;
+import disparser.ParsedArgument;
+import disparser.arguments.EitherArgument.Either;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
