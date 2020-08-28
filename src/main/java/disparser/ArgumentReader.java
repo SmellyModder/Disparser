@@ -32,15 +32,24 @@ public final class ArgumentReader {
 	public TextChannel getChannel() {
 		return this.channel;
 	}
-	
+
+	/**
+	 * @return - The split up message components for this {@link ArgumentReader}..
+	 */
 	public String[] getMessageComponents() {
 		return this.messageComponents;
 	}
-	
+
+	/**
+	 * @return - The current component index.
+	 */
 	public int getCurrentComponent() {
 		return this.currentComponent;
 	}
-	
+
+	/**
+	 * @return - The current message component.
+	 */
 	public String getCurrentMessageComponent() {
 		return this.messageComponents[this.currentComponent];
 	}

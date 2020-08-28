@@ -11,15 +11,27 @@ import java.util.Collection;
  * @author Luke Tonon
  */
 public final class MessageUtil {
-	
-	public static MessageEmbed createErrorMessage(String errorMessage) {
+
+	/**
+	 * Creates a simple error message as a {@link MessageEmbed}.
+	 * @see <a href="https://cdn.discordapp.com/attachments/667088262287851551/748739498036428840/Capture.PNG></a>
+	 * @param message - The error reason message.
+	 * @return a simple error message as a {@link MessageEmbed}.
+	 */
+	public static MessageEmbed createErrorMessage(String message) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
 		embedBuilder.setTitle(":x: " + "Command Failed");
-		embedBuilder.appendDescription("**Reason: **" + errorMessage);
+		embedBuilder.appendDescription("**Reason: **" + message);
 		embedBuilder.setColor(14495300);
 		return embedBuilder.build();
 	}
-	
+
+	/**
+	 * Creates a simple successful completion message as a {@link MessageEmbed}.
+	 * @see <a href="https://cdn.discordapp.com/attachments/667088262287851551/748740576630800425/Capture.PNG></a>
+	 * @param message - The message to be displayed.
+	 * @return a simple successful completion message as a {@link MessageEmbed}.
+	 */
 	public static MessageEmbed createSuccessfulMessage(String message) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
 		embedBuilder.setTitle(":white_check_mark: " + "Command Successful");
@@ -27,7 +39,13 @@ public final class MessageUtil {
 		embedBuilder.setColor(7844437);
 		return embedBuilder.build();
 	}
-	
+
+	/**
+	 * Gets the ordinal for an integer.
+	 * 1st, 2nd, 3rd, 4th, etc...
+	 * @param value - The integer.
+	 * @return the ordinal for an integer.
+	 */
 	public static String getOrdinalForInteger(int value) {
 		int hunRem = value % 100;
 		int tenRem = value % 10;
@@ -43,7 +61,12 @@ public final class MessageUtil {
 				return "th";
 		}
 	}
-	
+
+	/**
+	 * Creates an English formatted sentence of a collection.
+	 * @param collection - The collection to format.
+	 * @return an English formatted sentence of a collection.
+	 */
 	public static String createFormattedSentenceOfCollection(Collection<?> collection) {
 		StringBuilder builder = new StringBuilder();
 		int size = collection.size();

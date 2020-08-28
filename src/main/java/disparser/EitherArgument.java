@@ -55,11 +55,23 @@ public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argum
 			this.first = first;
 			this.second = second;
 		}
-		
+
+		/**
+		 * @param first - The first object to contain in the {@link Either}.
+		 * @param <F> - The type of the first object.
+		 * @param <S> - The type of the second object.
+		 * @return A {@link Either} containing a first object.
+		 */
 		public static <F, S> Either<F, S> first(@Nonnull F first) {
 			return new Either<>(first, null);
 		}
-		
+
+		/**
+		 * @param second - The second object to contain in the {@link Either}.
+		 * @param <F> - The type of the first object.
+		 * @param <S> - The type of the second object.
+		 * @return A {@link Either} containing a second object.
+		 */
 		public static <F, S> Either<F, S> second(@Nonnull S second) {
 			return new Either<>(null, second);
 		}

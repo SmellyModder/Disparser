@@ -45,19 +45,33 @@ public class CommandHandler extends ListenerAdapter {
 			});
 		}
 	}
-	
-	protected void registerCommand(String commandName, Command command) {
+
+	/**
+	 * Registers a command for an alias.
+	 * @param alias - The alias for this command.
+	 * @param command - The command to register.
+	 */
+	protected void registerCommand(String alias, Command command) {
 		synchronized (this.aliasMap) {
-			this.aliasMap.put(commandName, command);
+			this.aliasMap.put(alias, command);
 		}
 	}
-	
+
+	/**
+	 * Registers a command by all its aliases.
+	 * @param command - The command to register.
+	 */
 	protected void registerCommand(Command command) {
 		synchronized (this.aliasMap) {
 			command.getAliases().forEach(alias -> this.aliasMap.put(alias, command));
 		}
 	}
-	
+
+	/**
+	 * Applies {@link Aliases} and {@link Permissions}s to {@link Command} fields in a class.
+	 * @param clazz - The class to have its fields be applied.
+	 * @return This {@link CommandHandler}.
+	 */
 	public CommandHandler applyAnnotations(Class<?> clazz) {
 		for (Field field : clazz.getDeclaredFields()) {
 			Aliases aliases = field.getAnnotation(Aliases.class);
@@ -79,7 +93,11 @@ public class CommandHandler extends ListenerAdapter {
 		}
 		return this;
 	}
-	
+
+	/**
+	 * Applies an {@link Aliases} to a {@link Command}.
+	 * @param command - The command to have the {@link Aliases} applied to.
+	 */
 	private void applyAliases(Command command, Aliases aliases) {
 		this.aliasMap.entrySet().stream().filter(entry -> entry.getValue() == command).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).forEach((alias, value) -> this.aliasMap.remove(alias));
 		if (aliases != null) {
@@ -89,7 +107,11 @@ public class CommandHandler extends ListenerAdapter {
 		}
 		this.registerCommand(command);
 	}
-	
+
+	/**
+	 * Applies an {@link Permissions} to a {@link Command}.
+	 * @param command - The command to have the {@link Permissions} applied to.
+	 */
 	private void applyPermissions(Command command, Permissions permissions) {
 		if (permissions != null) {
 			Set<Permission> newPermissions = permissions.mergePermissions() ? command.getRequiredPermissions() : new HashSet<>();
@@ -113,7 +135,7 @@ public class CommandHandler extends ListenerAdapter {
 	}
 	
 	/**
-	 * Override this in your own {@link CommandHandler} if you wish to have the prefix be dynamic.
+	 * Override this in your own {@link CommandHandler} if you wish to have the prefix be dynamic and/or configurable.
 	 * @param guild - The guild belonging to the sent command.
 	 * @return The prefix for the commands.
 	 */
