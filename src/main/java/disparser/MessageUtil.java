@@ -14,7 +14,7 @@ public final class MessageUtil {
 
 	/**
 	 * Creates a simple error message as a {@link MessageEmbed}.
-	 * @see <a href="https://cdn.discordapp.com/attachments/667088262287851551/748739498036428840/Capture.PNG></a>
+	 * @see <a href="https://cdn.discordapp.com/attachments/667088262287851551/748744108939411496/errored_test.PNG></a>
 	 * @param message - The error reason message.
 	 * @return a simple error message as a {@link MessageEmbed}.
 	 */
@@ -28,7 +28,7 @@ public final class MessageUtil {
 
 	/**
 	 * Creates a simple successful completion message as a {@link MessageEmbed}.
-	 * @see <a href="https://cdn.discordapp.com/attachments/667088262287851551/748740576630800425/Capture.PNG></a>
+	 * @see <a href="https://cdn.discordapp.com/attachments/667088262287851551/748744125808902145/sucessful_test.PNG></a>
 	 * @param message - The message to be displayed.
 	 * @return a simple successful completion message as a {@link MessageEmbed}.
 	 */
