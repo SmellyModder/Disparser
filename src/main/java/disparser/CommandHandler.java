@@ -2,6 +2,8 @@ package disparser;
 
 import disparser.annotations.Aliases;
 import disparser.annotations.Permissions;
+import disparser.feedback.FeedbackHandler;
+import disparser.feedback.FeedbackHandlerBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -129,7 +131,16 @@ public class CommandHandler extends ListenerAdapter {
 		if (firstComponent.startsWith(prefix)) {
 			synchronized (this.aliasMap) {
 				Command command = this.aliasMap.get(firstComponent.substring(prefix.length()).toLowerCase());
-				if (command != null) CommandContext.createContext(event, command, reader).ifPresent(command::processCommand);
+				if (command != null) {
+					CommandContext.createContext(event, command, reader, this.getFeedbackHandlerBuilder()).ifPresent((context) -> {
+						try {
+							command.processCommand(context);
+						} catch (Exception exception) {
+							context.getFeedbackHandler().sendError(exception);
+							exception.printStackTrace();
+						}
+					});
+				}
 			}
 		}
 	}
@@ -141,5 +152,15 @@ public class CommandHandler extends ListenerAdapter {
 	 */
 	public String getPrefix(Guild guild) {
 		return this.prefix;
+	}
+
+	/**
+	 * Gets this handler's {@link FeedbackHandlerBuilder}.
+	 * This is used for creating a {@link FeedbackHandler} to be used for sending feedback when processing commands.
+	 * <p> This returns {@link FeedbackHandlerBuilder#SIMPLE_BUILDER} by default. </p>
+	 * @return
+	 */
+	public FeedbackHandlerBuilder getFeedbackHandlerBuilder() {
+		return FeedbackHandlerBuilder.SIMPLE_BUILDER;
 	}
 }

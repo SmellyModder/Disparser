@@ -1,6 +1,8 @@
 package disparser;
 
 import disparser.annotations.NullWhenErrored;
+import disparser.feedback.FeedbackHandler;
+import disparser.feedback.FeedbackHandlerBuilder;
 import disparser.util.MessageUtil;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -22,11 +24,13 @@ public class CommandContext {
 	private final GuildMessageReceivedEvent event;
 	private final ArgumentReader reader;
 	private final List<ParsedArgument<?>> parsedArguments;
+	private final FeedbackHandler feedbackHandler;
 	
-	private CommandContext(GuildMessageReceivedEvent event, ArgumentReader reader, List<ParsedArgument<?>> parsedArguments) {
+	private CommandContext(GuildMessageReceivedEvent event, ArgumentReader reader, List<ParsedArgument<?>> parsedArguments, FeedbackHandlerBuilder feedbackHandlerBuilder) {
 		this.event = event;
 		this.reader = reader;
 		this.parsedArguments = parsedArguments;
+		this.feedbackHandler = feedbackHandlerBuilder.build(this);
 	}
 	
 	/**
@@ -36,9 +40,10 @@ public class CommandContext {
 	 * @param event - The {@link GuildMessageReceivedEvent} that the message was sent from.
 	 * @param command - The {@link Command} to create the context for.
 	 * @param reader - The {@link ArgumentReader} to parse the arguments.
+	 * @param feedbackHandlerBuilder The {@link FeedbackHandlerBuilder} to build a {@link FeedbackHandler} to be used for sending feedback for processing commands.
 	 * @return An {@link Optional} {@link CommandContext} made from {@link Argument}s, empty if an error occurs when parsing the arguments.
 	 */
-	public static Optional<CommandContext> createContext(final GuildMessageReceivedEvent event, final Command command, final ArgumentReader reader) {
+	public static Optional<CommandContext> createContext(final GuildMessageReceivedEvent event, final Command command, final ArgumentReader reader, final FeedbackHandlerBuilder feedbackHandlerBuilder) {
 		Member member = event.getMember();
 		if (member == null) return Optional.empty();
 
@@ -84,11 +89,11 @@ public class CommandContext {
 						parsedArguments.add(parsedArg);
 					}
 				}
-				return Optional.of(new CommandContext(event, reader, parsedArguments));
+				return Optional.of(new CommandContext(event, reader, parsedArguments, feedbackHandlerBuilder));
 			}
 			return Optional.empty();
 		}
-		return Optional.of(new CommandContext(event, reader, new ArrayList<>()));
+		return Optional.of(new CommandContext(event, reader, new ArrayList<>(), feedbackHandlerBuilder));
 	}
 	
 	/**
@@ -165,6 +170,15 @@ public class CommandContext {
 	 */
 	public ArgumentReader getArgumentReader() {
 		return this.reader;
+	}
+
+	/**
+	 * Use this to get the {@link FeedbackHandler} for this {@link CommandContext} to send feedback when processing commands.
+	 * @see FeedbackHandler
+	 * @return The {@link FeedbackHandler} for this {@link CommandContext}.
+	 */
+	public FeedbackHandler getFeedbackHandler() {
+		return this.feedbackHandler;
 	}
 
 	/**

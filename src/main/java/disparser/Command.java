@@ -1,6 +1,7 @@
 package disparser;
 
 import disparser.annotations.Optional;
+import disparser.feedback.CommandSyntaxException;
 import disparser.util.MessageUtil;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -75,7 +76,7 @@ public abstract class Command {
 	 * 
 	 * @param context - The {@link CommandContext} for this command, use this to get the parsed arguments and make use of the {@link GuildMessageReceivedEvent} event
 	 */
-	public abstract void processCommand(CommandContext context);
+	public abstract void processCommand(CommandContext context) throws Exception;
 	
 	public boolean hasPermissions(Member member) {
 		return member.hasPermission(this.getRequiredPermissions());
