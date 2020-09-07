@@ -122,11 +122,13 @@ public final class ArgumentReader {
 	
 	/**
 	 * Used to convert strings to non-primitive type arguments.
-	 * @param parser - A {@link Parser} to parse the next string argument to an {@link ParsedArgument}.
+	 * @param parser - A {@link Function} to parse the next string argument to an {@link ParsedArgument}.
+	 * @param <A> - The type of the argument.
+	 * @param <P> - A {@link ParsedArgument} with the type of the argument.
 	 * @return The object({@link A}) read from the reader.
 	 */
-	public <A> ParsedArgument<A> parseNextArgument(final Parser<A> parser) {
-		return parser.parse(this.nextArgument());
+	public <A, P extends ParsedArgument<A>> P parseNextArgument(final Function<String, P> parser) {
+		return parser.apply(this.nextArgument());
 	}
 
 	/**
@@ -162,10 +164,5 @@ public final class ArgumentReader {
 	 */
 	public boolean hasNextArg() {
 		return this.currentComponent + 1 <= this.messageComponents.length - 1;
-	}
-
-	@FunctionalInterface
-	public interface Parser<A> {
-		ParsedArgument<A> parse(String string);
 	}
 }
