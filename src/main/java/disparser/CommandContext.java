@@ -36,7 +36,7 @@ public class CommandContext {
 	 * @param event - The {@link GuildMessageReceivedEvent} that the message was sent from.
 	 * @param command - The {@link Command} to create the context for.
 	 * @param reader - The {@link ArgumentReader} to parse the arguments.
-	 * @return An {@link Optional} {@link CommandContext} made from {@link Argument}s, empty if an error occurs when parsing the arguments
+	 * @return An {@link Optional} {@link CommandContext} made from {@link Argument}s, empty if an error occurs when parsing the arguments.
 	 */
 	public static Optional<CommandContext> createContext(final GuildMessageReceivedEvent event, final Command command, final ArgumentReader reader) {
 		Member member = event.getMember();
@@ -196,7 +196,7 @@ public class CommandContext {
 	 * Gets the {@link ParsedArgument#getResult()} for a {@link ParsedArgument} for this {@link CommandContext} by an index.
 	 * If the result of {@link ParsedArgument#getResult()} is null then it will return {@param other}.
 	 * This should only be used for optional arguments. Moreover, arguments that have {@link Argument#isOptional()} return true.
-	 * @see {@link #getParsedArgument(int)}
+	 * @see {@link #getParsedArgument(int)}.
 	 * @param argument - The index of the {@link ParsedArgument#getResult()}.
 	 * @param other - The result to return if {@link ParsedArgument#getResult()} is null.
 	 * @param <A> - The type of the {@link ParsedArgument#getResult()}.

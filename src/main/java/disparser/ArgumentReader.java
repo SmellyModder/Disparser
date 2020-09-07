@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * Used to read {@link Argument}s from a message
@@ -22,9 +23,9 @@ public final class ArgumentReader {
 	}
 	
 	/**
-	 * Creates an ArgumentReader for a message
-	 * @param message - {@link Message} for this ArgumentReader
-	 * @return {@link ArgumentReader} for the message
+	 * Creates an ArgumentReader for a message.
+	 * @param message - {@link Message} for this ArgumentReader.
+	 * @return {@link ArgumentReader} for the message.
 	 */
 	public static ArgumentReader create(final Message message) {
 		return new ArgumentReader(message.getTextChannel(), message.getContentRaw().split(" "));
@@ -35,7 +36,7 @@ public final class ArgumentReader {
 	}
 
 	/**
-	 * @return - The split up message components for this {@link ArgumentReader}..
+	 * @return - The split up message components for this {@link ArgumentReader}.
 	 */
 	public String[] getMessageComponents() {
 		return this.messageComponents;
@@ -121,8 +122,8 @@ public final class ArgumentReader {
 	
 	/**
 	 * Used to convert strings to non-primitive type arguments.
-	 * @param parser - {@link Parser} for the object
-	 * @return The object({@link A}) read from the reader
+	 * @param parser - A {@link Parser} to parse the next string argument to an {@link ParsedArgument}.
+	 * @return The object({@link A}) read from the reader.
 	 */
 	public <A> ParsedArgument<A> parseNextArgument(final Parser<A> parser) {
 		return parser.parse(this.nextArgument());
@@ -144,7 +145,7 @@ public final class ArgumentReader {
 	
 	/**
 	 * Gets the next argument in the message's components.
-	 * <p> Should ideally only be called once in {@link Argument#parse(ArgumentReader)} </p>
+	 * <p> Should ideally only be called once in {@link Argument#parse(ArgumentReader)}. </p>
 	 * @return The next argument.
 	 */
 	public String nextArgument() {
@@ -162,7 +163,7 @@ public final class ArgumentReader {
 	public boolean hasNextArg() {
 		return this.currentComponent + 1 <= this.messageComponents.length - 1;
 	}
-	
+
 	@FunctionalInterface
 	public interface Parser<A> {
 		ParsedArgument<A> parse(String string);

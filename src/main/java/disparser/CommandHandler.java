@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 /**
  * Handles all the command execution.
- * <p> This is a {@link ListenerAdapter}. <p>
+ * <p> This is a {@link ListenerAdapter} so it can be used as a JDA event listener. <p>
  * 
  * @author Luke Tonon
  */
