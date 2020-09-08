@@ -9,3 +9,7 @@ Disparser will stay relatively small and simple forever, offerring simple and ef
 ## Usage
 Currently there is no Maven that disparser is hosted on, but that'll be fixed relatively soon.
 <br> If you wish to try it out in the early stages it's in right now you can build it yourself by downloading the repository source and building it with the gradle using the `gradlew build` command. </br>
+
+## Upcoming Features
+* Better feedback support when processing commands. This includes catching exceptions in commands and sending them as errored to a text channel in a customizable way. This feature is already being worked on, but still needs support for argument parsing.
+* Compound Arguments. Compound Arguments are arguments that include multiple arguments or parameters in themselves, this allows for more complex use and parsing objects without needing certain information.
