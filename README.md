@@ -12,4 +12,4 @@ Currently there is no Maven that disparser is hosted on, but that'll be fixed re
 
 ## Upcoming Features
 * Better feedback support when processing commands. This includes catching exceptions in commands and sending them as errored to a text channel in a customizable way. This feature is already being worked on, but still needs support for argument parsing.
-* Compound Arguments. Compound Arguments are arguments that include multiple arguments or parameters in themselves, this allows for more complex use and parsing objects without needing certain information.
+* Compound Arguments. Compound Arguments are arguments that include multiple arguments or parameters in themselves, this allows for more complex use and using a system for parsing objects without needing certain information across many commands.
