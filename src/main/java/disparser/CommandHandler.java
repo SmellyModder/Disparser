@@ -159,9 +159,7 @@ public class CommandHandler extends ListenerAdapter {
 	
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-		for (int i = 0; i < 1000; i++) {
-			CommandContext.createAndDisparse(this, event);
-		}
+		CommandContext.createAndDisparse(this, event);
 	}
 	
 	/**
