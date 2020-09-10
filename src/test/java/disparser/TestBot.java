@@ -16,15 +16,10 @@ public final class TestBot {
 		botBuilder.setStatus(OnlineStatus.ONLINE);
 		botBuilder.setActivity(Activity.of(ActivityType.DEFAULT, "Disparsing!"));
 		botBuilder.addEventListeners(
-			new CommandHandler("!",
-				Commands.OPTIONAL_TEST,
-				Commands.TEST_COMMAND,
-				Commands.COMPLEX_TEST,
-				Commands.ENUM_TEST,
-				Commands.RENAME_CHANNEL_TEST,
-				Commands.USER_PROFILE_TEST,
-				Commands.NUMBER_TEST
-			).applyAnnotations(Commands.class)
+			new CommandHandler.CommandHandlerBuilder()
+				.setPrefix("!")
+				.registerCommands(Commands.class)
+				.build()
 		);
 		botBuilder.build();
 	}
