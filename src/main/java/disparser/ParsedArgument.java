@@ -18,10 +18,11 @@ import java.util.function.Consumer;
 public final class ParsedArgument<A> {
 	@NullWhenErrored
 	private final A result;
+	@Deprecated //Remove in 1.2.0
 	@Nullable
 	private final String errorMessage;
 	
-	private ParsedArgument(@Nullable final A readArgument, @Nullable final String errorMessage) {
+	private ParsedArgument(@Nullable final A readArgument, @Deprecated @Nullable final String errorMessage) {
 		this.result = readArgument;
 		this.errorMessage = errorMessage;
 	}
@@ -60,8 +61,16 @@ public final class ParsedArgument<A> {
 	 * @param <A> - The type of the result.
 	 * @return A new {@link ParsedArgument} that contains a non-null result.
 	 */
-	public static <A> ParsedArgument<A> parse(@Nonnull final A result) {
+	public static <A> ParsedArgument<A> parse(final A result) {
 		return new ParsedArgument<>(result, null);
+	}
+
+	/**
+	 * @param <A> - The type of the result.
+	 * @return A new {@link ParsedArgument} that contains a null result.
+	 */
+	public static <A> ParsedArgument<A> empty() {
+		return new ParsedArgument<>(null, null);
 	}
 
 	/**
@@ -69,6 +78,7 @@ public final class ParsedArgument<A> {
 	 * @param <A> - The type of the result.
 	 * @return A new {@link ParsedArgument} that contains a null result and an error message.
 	 */
+	@Deprecated
 	public static <A> ParsedArgument<A> parseError(@Nonnull final String errorMessage) {
 		return new ParsedArgument<>(null, errorMessage);
 	}
@@ -79,6 +89,7 @@ public final class ParsedArgument<A> {
 	 * @param <A> - The type of the result.
 	 * @return A new {@link ParsedArgument} that contains a null result and an error message formatted using {@link String#format(String, Object...)}.
 	 */
+	@Deprecated
 	public static <A> ParsedArgument<A> parseError(@Nonnull final String errorMessage, final Object... args) {
 		return new ParsedArgument<>(null, String.format(errorMessage, args));
 	}

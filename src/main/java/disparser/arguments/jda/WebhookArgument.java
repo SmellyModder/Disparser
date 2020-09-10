@@ -3,11 +3,11 @@ package disparser.arguments.jda;
 import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
+import disparser.feedback.DynamicCommandExceptionCreator;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Webhook;
 
 import javax.annotation.Nullable;
-import java.util.concurrent.ExecutionException;
 
 /**
  * An argument that can parse webhooks by their ID.
@@ -16,6 +16,12 @@ import java.util.concurrent.ExecutionException;
  * @author Luke Tonon
  */
 public final class WebhookArgument implements Argument<Webhook> {
+	private static final DynamicCommandExceptionCreator<Long> WEBHOOK_NOT_FOUND_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("Webhook with id `%d` could not be found", id);
+	}));
+	private static final DynamicCommandExceptionCreator<String> INVALID_ID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("`%s` is not a valid webhook id", id);
+	}));
 	@Nullable
 	private final JDA jda;
 	
@@ -40,23 +46,18 @@ public final class WebhookArgument implements Argument<Webhook> {
 	}
 	
 	@Override
-	public ParsedArgument<Webhook> parse(ArgumentReader reader) {
+	public ParsedArgument<Webhook> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long parsedLong = Long.parseLong(arg);
-				Webhook foundWebhook;
-				try {
-					foundWebhook = this.jda == null ? reader.getChannel().getJDA().retrieveWebhookById(parsedLong).submit().get() : this.jda.retrieveWebhookById(parsedLong).submit().get();
-					if (foundWebhook != null) {
-						return ParsedArgument.parse(foundWebhook);
-					} else {
-						return ParsedArgument.parseError("Text channel with id `%d` could not be found", parsedLong);
-					}
-				} catch (InterruptedException | ExecutionException e) {
-					return ParsedArgument.parseError("An exception occured when trying to process the webhook with id `%d`", parsedLong);
+				Webhook foundWebhook = this.jda == null ? reader.getChannel().getJDA().retrieveWebhookById(parsedLong).submit().get() : this.jda.retrieveWebhookById(parsedLong).submit().get();
+				if (foundWebhook != null) {
+					return ParsedArgument.parse(foundWebhook);
+				} else {
+					throw WEBHOOK_NOT_FOUND_EXCEPTION.create(parsedLong);
 				}
 			} catch (NumberFormatException exception) {
-				return ParsedArgument.parseError("`%s` is not a valid channel id", arg);
+				throw INVALID_ID_EXCEPTION.create(arg);
 			}
 		});
 	}

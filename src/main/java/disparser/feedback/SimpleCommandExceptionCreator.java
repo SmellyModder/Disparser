@@ -20,4 +20,11 @@ public final class SimpleCommandExceptionCreator implements CommandExceptionCrea
 	public CommandSyntaxException create() {
 		return new CommandSyntaxException(this.message);
 	}
+
+	/**
+	 * @return Creates a new {@link CommandSyntaxException} with this creator's message.
+	 */
+	public CommandSyntaxException createForArgument(int argument) {
+		return new CommandSyntaxException(this.message, argument);
+	}
 }

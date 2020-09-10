@@ -3,6 +3,7 @@ package disparser.arguments.primitive;
 import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
+import disparser.feedback.DisparserExceptions;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -26,13 +27,13 @@ public final class NumberArgument implements Argument<Number> {
     }
 
     @Override
-    public ParsedArgument<Number> parse(ArgumentReader reader) {
-        String nextArgument = reader.nextArgument();
-        try {
-            Number number = NUMBER_FORMAT.parse(nextArgument);
-            return ParsedArgument.parse(number);
-        } catch (ParseException e) {
-            return ParsedArgument.parseError("%s is not a valid number", nextArgument);
-        }
+    public ParsedArgument<Number> parse(ArgumentReader reader) throws Exception {
+        return reader.parseNextArgument((arg) -> {
+            try {
+                return ParsedArgument.parse(NUMBER_FORMAT.parse(arg));
+            } catch (ParseException e) {
+                throw DisparserExceptions.INVALID_NUMBER_EXCEPTION.create(arg);
+            }
+        });
     }
 }

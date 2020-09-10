@@ -39,7 +39,7 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 	}
 	
 	@Override
-	public ParsedArgument<VoiceChannel> parse(ArgumentReader reader) {
+	public ParsedArgument<VoiceChannel> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long parsedLong = Long.parseLong(arg);
@@ -47,10 +47,10 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					return ParsedArgument.parseError("Voice channel with id `%d` could not be found", parsedLong);
+					throw GuildChannelArgument.CHANNEL_NOT_FOUND_EXCEPTION.create(parsedLong);
 				}
 			} catch (NumberFormatException exception) {
-				return ParsedArgument.parseError("`%s` is not a valid channel id", arg);
+				throw GuildChannelArgument.INVALID_ID_EXCEPTION.create(arg);
 			}
 		});
 	}

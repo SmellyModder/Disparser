@@ -3,6 +3,7 @@ package disparser.arguments.jda;
 import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
+import disparser.feedback.DynamicCommandExceptionCreator;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -12,6 +13,13 @@ import net.dv8tion.jda.api.entities.Guild;
  * @author Luke Tonon
  */
 public final class GuildArgument implements Argument<Guild> {
+	private static final DynamicCommandExceptionCreator<Long> GUILD_NOT_FOUND_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("Guild with id `%d` could not be found", id);
+	}));
+	private static final DynamicCommandExceptionCreator<String> INVALID_ID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("`%s` is not a valid guild id", id);
+	}));
+
 	private final JDA jda;
 	
 	private GuildArgument(JDA jda) {
@@ -27,17 +35,18 @@ public final class GuildArgument implements Argument<Guild> {
 	}
 	
 	@Override
-	public ParsedArgument<Guild> parse(ArgumentReader reader) {
+	public ParsedArgument<Guild> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {
 			try {
-				Guild guild = this.jda.getGuildById(Long.parseLong(arg));
+				long id = Long.parseLong(arg);
+				Guild guild = this.jda.getGuildById(id);
 				if (guild != null) {
 					return ParsedArgument.parse(guild);
 				} else {
-					return ParsedArgument.parseError("Guild with id `%s` could not be found");
+					throw GUILD_NOT_FOUND_EXCEPTION.create(id);
 				}
 			} catch (NumberFormatException exception) {
-				return ParsedArgument.parseError("`%s` is not a valid guild id", arg);
+				throw INVALID_ID_EXCEPTION.create(arg);
 			}
 		});
 	}

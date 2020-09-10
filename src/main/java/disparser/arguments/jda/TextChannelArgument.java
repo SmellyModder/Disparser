@@ -3,6 +3,7 @@ package disparser.arguments.jda;
 import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
+import disparser.feedback.SimpleCommandExceptionCreator;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -18,12 +19,13 @@ import java.util.regex.Pattern;
  * @author Luke Tonon
  */
 public final class TextChannelArgument implements Argument<TextChannel> {
+	private static final SimpleCommandExceptionCreator MENTION_CHANNEL_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionCreator("Text Channel in mention could not be found");
 	private static final Pattern MENTION_PATTERN = Pattern.compile("^<#(\\d+)>$");
 	
 	@Nullable
 	private final JDA jda;
 	
-	private TextChannelArgument(JDA jda) {
+	private TextChannelArgument(@Nullable JDA jda) {
 		this.jda = jda;
 	}
 	
@@ -44,7 +46,7 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 	}
 	
 	@Override
-	public ParsedArgument<TextChannel> parse(ArgumentReader reader) {
+	public ParsedArgument<TextChannel> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {
 			Guild guild = reader.getChannel().getGuild();
 			try {
@@ -53,7 +55,7 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					return ParsedArgument.parseError("Text channel with id `%d` could not be found", parsedId);
+					throw GuildChannelArgument.CHANNEL_NOT_FOUND_EXCEPTION.create(parsedId);
 				}
 			} catch (NumberFormatException exception) {
 				Matcher matcher = MENTION_PATTERN.matcher(arg);
@@ -64,11 +66,11 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 					if (foundChannel != null) {
 						return ParsedArgument.parse(foundChannel);
 					} else {
-						return ParsedArgument.parseError("Text Channel in mention could not be found");
+						throw MENTION_CHANNEL_NOT_FOUND_EXCEPTION.create();
 					}
 				}
 
-				return ParsedArgument.parseError("`%s` is not a valid channel id", arg);
+				throw GuildChannelArgument.INVALID_ID_EXCEPTION.create(arg);
 			}
 		});
 	}

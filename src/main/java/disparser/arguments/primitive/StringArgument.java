@@ -3,6 +3,7 @@ package disparser.arguments.primitive;
 import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
+import disparser.feedback.DisparserExceptions;
 
 import javax.annotation.Nullable;
 
@@ -35,11 +36,11 @@ public final class StringArgument implements Argument<String> {
 	}
 	
 	@Override
-	public ParsedArgument<String> parse(ArgumentReader reader) {
+	public ParsedArgument<String> parse(ArgumentReader reader) throws Exception {
 		String nextArgument = reader.nextArgument();
 		Integer maxChars = this.maxChars;
 		if (maxChars != null && nextArgument.length() > maxChars) {
-			ParsedArgument.parseError("The argument `%s` exceeds the character length of %o", nextArgument, maxChars);
+			throw DisparserExceptions.LENGTH_EXCEPTION.create(nextArgument, maxChars);
 		}
 		return ParsedArgument.parse(nextArgument);
 	}

@@ -41,11 +41,12 @@ public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argum
 	}
 	
 	@Override
-	public ParsedArgument<Either<F, S>> parse(ArgumentReader reader) {
+	public ParsedArgument<Either<F, S>> parse(ArgumentReader reader) throws Exception {
 		ParsedArgument<F> first = reader.tryToParseArgument(this.firstArgument);
-		if (first.hasResult()) return ParsedArgument.parse(Either.first(first.getResult()));
-		ParsedArgument<S> second = reader.tryToParseArgument(this.secondArgument);
-		return second.hasResult() ? ParsedArgument.parse(Either.second(second.getResult())) : ParsedArgument.parseError(second.getErrorMessage());
+		if (first.hasResult()) {
+			return ParsedArgument.parse(Either.first(first.getResult()));
+		}
+		return ParsedArgument.parse(Either.second(this.secondArgument.parse(reader).getResult()));
 	}
 	
 	public static final class Either<F, S> {

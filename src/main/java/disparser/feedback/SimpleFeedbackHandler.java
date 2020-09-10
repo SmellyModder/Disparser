@@ -15,10 +15,10 @@ public class SimpleFeedbackHandler implements FeedbackHandler {
 
 	/**
 	 * Constructs a new {@link SimpleFeedbackHandler} with a {@link TextChannel} from a {@link CommandContext}.
-	 * @param commandContext {@link CommandContext} to get its {@link TextChannel}.
+	 * @param textChannel {@link TextChannel} to build the {@link FeedbackHandler}.
 	 */
-	public SimpleFeedbackHandler(CommandContext commandContext) {
-		this.channel = commandContext.getArgumentReader().getChannel();
+	public SimpleFeedbackHandler(TextChannel textChannel) {
+		this.channel = textChannel;
 	}
 
 	/**

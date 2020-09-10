@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @author Luke Tonon
  */
 public class CommandHandler extends ListenerAdapter {
-	private final Map<String, Command> aliasMap = Collections.synchronizedMap(new HashMap<>());
+	public final Map<String, Command> aliasMap = Collections.synchronizedMap(new HashMap<>());
 	private Function<Guild, String> prefixFunction = (guild) -> "!";
 	private FeedbackHandlerBuilder feedbackHandlerBuilder = FeedbackHandlerBuilder.SIMPLE_BUILDER;
 	
@@ -159,23 +159,8 @@ public class CommandHandler extends ListenerAdapter {
 	
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-		ArgumentReader reader = ArgumentReader.create(event.getMessage());
-		String firstComponent = reader.getCurrentMessageComponent();
-		String prefix = this.getPrefix(event.getGuild());
-		if (firstComponent.startsWith(prefix)) {
-			synchronized (this.aliasMap) {
-				Command command = this.aliasMap.get(firstComponent.substring(prefix.length()).toLowerCase());
-				if (command != null) {
-					CommandContext.createContext(event, command, reader, this.getFeedbackHandlerBuilder()).ifPresent((context) -> {
-						try {
-							command.processCommand(context);
-						} catch (Exception exception) {
-							context.getFeedbackHandler().sendError(exception);
-							exception.printStackTrace();
-						}
-					});
-				}
-			}
+		for (int i = 0; i < 1000; i++) {
+			CommandContext.createAndDisparse(this, event);
 		}
 	}
 	

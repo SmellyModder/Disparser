@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
  * @see SimpleCommandExceptionCreator
  * @author Luke Tonon
  */
+@SuppressWarnings("serial")
 public class CommandSyntaxException extends Exception {
 	private final String message;
 	@Nullable

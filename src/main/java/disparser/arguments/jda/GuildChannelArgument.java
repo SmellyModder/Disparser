@@ -3,6 +3,7 @@ package disparser.arguments.jda;
 import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
+import disparser.feedback.DynamicCommandExceptionCreator;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.GuildChannel;
 
@@ -14,6 +15,13 @@ import javax.annotation.Nullable;
  * @author Luke Tonon
  */
 public final class GuildChannelArgument implements Argument<GuildChannel> {
+	public static final DynamicCommandExceptionCreator<Long> CHANNEL_NOT_FOUND_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("Channel with id `%d` could not be found", id);
+	}));
+	public static final DynamicCommandExceptionCreator<String> INVALID_ID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("`%s` is not a valid channel id", id);
+	}));
+
 	@Nullable
 	private final JDA jda;
 	
@@ -38,7 +46,7 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 	}
 	
 	@Override
-	public ParsedArgument<GuildChannel> parse(ArgumentReader reader) {
+	public ParsedArgument<GuildChannel> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long parsedLong = Long.parseLong(arg);
@@ -46,10 +54,10 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					return ParsedArgument.parseError("Channel with id `%s` could not be found", arg);
+					throw CHANNEL_NOT_FOUND_EXCEPTION.create(parsedLong);
 				}
 			} catch (NumberFormatException exception) {
-				return ParsedArgument.parseError("`%s` is not a valid channel id", arg);
+				throw INVALID_ID_EXCEPTION.create(arg);
 			}
 		});
 	}

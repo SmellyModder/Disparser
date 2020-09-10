@@ -1,10 +1,12 @@
 package disparser;
 
+import disparser.feedback.CommandSyntaxException;
+import disparser.feedback.DisparserExceptions;
+import disparser.feedback.FeedbackHandler;
 import disparser.util.MessageUtil;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-import javax.annotation.Nullable;
 import java.util.function.Function;
 
 /**
@@ -13,22 +15,26 @@ import java.util.function.Function;
  * @author Luke Tonon
  */
 public final class ArgumentReader {
+	private final FeedbackHandler feedbackHandler;
 	private final TextChannel channel;
 	private final String[] messageComponents;
 	private int currentComponent;
 	
-	private ArgumentReader(TextChannel channel, String[] messageComponents) {
+	private ArgumentReader(FeedbackHandler feedbackHandler, TextChannel channel, String[] messageComponents) {
+		this.feedbackHandler = feedbackHandler;
 		this.channel = channel;
 		this.messageComponents = messageComponents;
 	}
 	
 	/**
-	 * Creates an ArgumentReader for a message.
-	 * @param message - {@link Message} for this ArgumentReader.
+	 * Creates an ArgumentReader for a {@link Message and {@link FeedbackHandler}.
+	 * Use the {@link FeedbackHandler} to send feedback when parsing arguments.
+	 * @param feedbackHandler - The {@link FeedbackHandler} for this {@link ArgumentReader}.
+	 * @param message - The {@link Message} for this {@link ArgumentReader}.
 	 * @return {@link ArgumentReader} for the message.
 	 */
-	public static ArgumentReader create(final Message message) {
-		return new ArgumentReader(message.getTextChannel(), message.getContentRaw().split(" "));
+	public static ArgumentReader create(final FeedbackHandler feedbackHandler, final Message message) {
+		return new ArgumentReader(feedbackHandler, message.getTextChannel(), message.getContentRaw().split(" "));
 	}
 	
 	public TextChannel getChannel() {
@@ -40,6 +46,13 @@ public final class ArgumentReader {
 	 */
 	public String[] getMessageComponents() {
 		return this.messageComponents;
+	}
+
+	/**
+	 * @return - This reader's {@link FeedbackHandler}.
+	 */
+	public FeedbackHandler getFeedbackHandler() {
+		return this.feedbackHandler;
 	}
 
 	/**
@@ -55,64 +68,66 @@ public final class ArgumentReader {
 	public String getCurrentMessageComponent() {
 		return this.messageComponents[this.currentComponent];
 	}
-	
-	@Nullable
-	public Integer nextInt() {
-		try {
-			return Integer.parseInt(this.nextArgument());
-		} catch (NumberFormatException exception) {
-			return null;
-		}
-	}
-	
-	@Nullable
-	public Long nextLong() {
-		try {
-			return Long.parseLong(this.nextArgument());
-		} catch (NumberFormatException exception) {
-			return null;
-		}
-	}
-	
-	@Nullable
-	public Character nextChar() {
+
+	public Integer nextInt() throws CommandSyntaxException {
 		String nextArg = this.nextArgument();
-		return nextArg.length() > 1 ? null : nextArg.charAt(0);
-	}
-	
-	@Nullable
-	public Short nextShort() {
 		try {
-			return Short.parseShort(this.nextArgument());
+			return Integer.parseInt(nextArg);
 		} catch (NumberFormatException exception) {
-			return null;
+			throw DisparserExceptions.INVALID_INTEGER_EXCEPTION.create(nextArg);
 		}
 	}
-	
-	@Nullable
-	public Byte nextByte() {
+
+	public Long nextLong() throws CommandSyntaxException {
+		String nextArg = this.nextArgument();
 		try {
-			return Byte.parseByte(this.nextArgument());
+			return Long.parseLong(nextArg);
 		} catch (NumberFormatException exception) {
-			return null;
+			throw DisparserExceptions.INVALID_LONG_EXCEPTION.create(nextArg);
 		}
 	}
-	
-	@Nullable
-	public Float nextFloat() {
+
+	public Character nextChar() throws CommandSyntaxException {
+		String nextArg = this.nextArgument();
+		if (nextArg.length() > 1) {
+			throw DisparserExceptions.INVALID_CHAR_EXCEPTION.create(nextArg);
+		}
+		return nextArg.charAt(0);
+	}
+
+	public Short nextShort() throws CommandSyntaxException {
+		String nextArg = this.nextArgument();
 		try {
-			return Float.parseFloat(this.nextArgument());
+			return Short.parseShort(nextArg);
 		} catch (NumberFormatException exception) {
-			return null;
+			throw DisparserExceptions.INVALID_SHORT_EXCEPTION.create(nextArg);
 		}
 	}
-	
-	@Nullable
-	public Double nextDouble() {
+
+	public Byte nextByte() throws CommandSyntaxException {
+		String nextArg = this.nextArgument();
 		try {
-			return Double.parseDouble(this.nextArgument());
+			return Byte.parseByte(nextArg);
 		} catch (NumberFormatException exception) {
-			return null;
+			throw DisparserExceptions.INVALID_BYTE_EXCEPTION.create(nextArg);
+		}
+	}
+
+	public Float nextFloat() throws CommandSyntaxException {
+		String nextArg = this.nextArgument();
+		try {
+			return Float.parseFloat(nextArg);
+		} catch (NumberFormatException exception) {
+			throw DisparserExceptions.INVALID_FLOAT_EXCEPTION.create(nextArg);
+		}
+	}
+
+	public Double nextDouble() throws CommandSyntaxException {
+		String nextArg = this.nextArgument();
+		try {
+			return Double.parseDouble(nextArg);
+		} catch (NumberFormatException exception) {
+			throw DisparserExceptions.INVALID_DOUBLE_EXCEPTION.create(nextArg);
 		}
 	}
 	
@@ -124,11 +139,10 @@ public final class ArgumentReader {
 	 * Used to convert strings to non-primitive type arguments.
 	 * @param parser - A {@link Function} to parse the next string argument to an {@link ParsedArgument}.
 	 * @param <A> - The type of the argument.
-	 * @param <P> - A {@link ParsedArgument} with the type of the argument.
 	 * @return The object({@link A}) read from the reader.
 	 */
-	public <A, P extends ParsedArgument<A>> P parseNextArgument(final Function<String, P> parser) {
-		return parser.apply(this.nextArgument());
+	public <A> ParsedArgument<A> parseNextArgument(final Parser<A> parser) throws Exception {
+		return parser.parse(this.nextArgument());
 	}
 
 	/**
@@ -138,11 +152,13 @@ public final class ArgumentReader {
 	 * @return The parsed argument. If it fails, the parsed argument's result will be null and an error message will be included in the parsed argument.
 	 */
 	public <A> ParsedArgument<A> tryToParseArgument(Argument<A> argument) {
-		ParsedArgument<A> parsedArgument = this.hasNextArg() ? argument.parse(new ArgumentReader(this.channel, new String[] {"", this.messageComponents[this.currentComponent + 1]})) : ParsedArgument.parseError("Missing argument");
-		if (parsedArgument.getErrorMessage() == null) {
-			this.nextArgument();
+		int prevComponent = this.currentComponent;
+		try {
+			return argument.parse(this);
+		} catch (Exception exception) {
+			this.currentComponent -= (this.currentComponent - prevComponent);
+			return ParsedArgument.empty();
 		}
-		return parsedArgument;
 	}
 	
 	/**
@@ -164,5 +180,10 @@ public final class ArgumentReader {
 	 */
 	public boolean hasNextArg() {
 		return this.currentComponent + 1 <= this.messageComponents.length - 1;
+	}
+
+	@FunctionalInterface
+	public interface Parser<A> {
+		ParsedArgument<A> parse(String arg) throws Exception;
 	}
 }

@@ -21,9 +21,8 @@ public final class ShortArgument implements Argument<Short> {
 	}
 	
 	@Override
-	public ParsedArgument<Short> parse(ArgumentReader reader) {
-		Short nextShort = reader.nextShort();
-		return nextShort != null ? ParsedArgument.parse(nextShort) : ParsedArgument.parseError("`%s` is not a valid short", reader.getCurrentMessageComponent());
+	public ParsedArgument<Short> parse(ArgumentReader reader) throws Exception {
+		return ParsedArgument.parse(reader.nextShort());
 	}
 
 }

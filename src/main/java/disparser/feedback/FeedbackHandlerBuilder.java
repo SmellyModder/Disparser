@@ -1,6 +1,6 @@
 package disparser.feedback;
 
-import disparser.CommandContext;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 /**
  * This interface is used to build {@link FeedbackHandler}s.
@@ -13,8 +13,8 @@ public interface FeedbackHandlerBuilder {
 
 	/**
 	 * Builds a {@link FeedbackHandler}.
-	 * @param commandContext The {@link CommandContext} for building this {@link FeedbackHandler}.
+	 * @param textChannel The {@link TextChannel} for building this {@link FeedbackHandler}.
 	 * @return a built {@link FeedbackHandler}.
 	 */
-	FeedbackHandler build(CommandContext commandContext);
+	FeedbackHandler build(TextChannel textChannel);
 }

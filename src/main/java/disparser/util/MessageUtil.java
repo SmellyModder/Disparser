@@ -11,7 +11,6 @@ import java.util.Collection;
  * @author Luke Tonon
  */
 public final class MessageUtil {
-
 	/**
 	 * Creates a simple error message as a {@link MessageEmbed}.
 	 * @see <a href="https://cdn.discordapp.com/attachments/667088262287851551/748744108939411496/errored_test.PNG">Errored Message</a>
@@ -75,5 +74,4 @@ public final class MessageUtil {
 		}
 		return builder.toString();
 	}
-	
 }

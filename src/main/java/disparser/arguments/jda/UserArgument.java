@@ -3,6 +3,8 @@ package disparser.arguments.jda;
 import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
+import disparser.feedback.DynamicCommandExceptionCreator;
+import disparser.feedback.SimpleCommandExceptionCreator;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 
@@ -17,6 +19,13 @@ import java.util.regex.Pattern;
  * @author Luke Tonon
  */
 public final class UserArgument implements Argument<User> {
+	private static final DynamicCommandExceptionCreator<Long> USER_NOT_FOUND_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("User with id `%d` could not be found", id);
+	}));
+	private static final SimpleCommandExceptionCreator MENTION_USER_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionCreator("Member in mention could not be found");
+	public static final DynamicCommandExceptionCreator<String> INVALID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("`%s` is not a valid member id or valid user mention");
+	}));
 	private static final Pattern MENTION_PATTERN = Pattern.compile("^<@!?(\\d+)>$");
 	
 	@Nullable
@@ -43,7 +52,7 @@ public final class UserArgument implements Argument<User> {
 	}
 	
 	@Override
-	public ParsedArgument<User> parse(ArgumentReader reader) {
+	public ParsedArgument<User> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long id = Long.parseLong(arg);
@@ -51,7 +60,7 @@ public final class UserArgument implements Argument<User> {
 				if (foundUser != null) {
 					return ParsedArgument.parse(foundUser);
 				} else {
-					return ParsedArgument.parseError("Member with id `%d` could not be found", id);
+					throw USER_NOT_FOUND_EXCEPTION.create(id);
 				}
 			} catch (NumberFormatException exception) {
 				Matcher matcher = MENTION_PATTERN.matcher(arg);
@@ -61,11 +70,11 @@ public final class UserArgument implements Argument<User> {
 					if (foundUser != null) {
 						return ParsedArgument.parse(foundUser);
 					} else {
-						return ParsedArgument.parseError("Member in mention could not be found");
+						throw MENTION_USER_NOT_FOUND_EXCEPTION.create();
 					}
 				}
-				
-				return ParsedArgument.parseError("`%s` is not a valid member id or valid user mention", arg);
+
+				throw INVALID_EXCEPTION.create(arg);
 			}
 		});
 	}

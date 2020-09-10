@@ -14,9 +14,8 @@ import disparser.annotations.Optional;
 public class OptionalTestArgument implements Argument<Integer> {
 
 	@Override
-	public ParsedArgument<Integer> parse(ArgumentReader reader) {
-		Integer integer = reader.nextInt();
-		return integer != null ? ParsedArgument.parse(integer) : ParsedArgument.parseError("`" + reader.getCurrentMessageComponent() + "` is not a valid integer");
+	public ParsedArgument<Integer> parse(ArgumentReader reader) throws Exception {
+		return ParsedArgument.parse(reader.nextInt());
 	}
 
 }

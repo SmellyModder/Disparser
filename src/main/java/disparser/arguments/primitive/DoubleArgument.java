@@ -21,9 +21,8 @@ public final class DoubleArgument implements Argument<Double> {
 	}
 	
 	@Override
-	public ParsedArgument<Double> parse(ArgumentReader reader) {
-		Double nextDouble = reader.nextDouble();
-		return nextDouble != null ? ParsedArgument.parse(nextDouble) : ParsedArgument.parseError("`%s` is not a valid double", reader.getCurrentMessageComponent());
+	public ParsedArgument<Double> parse(ArgumentReader reader) throws Exception {
+		return ParsedArgument.parse(reader.nextDouble());
 	}
 
 }

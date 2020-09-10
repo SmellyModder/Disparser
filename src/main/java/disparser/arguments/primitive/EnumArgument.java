@@ -3,6 +3,7 @@ package disparser.arguments.primitive;
 import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
+import disparser.feedback.DisparserExceptions;
 
 /**
  * An argument that parses values of an enum by their name.
@@ -26,14 +27,14 @@ public final class EnumArgument<E extends Enum<?>> implements Argument<E> {
 	}
 	
 	@Override
-	public ParsedArgument<E> parse(ArgumentReader reader) {
+	public ParsedArgument<E> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {
 			for (E type : this.values) {
 				if (type.toString().equalsIgnoreCase(arg)) {
 					return ParsedArgument.parse(type);
 				}
 			}
-			return ParsedArgument.parseError("`%s` is not a valid type", arg);
+			throw DisparserExceptions.INVALID_ENUM_EXCEPTION.create(arg);
 		});
 	}
 }

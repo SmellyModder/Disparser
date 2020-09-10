@@ -1,11 +1,12 @@
 package disparser;
 
 import disparser.annotations.NullWhenErrored;
+import disparser.feedback.DynamicCommandExceptionCreator;
 import disparser.feedback.FeedbackHandler;
 import disparser.feedback.FeedbackHandlerBuilder;
+import disparser.feedback.SimpleCommandExceptionCreator;
 import disparser.util.MessageUtil;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -21,42 +22,51 @@ import java.util.stream.Collectors;
  * @author Luke Tonon
  */
 public class CommandContext {
+	protected static final SimpleCommandExceptionCreator PERMISSION_EXCEPTION = new SimpleCommandExceptionCreator("You do not have permission to run this command!");
+	protected static final SimpleCommandExceptionCreator NO_ARGUMENTS_EXCEPTION = new SimpleCommandExceptionCreator("No arguments are present!");
+	protected static final SimpleCommandExceptionCreator MISSING_ARGUMENT_EXCEPTION = new SimpleCommandExceptionCreator("An argument is missing");
+	protected static final SimpleCommandExceptionCreator MISSING_ARGUMENTS_EXCEPTION = new SimpleCommandExceptionCreator("Multiple arguments are missing, view this command's arguments!");
+	protected static final SimpleCommandExceptionCreator SPECIFIC_MISSING_ARGUMENT_EXCEPTION = new SimpleCommandExceptionCreator("Argument is missing");
+	protected static final DynamicCommandExceptionCreator<List<String>> SPECIFIC_MISSING_ARGUMENTS_EXCEPTION = DynamicCommandExceptionCreator.createInstance((missingArgs) -> MessageUtil.createFormattedSentenceOfCollection(missingArgs) + " arguments are missing");
+
 	private final GuildMessageReceivedEvent event;
-	private final ArgumentReader reader;
 	private final List<ParsedArgument<?>> parsedArguments;
 	private final FeedbackHandler feedbackHandler;
+	private final ArgumentReader reader;
 	
-	private CommandContext(GuildMessageReceivedEvent event, ArgumentReader reader, List<ParsedArgument<?>> parsedArguments, FeedbackHandlerBuilder feedbackHandlerBuilder) {
+	private CommandContext(GuildMessageReceivedEvent event, List<ParsedArgument<?>> parsedArguments, FeedbackHandlerBuilder feedbackHandlerBuilder) {
 		this.event = event;
-		this.reader = reader;
 		this.parsedArguments = parsedArguments;
-		this.feedbackHandler = feedbackHandlerBuilder.build(this);
+		this.feedbackHandler = feedbackHandlerBuilder.build(event.getChannel());
+		this.reader = ArgumentReader.create(this.feedbackHandler, event.getMessage());
 	}
-	
+
 	/**
-	 * Parses arguments with an {@link ArgumentReader} to create a new {@link CommandContext} instance.
-	 * When a parsing error occurs it will send a message to the reader's channel {@link ArgumentReader#getChannel()}.
-	 *
-	 * @param event - The {@link GuildMessageReceivedEvent} that the message was sent from.
-	 * @param command - The {@link Command} to create the context for.
-	 * @param reader - The {@link ArgumentReader} to parse the arguments.
-	 * @param feedbackHandlerBuilder The {@link FeedbackHandlerBuilder} to build a {@link FeedbackHandler} to be used for sending feedback for processing commands.
-	 * @return An {@link Optional} {@link CommandContext} made from {@link Argument}s, empty if an error occurs when parsing the arguments.
+	 * Creates an {@link Optional} {@link CommandContext} for a {@link Command} with a {@link FeedbackHandlerBuilder} to use for building a {@link FeedbackHandler} for sending parsing feedback.
+	 * If an error occurs when parsing the {@link CommandContext} for the command this will return an empty optional.
+	 * @param event The {@link GuildMessageReceivedEvent} to use for parsing the command's arguments.
+	 * @param command The {@link Command} to try to parse and create an {@link CommandContext} for.
+	 * @param feedbackHandlerBuilder The {@link FeedbackHandlerBuilder} to use for building a {@link FeedbackHandler} for sending feedback.
+	 * @return An {@link Optional} {@link CommandContext} made for a {@link Command}, empty if an error occurs when parsing the arguments.
 	 */
-	public static Optional<CommandContext> createContext(final GuildMessageReceivedEvent event, final Command command, final ArgumentReader reader, final FeedbackHandlerBuilder feedbackHandlerBuilder) {
+	public static Optional<CommandContext> create(final GuildMessageReceivedEvent event, final Command command, final FeedbackHandlerBuilder feedbackHandlerBuilder) {
+		CommandContext commandContext = new CommandContext(event, new ArrayList<>(), feedbackHandlerBuilder);
+		FeedbackHandler feedbackHandler = commandContext.getFeedbackHandler();
+
 		Member member = event.getMember();
 		if (member == null) return Optional.empty();
 
 		if (!command.hasPermissions(member)) {
-			event.getChannel().sendMessage(MessageUtil.createErrorMessage("You do not have permission to run this command!")).queue();
+			feedbackHandler.sendError(PERMISSION_EXCEPTION.create());
 			return Optional.empty();
 		}
-		
+
 		List<Argument<?>> commandArguments = command.getArguments();
 		if (commandArguments.size() > 0) {
 			boolean hasOptionalArguments = !getOptionalArguments(commandArguments).isEmpty();
+			ArgumentReader reader = commandContext.getArgumentReader();
 			if (testForPresentArgs(reader, commandArguments, hasOptionalArguments)) {
-				List<ParsedArgument<?>> parsedArguments = new ArrayList<>(commandArguments.size());
+				List<ParsedArgument<?>> parsedArguments = commandContext.parsedArguments;
 				if (hasOptionalArguments) {
 					for (int i = 0; i < commandArguments.size(); i++) {
 						Argument<?> argument = commandArguments.get(i);
@@ -65,35 +75,62 @@ public class CommandContext {
 							parsedArguments.add(parsedArg);
 						} else {
 							if (!reader.hasNextArg()) {
-								int nextArg = i + 1;
-								reader.getChannel().sendMessage(MessageUtil.createErrorMessage(nextArg + MessageUtil.getOrdinalForInteger(nextArg) + " argument is missing")).queue();
+								feedbackHandler.sendError(SPECIFIC_MISSING_ARGUMENT_EXCEPTION.createForArgument(i + 1));
 								return Optional.empty();
 							}
-							ParsedArgument<?> parsedArg = argument.parse(reader);
-							String errorMessage = parsedArg.getErrorMessage();
-							if (errorMessage != null) {
-								reader.getChannel().sendMessage(MessageUtil.createErrorMessage(errorMessage)).queue();
+							try {
+								parsedArguments.add(argument.parse(reader));
+							} catch (Exception exception) {
+								feedbackHandler.sendError(exception);
 								return Optional.empty();
 							}
-							parsedArguments.add(parsedArg);
 						}
 					}
 				} else {
 					for (Argument<?> argument : commandArguments) {
-						ParsedArgument<?> parsedArg = argument.parse(reader);
-						String errorMessage = parsedArg.getErrorMessage();
-						if (errorMessage != null) {
-							reader.getChannel().sendMessage(MessageUtil.createErrorMessage(errorMessage)).queue();
+						try {
+							parsedArguments.add(argument.parse(reader));
+						} catch (Exception exception) {
+							feedbackHandler.sendError(exception);
 							return Optional.empty();
 						}
-						parsedArguments.add(parsedArg);
 					}
 				}
-				return Optional.of(new CommandContext(event, reader, parsedArguments, feedbackHandlerBuilder));
 			}
-			return Optional.empty();
 		}
-		return Optional.of(new CommandContext(event, reader, new ArrayList<>(), feedbackHandlerBuilder));
+
+		return Optional.of(commandContext);
+	}
+
+	/**
+	 * Creates an {@link Optional} {@link CommandContext} using the {@link #create(GuildMessageReceivedEvent, Command, FeedbackHandlerBuilder)} method.
+	 * First this method will try to find a matching command for a {@link CommandHandler} and then process that command.
+	 * The term "disparse" is used here since it performs all of Disparser's core parsing and processing actions for a command in one method.
+	 * @param event The {@link GuildMessageReceivedEvent} to use for parsing the command's arguments.
+	 * @see #create(GuildMessageReceivedEvent, Command, FeedbackHandlerBuilder).
+	 * @return An {@link Optional} {@link CommandContext} made for a {@link Command}, empty if an error occurs when parsing the arguments.
+	 */
+	public static Optional<CommandContext> createAndDisparse(final CommandHandler commandHandler, final GuildMessageReceivedEvent event) {
+		String firstComponent = event.getMessage().getContentRaw().split(" ")[0];
+		String prefix = commandHandler.getPrefix(event.getGuild());
+		if (firstComponent.startsWith(prefix)) {
+			synchronized (commandHandler.aliasMap) {
+				Command command = commandHandler.aliasMap.get(firstComponent.substring(prefix.length()));
+				if (command != null) {
+					Optional<CommandContext> commandContext = create(event, command, commandHandler.getFeedbackHandlerBuilder());
+					commandContext.ifPresent(context -> {
+						try {
+							command.processCommand(context);
+						} catch (Exception exception) {
+							context.getFeedbackHandler().sendError(exception);
+							exception.printStackTrace();
+						}
+					});
+					return commandContext;
+				}
+			}
+		}
+		return Optional.empty();
 	}
 	
 	/**
@@ -108,41 +145,41 @@ public class CommandContext {
 	public static boolean testForPresentArgs(final ArgumentReader reader, final List<Argument<?>> commandArguments, boolean hasOptionalArguments) {
 		int readerArgumentLength = reader.getMessageComponents().length - 1;
 		int commandArgumentsSize = commandArguments.size();
-		
+
+		FeedbackHandler feedbackHandler = reader.getFeedbackHandler();
 		if (hasOptionalArguments) {
 			List<Argument<?>> optionalArguments = getOptionalArguments(commandArguments);
 			int mandatorySize = commandArgumentsSize - optionalArguments.size();
 			if (readerArgumentLength < mandatorySize) {
-				TextChannel channel = reader.getChannel();
 				if (readerArgumentLength == 0) {
-					channel.sendMessage(MessageUtil.createErrorMessage("No arguments are present")).queue();
+					feedbackHandler.sendError(NO_ARGUMENTS_EXCEPTION.create());
 					return false;
 				}
 				
 				if (readerArgumentLength - mandatorySize < -1) {
-					channel.sendMessage(MessageUtil.createErrorMessage("More than one argument is missing, view this command's arguments")).queue();
+					feedbackHandler.sendError(MISSING_ARGUMENTS_EXCEPTION.create());
 				} else {
-					channel.sendMessage(MessageUtil.createErrorMessage("Last argument is missing")).queue();
+					feedbackHandler.sendError(MISSING_ARGUMENT_EXCEPTION.create());
 				}
 				return false;
 			}
 		} else {
 			if (readerArgumentLength < commandArgumentsSize) {
-				TextChannel channel = reader.getChannel();
 				if (readerArgumentLength == 0) {
-					channel.sendMessage(MessageUtil.createErrorMessage("No arguments are present")).queue();
+					feedbackHandler.sendError(NO_ARGUMENTS_EXCEPTION.create());
 					return false;
 				}
 				
 				List<String> missingArgs = new ArrayList<>(commandArgumentsSize - readerArgumentLength);
 				for (int i = readerArgumentLength; i < commandArgumentsSize; i++) {
-					missingArgs.add((i + 1) + MessageUtil.getOrdinalForInteger((i + 1)));
+					int argumentOrder = i + 1;
+					missingArgs.add(argumentOrder + MessageUtil.getOrdinalForInteger(argumentOrder));
 				}
 				
 				if (missingArgs.size() > 1) {
-					channel.sendMessage(MessageUtil.createErrorMessage(MessageUtil.createFormattedSentenceOfCollection(missingArgs) + " arguments are missing")).queue();
+					feedbackHandler.sendError(SPECIFIC_MISSING_ARGUMENTS_EXCEPTION.create(missingArgs));
 				} else {
-					channel.sendMessage(MessageUtil.createErrorMessage(missingArgs.get(0) + " argument is missing")).queue();
+					feedbackHandler.sendError(SPECIFIC_MISSING_ARGUMENT_EXCEPTION.createForArgument(1));
 				}
 				return false;
 			}

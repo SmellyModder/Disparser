@@ -1,7 +1,6 @@
 package disparser;
 
 import disparser.annotations.Optional;
-import disparser.feedback.CommandSyntaxException;
 import disparser.util.MessageUtil;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;

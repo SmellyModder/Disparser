@@ -21,9 +21,8 @@ public final class ByteArgument implements Argument<Byte> {
 	}
 	
 	@Override
-	public ParsedArgument<Byte> parse(ArgumentReader reader) {
-		Byte nextByte = reader.nextByte();
-		return nextByte != null ? ParsedArgument.parse(nextByte) : ParsedArgument.parseError("`%s` is not a valid byte", reader.getCurrentMessageComponent());
+	public ParsedArgument<Byte> parse(ArgumentReader reader) throws Exception {
+		return ParsedArgument.parse(reader.nextByte());
 	}
 
 }

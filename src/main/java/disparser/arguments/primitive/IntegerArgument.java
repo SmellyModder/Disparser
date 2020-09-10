@@ -21,9 +21,8 @@ public final class IntegerArgument implements Argument<Integer> {
 	}
 	
 	@Override
-	public ParsedArgument<Integer> parse(ArgumentReader reader) {
-		Integer integer = reader.nextInt();
-		return integer != null ? ParsedArgument.parse(integer) : ParsedArgument.parseError("`%s` is not a valid integer", reader.getCurrentMessageComponent());
+	public ParsedArgument<Integer> parse(ArgumentReader reader) throws Exception {
+		return ParsedArgument.parse(reader.nextInt());
 	}
 
 }

@@ -16,7 +16,7 @@ public interface Argument<T> {
 	 * @param reader - The {@link ArgumentReader} for this argument
 	 * @return - The parsed argument containing the parsed object and an error message if an error occurs
 	 */
-	ParsedArgument<T> parse(final ArgumentReader reader);
+	ParsedArgument<T> parse(final ArgumentReader reader) throws Exception;
 	
 	/**
 	 * If this argument is optional.
@@ -47,7 +47,7 @@ public interface Argument<T> {
 	static <T, A extends Argument<T>> Argument<T> asOptional(A argument) {
 		return new Argument<T>() {
 			@Override
-			public ParsedArgument<T> parse(ArgumentReader reader) {
+			public ParsedArgument<T> parse(ArgumentReader reader) throws Exception {
 				return argument.parse(reader);
 			}
 			
