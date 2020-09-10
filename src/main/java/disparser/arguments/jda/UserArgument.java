@@ -24,7 +24,7 @@ public final class UserArgument implements Argument<User> {
 	}));
 	private static final SimpleCommandExceptionCreator MENTION_USER_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionCreator("Member in mention could not be found");
 	public static final DynamicCommandExceptionCreator<String> INVALID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
-		return String.format("`%s` is not a valid member id or valid user mention");
+		return String.format("`%s` is not a valid member id or valid user mention", id);
 	}));
 	private static final Pattern MENTION_PATTERN = Pattern.compile("^<@!?(\\d+)>$");
 	

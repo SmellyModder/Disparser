@@ -96,6 +96,8 @@ public class CommandContext {
 						}
 					}
 				}
+			} else {
+				return Optional.empty();
 			}
 		}
 

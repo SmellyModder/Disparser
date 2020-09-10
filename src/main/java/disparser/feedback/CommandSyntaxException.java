@@ -38,7 +38,7 @@ public class CommandSyntaxException extends Exception {
 	@Override
 	public String getMessage() {
 		if (this.argumentIndex != null) {
-			return String.format("Error at **%1$s** argument: %2$s", MessageUtil.getOrdinalForInteger(this.argumentIndex), this.message);
+			return String.format("Error at **%o%s** argument: %s", this.argumentIndex, MessageUtil.getOrdinalForInteger(this.argumentIndex), this.message);
 		}
 		return this.message;
 	}
