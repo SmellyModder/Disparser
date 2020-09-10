@@ -4,6 +4,7 @@ import disparser.Argument;
 import disparser.ArgumentReader;
 import disparser.ParsedArgument;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.annotation.Nullable;
@@ -45,28 +46,35 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 	@Override
 	public ParsedArgument<TextChannel> parse(ArgumentReader reader) {
 		return reader.parseNextArgument((arg) -> {
+			Guild guild = reader.getChannel().getGuild();
 			try {
-				long parsedLong = Long.parseLong(arg);
-				TextChannel foundChannel = this.jda != null ? this.jda.getTextChannelById(parsedLong) : reader.getChannel().getGuild().getTextChannelById(parsedLong);
+				long parsedId = Long.parseLong(arg);
+				TextChannel foundChannel = this.findhannelWithId(guild, parsedId);
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					return ParsedArgument.parseError("Text channel with id `%d` could not be found", parsedLong);
+					return ParsedArgument.parseError("Text channel with id `%d` could not be found", parsedId);
 				}
 			} catch (NumberFormatException exception) {
 				Matcher matcher = MENTION_PATTERN.matcher(arg);
 				
 				if (matcher.matches()) {
-					TextChannel channel = this.jda.getTextChannelById(Long.parseLong(matcher.group(1)));
-					if (channel != null) {
-						return ParsedArgument.parse(channel);
+					long parsedId = Long.parseLong(matcher.group(1));
+					TextChannel foundChannel = this.findhannelWithId(guild, parsedId);
+					if (foundChannel != null) {
+						return ParsedArgument.parse(foundChannel);
 					} else {
 						return ParsedArgument.parseError("Text Channel in mention could not be found");
 					}
 				}
-				
+
 				return ParsedArgument.parseError("`%s` is not a valid channel id", arg);
 			}
 		});
+	}
+
+	@Nullable
+	private TextChannel findhannelWithId(Guild guild, long id) {
+		return this.jda != null ? this.jda.getTextChannelById(id) : guild.getTextChannelById(id);
 	}
 }
