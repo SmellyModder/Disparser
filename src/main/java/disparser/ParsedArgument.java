@@ -4,40 +4,42 @@ import disparser.annotations.NullWhenErrored;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * A class holding a parsed result from an {@link Argument} and possibly an error message.
- * <p> This class works as an 'either' system, i.e. a parsed result and error message cannot both be present. 
- * This effectively means that if there is no error message then the result is present and vise-versa. </p>
- * 
+ * A container object for holding a parsed result from an {@link Argument}. Ideally similar to {@link java.util.Optional}
+ * <p>
+ * {@link #result} should <b> always </b> be null when a parsing error occurs.
+ * </p>
  * @author Luke Tonon
  *
  * @param <A> - The type for this parsed argument.
  */
 public final class ParsedArgument<A> {
+	private static final ParsedArgument<?> EMPTY = new ParsedArgument<>(null);
+
 	@NullWhenErrored
 	private final A result;
-	@Deprecated //Remove in 1.2.0
-	@Nullable
-	private final String errorMessage;
 	
-	private ParsedArgument(@Nullable final A readArgument, @Deprecated @Nullable final String errorMessage) {
+	private ParsedArgument(@Nullable final A readArgument) {
 		this.result = readArgument;
-		this.errorMessage = errorMessage;
 	}
-	
+
+	/**
+	 * @return The parsed result.
+	 */
 	@NullWhenErrored
 	public A getResult() {
 		return this.result;
 	}
-	
-	@Nullable
-	public String getErrorMessage() {
-		return this.errorMessage;
-	}
-	
+
+	/**
+	 * @throws NullPointerException if other value is null
+	 * @return The parsed result or other result if null.
+	 */
 	public A getOrOtherResult(@Nonnull A other) {
+		Objects.requireNonNull(other);
 		return this.result == null ? other : this.result;
 	}
 
@@ -59,38 +61,39 @@ public final class ParsedArgument<A> {
 	/**
 	 * @param result - The result.
 	 * @param <A> - The type of the result.
+	 * @throws NullPointerException if value is null
 	 * @return A new {@link ParsedArgument} that contains a non-null result.
 	 */
-	public static <A> ParsedArgument<A> parse(final A result) {
-		return new ParsedArgument<>(result, null);
+	public static <A> ParsedArgument<A> parse(@Nonnull final A result) {
+		Objects.requireNonNull(result);
+		return new ParsedArgument<>(result);
+	}
+
+	/**
+	 * @param result - The result.
+	 * @param <A> - The type of the result.
+	 * @return A new {@link ParsedArgument} that contains a nullable result.
+	 */
+	public static <A> ParsedArgument<A> parseNullable(@Nullable final A result) {
+		return result == null ? empty() : new ParsedArgument<>(result);
 	}
 
 	/**
 	 * @param <A> - The type of the result.
 	 * @return A new {@link ParsedArgument} that contains a null result.
 	 */
+	@SuppressWarnings("unchecked")
 	public static <A> ParsedArgument<A> empty() {
-		return new ParsedArgument<>(null, null);
+		return (ParsedArgument<A>) EMPTY;
 	}
 
-	/**
-	 * @param errorMessage - The error message.
-	 * @param <A> - The type of the result.
-	 * @return A new {@link ParsedArgument} that contains a null result and an error message.
-	 */
-	@Deprecated
-	public static <A> ParsedArgument<A> parseError(@Nonnull final String errorMessage) {
-		return new ParsedArgument<>(null, errorMessage);
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.result);
 	}
 
-	/**
-	 * @param errorMessage - The error message.
-	 * @param args - The args to format in {@link String#format(String, Object...)}.
-	 * @param <A> - The type of the result.
-	 * @return A new {@link ParsedArgument} that contains a null result and an error message formatted using {@link String#format(String, Object...)}.
-	 */
-	@Deprecated
-	public static <A> ParsedArgument<A> parseError(@Nonnull final String errorMessage, final Object... args) {
-		return new ParsedArgument<>(null, String.format(errorMessage, args));
+	@Override
+	public String toString() {
+		return this.result != null ? String.format("ParsedArgument[%s]", this.result) : "ParsedArgument.empty";
 	}
 }
