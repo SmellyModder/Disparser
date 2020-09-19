@@ -2,7 +2,7 @@ package disparser.commands;
 
 import disparser.Command;
 import disparser.CommandContext;
-import disparser.arguments.primitive.NumberArgument;
+import disparser.arguments.java.NumberArgument;
 
 public final class NumberTestCommand extends Command {
 

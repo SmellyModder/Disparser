@@ -1,4 +1,4 @@
-package disparser.arguments.primitive;
+package disparser.arguments.java;
 
 import disparser.Argument;
 import disparser.ArgumentReader;

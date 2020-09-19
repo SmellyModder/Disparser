@@ -3,7 +3,7 @@ package disparser.commands;
 import disparser.Command;
 import disparser.CommandContext;
 import disparser.arguments.jda.TextChannelArgument;
-import disparser.arguments.primitive.StringArgument;
+import disparser.arguments.java.StringArgument;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 

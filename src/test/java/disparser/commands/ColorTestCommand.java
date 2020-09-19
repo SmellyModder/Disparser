@@ -2,7 +2,7 @@ package disparser.commands;
 
 import disparser.Command;
 import disparser.CommandContext;
-import disparser.arguments.primitive.ColorArgument;
+import disparser.arguments.java.ColorArgument;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public final class ColorTestCommand extends Command {

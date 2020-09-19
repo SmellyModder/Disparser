@@ -2,7 +2,7 @@
  * This package contains all the built in {@link disparser.Argument}s for Disparser.
  *
  * <p>
- * {@link disparser.arguments.primitive} contains all built in arguments for Java primitive types and objects.
+ * {@link disparser.arguments.java} contains all built in arguments for Java primitive types and objects.
  * {@link disparser.arguments.jda} contains all built in arguments for some JDA objects.
  * </p>
  *

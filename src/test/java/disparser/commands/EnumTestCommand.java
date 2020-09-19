@@ -2,7 +2,7 @@ package disparser.commands;
 
 import disparser.Command;
 import disparser.CommandContext;
-import disparser.arguments.primitive.EnumArgument;
+import disparser.arguments.java.EnumArgument;
 import disparser.feedback.CommandSyntaxException;
 import disparser.feedback.SimpleCommandExceptionCreator;
 
