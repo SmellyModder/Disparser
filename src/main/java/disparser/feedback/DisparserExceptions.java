@@ -33,6 +33,9 @@ public final class DisparserExceptions {
 	public static final DynamicCommandExceptionCreator<String> INVALID_NUMBER_EXCEPTION = DynamicCommandExceptionCreator.createInstance(number -> {
 		return String.format("`%s` is not a valid number!", number);
 	});
+	public static final DynamicCommandExceptionCreator<String> INVALID_COLOR_EXCEPTION = DynamicCommandExceptionCreator.createInstance(number -> {
+		return String.format("`%s` is not a valid color value!", number);
+	});
 	public static final BiDynamicCommandExceptionCreator<String, Integer> LENGTH_EXCEPTION = BiDynamicCommandExceptionCreator.createInstance((string, length) -> {
 		return String.format("`%s` exceeds the length of %o", string, length);
 	});

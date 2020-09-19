@@ -23,6 +23,9 @@ public class Commands {
 
 	@Aliases(value = {"number_test"}, mergeAliases = true)
 	public static final NumberTestCommand NUMBER_TEST = new NumberTestCommand();
+
+	@Aliases(value = {"color_test"}, mergeAliases = true)
+	public static final ColorTestCommand COLOR_TEST = new ColorTestCommand();
 	
 	@Aliases(value = {"normal_test"}, mergeAliases = true)
 	public static final TestCommand TEST_COMMAND = new TestCommand();
