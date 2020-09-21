@@ -39,4 +39,10 @@ public final class DisparserExceptions {
 	public static final BiDynamicCommandExceptionCreator<String, Integer> LENGTH_EXCEPTION = BiDynamicCommandExceptionCreator.createInstance((string, length) -> {
 		return String.format("`%s` exceeds the length of %o", string, length);
 	});
+	public static final BiDynamicCommandExceptionCreator<Number, Number> VALUE_TOO_HIGH = BiDynamicCommandExceptionCreator.createInstance((value, max) -> {
+		return String.format("Value (`%1$s`) cannot be greater than %2$s", value, max);
+	});
+	public static final BiDynamicCommandExceptionCreator<Number, Number> VALUE_TOO_LOW = BiDynamicCommandExceptionCreator.createInstance((value, min) -> {
+		return String.format("Value (`%1$s`) cannot be lower than %2$s", value, min);
+	});
 }

@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class ComplexTestCommand extends Command {
 
 	public ComplexTestCommand() {
-		super("complex", TextChannelArgument.get().asOptional(), EitherArgument.of(IntegerArgument.get(), UserArgument.get()), FloatArgument.get(), CharArgument.get().asOptional());
+		super("complex", TextChannelArgument.get().asOptional(), EitherArgument.of(IntegerArgument.get(), UserArgument.get()), FloatArgument.getClamped(0.0F, 100.0F), CharArgument.get().asOptional());
 	}
 
 	@Override
