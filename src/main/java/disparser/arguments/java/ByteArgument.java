@@ -26,14 +26,30 @@ public final class ByteArgument implements Argument<Byte> {
 		return new ByteArgument(Byte.MIN_VALUE, Byte.MAX_VALUE);
 	}
 
+	/**
+	 * Creates a new {@link ByteArgument} that clamps the parsable value.
+	 * @param min Minimum value
+	 * @param max Maximum value
+	 * @return a new {@link ByteArgument} that clamps the parsable value.
+	 */
 	public static ByteArgument getClamped(byte min, byte max) {
 		return new ByteArgument(min, max);
 	}
 
+	/**
+	 * Creates a new {@link ByteArgument} that minimums the parsable value.
+	 * @param min Minimum value
+	 * @return a new {@link ByteArgument} that minimums the parsable value.
+	 */
 	public static ByteArgument getMin(byte min) {
 		return new ByteArgument(min, Byte.MAX_VALUE);
 	}
 
+	/**
+	 * Creates a new {@link ByteArgument} that maxes the parsable value.
+	 * @param max Max value
+	 * @return a new {@link ByteArgument} that maxes the parsable value.
+	 */
 	public static ByteArgument getMax(byte max) {
 		return new ByteArgument(Byte.MIN_VALUE, max);
 	}

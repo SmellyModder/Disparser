@@ -26,14 +26,30 @@ public final class LongArgument implements Argument<Long> {
 		return new LongArgument(Long.MIN_VALUE, Long.MAX_VALUE);
 	}
 
+	/**
+	 * Creates a new {@link LongArgument} that clamps the parsable value.
+	 * @param min Minimum value
+	 * @param max Maximum value
+	 * @return a new {@link LongArgument} that clamps the parsable value.
+	 */
 	public static LongArgument getClamped(long min, long max) {
 		return new LongArgument(min, max);
 	}
 
+	/**
+	 * Creates a new {@link LongArgument} that minimums the parsable value.
+	 * @param min Minimum value
+	 * @return a new {@link LongArgument} that minimums the parsable value.
+	 */
 	public static LongArgument getMin(long min) {
 		return new LongArgument(min, Long.MAX_VALUE);
 	}
 
+	/**
+	 * Creates a new {@link LongArgument} that maxes the parsable value.
+	 * @param max Maximum value
+	 * @return a new {@link LongArgument} that maxes the parsable value.
+	 */
 	public static LongArgument getMax(long max) {
 		return new LongArgument(Long.MIN_VALUE, max);
 	}

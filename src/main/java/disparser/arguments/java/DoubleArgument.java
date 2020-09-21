@@ -26,14 +26,30 @@ public final class DoubleArgument implements Argument<Double> {
 		return new DoubleArgument(Double.MIN_VALUE, Double.MAX_VALUE);
 	}
 
+	/**
+	 * Creates a new {@link DoubleArgument} that clamps the parsable value.
+	 * @param min Minimum value
+	 * @param max Maximum value
+	 * @return a new {@link DoubleArgument} that clamps the parsable value.
+	 */
 	public static DoubleArgument getClamped(double min, double max) {
 		return new DoubleArgument(min, max);
 	}
 
+	/**
+	 * Creates a new {@link DoubleArgument} that minimums the parsable value.
+	 * @param min Minimum value
+	 * @return a new {@link DoubleArgument} that minimums the parsable value.
+	 */
 	public static DoubleArgument getMin(double min) {
 		return new DoubleArgument(min, Double.MAX_VALUE);
 	}
 
+	/**
+	 * Creates a new {@link DoubleArgument} that maxes the parsable value.
+	 * @param max Max value
+	 * @return a new {@link DoubleArgument} that maxes the parsable value.
+	 */
 	public static DoubleArgument getMax(double max) {
 		return new DoubleArgument(Double.MIN_VALUE, max);
 	}

@@ -32,14 +32,30 @@ public final class NumberArgument implements Argument<Number> {
         return new NumberArgument(Double.MIN_VALUE, Double.MAX_VALUE);
     }
 
+    /**
+     * Creates a new {@link NumberArgument} that clamps the parsable value.
+     * @param min Minimum value
+     * @param max Maximum value
+     * @return a new {@link NumberArgument} that clamps the parsable value.
+     */
     public static NumberArgument getClamped(double min, double max) {
         return new NumberArgument(min, max);
     }
 
+    /**
+     * Creates a new {@link NumberArgument} that minimums the parsable value.
+     * @param min Minimum value
+     * @return a new {@link NumberArgument} that minimums the parsable value.
+     */
     public static NumberArgument getMin(double min) {
         return new NumberArgument(min, Double.MAX_VALUE);
     }
 
+    /**
+     * Creates a new {@link NumberArgument} that maxes the parsable value.
+     * @param max Maximum value
+     * @return a new {@link NumberArgument} that maxes the parsable value.
+     */
     public static NumberArgument getMax(double max) {
         return new NumberArgument(Double.MIN_VALUE, max);
     }

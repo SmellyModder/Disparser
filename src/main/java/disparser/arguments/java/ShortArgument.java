@@ -26,14 +26,30 @@ public final class ShortArgument implements Argument<Short> {
 		return new ShortArgument(Short.MIN_VALUE, Short.MAX_VALUE);
 	}
 
+	/**
+	 * Creates a new {@link ShortArgument} that clamps the parsable value.
+	 * @param min Minimum value
+	 * @param max Maximum value
+	 * @return a new {@link ShortArgument} that clamps the parsable value.
+	 */
 	public static ShortArgument getClamped(byte min, byte max) {
 		return new ShortArgument(min, max);
 	}
 
+	/**
+	 * Creates a new {@link ShortArgument} that minimums the parsable value.
+	 * @param min Minimum value
+	 * @return a new {@link ShortArgument} that minimums the parsable value.
+	 */
 	public static ShortArgument getMin(byte min) {
 		return new ShortArgument(min, Short.MAX_VALUE);
 	}
 
+	/**
+	 * Creates a new {@link ShortArgument} that maxes the parsable value.
+	 * @param max Maximum value
+	 * @return a new {@link ShortArgument} that maxes the parsable value.
+	 */
 	public static ShortArgument getMax(byte max) {
 		return new ShortArgument(Short.MIN_VALUE, max);
 	}

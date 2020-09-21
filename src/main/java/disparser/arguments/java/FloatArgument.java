@@ -26,14 +26,30 @@ public final class FloatArgument implements Argument<Float> {
 		return new FloatArgument(Float.MIN_VALUE, Float.MAX_VALUE);
 	}
 
+	/**
+	 * Creates a new {@link FloatArgument} that clamps the parsable value.
+	 * @param min Minimum value
+	 * @param max Maximum value
+	 * @return a new {@link FloatArgument} that clamps the parsable value.
+	 */
 	public static FloatArgument getClamped(float min, float max) {
 		return new FloatArgument(min, max);
 	}
 
+	/**
+	 * Creates a new {@link FloatArgument} that minimums the parsable value.
+	 * @param min Minimum value
+	 * @return a new {@link FloatArgument} that minimums the parsable value.
+	 */
 	public static FloatArgument getMin(float min) {
 		return new FloatArgument(min, Float.MAX_VALUE);
 	}
 
+	/**
+	 * Creates a new {@link FloatArgument} that maxes the parsable value.
+	 * @param max Max value
+	 * @return a new {@link FloatArgument} that maxes the parsable value.
+	 */
 	public static FloatArgument getMax(float max) {
 		return new FloatArgument(Float.MIN_VALUE, max);
 	}
