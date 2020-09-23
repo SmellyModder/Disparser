@@ -45,4 +45,7 @@ public final class DisparserExceptions {
 	public static final BiDynamicCommandExceptionCreator<Number, Number> VALUE_TOO_LOW = BiDynamicCommandExceptionCreator.createInstance((value, min) -> {
 		return String.format("Value (`%1$s`) cannot be lower than %2$s", value, min);
 	});
+	public static final DynamicCommandExceptionCreator<String> INVALID_URL_EXCEPTION = DynamicCommandExceptionCreator.createInstance((url) -> {
+		return String.format("`%s` is not a valid URL", url);
+	});
 }

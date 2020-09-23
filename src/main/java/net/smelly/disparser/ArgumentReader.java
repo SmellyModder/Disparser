@@ -3,9 +3,9 @@ package net.smelly.disparser;
 import net.smelly.disparser.feedback.CommandSyntaxException;
 import net.smelly.disparser.feedback.DisparserExceptions;
 import net.smelly.disparser.feedback.FeedbackHandler;
-import net.smelly.disparser.util.MessageUtil;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.smelly.disparser.util.MessageUtil;
 
 import java.util.function.Function;
 
