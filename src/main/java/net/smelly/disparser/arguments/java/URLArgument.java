@@ -27,6 +27,9 @@ public final class URLArgument implements Argument<URL> {
 	@Override
 	public ParsedArgument<URL> parse(ArgumentReader reader) throws Exception {
 		String next = reader.nextArgument();
+		if (next.startsWith("<") && next.endsWith(">")) {
+			next = next.substring(1, next.length() - 1);
+		}
 		try {
 			return ParsedArgument.parse(new URL(next));
 		} catch (MalformedURLException e) {
