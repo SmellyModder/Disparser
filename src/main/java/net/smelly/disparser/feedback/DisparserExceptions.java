@@ -48,4 +48,7 @@ public final class DisparserExceptions {
 	public static final DynamicCommandExceptionCreator<String> INVALID_URL_EXCEPTION = DynamicCommandExceptionCreator.createInstance((url) -> {
 		return String.format("`%s` is not a valid URL", url);
 	});
+	public static final DynamicCommandExceptionCreator<String> INVALID_EMOJI_EXCEPTION = DynamicCommandExceptionCreator.createInstance((mention) -> {
+		return String.format("`%s` is not a valid emoji", mention);
+	});
 }
