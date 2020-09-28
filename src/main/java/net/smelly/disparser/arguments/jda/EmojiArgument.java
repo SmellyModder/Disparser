@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * @author Luke Tonon
  */
 public final class EmojiArgument implements Argument<Activity.Emoji> {
-	private static final Pattern UNICODE_EMOJI_PATTERN = Pattern.compile("[\\uD83C-\\uDBFF\\uDC00-\\uDFFF]+");
+	private static final Pattern UNICODE_EMOJI_PATTERN = Pattern.compile("[^\\p{L}\\p{N}\\p{P}\\p{Z}]", Pattern.UNICODE_CHARACTER_CLASS);
 	private static final Pattern CUSTOM_EMOJI_PATTERN = Pattern.compile("<(a?):(\\w+):(\\d+)>");
 
 	private final boolean allowCustomEmotes;
