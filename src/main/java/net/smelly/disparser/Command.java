@@ -39,6 +39,13 @@ public abstract class Command {
 		}
 		this.arguments = setupArguments;
 	}
+
+	/**
+	 * Used for processing this command.
+	 *
+	 * @param context - The {@link CommandContext} for this command, use this to get the parsed arguments and make use of the {@link GuildMessageReceivedEvent} event
+	 */
+	public abstract void processCommand(CommandContext context) throws Exception;
 	
 	public void setAliases(Set<String> aliases) {
 		this.aliases = aliases;
@@ -70,49 +77,7 @@ public abstract class Command {
 		return this.arguments;
 	}
 	
-	/**
-	 * Used for processing this command.
-	 * 
-	 * @param context - The {@link CommandContext} for this command, use this to get the parsed arguments and make use of the {@link GuildMessageReceivedEvent} event
-	 */
-	public abstract void processCommand(CommandContext context) throws Exception;
-	
 	public boolean hasPermissions(Member member) {
 		return member.hasPermission(this.getRequiredPermissions());
-	}
-
-	/**
-	 * Tests for an array of permisssions on a message.
-	 * @param message - The message to test.
-	 * @param permissions - The permissions to test.
-	 * @return True if the sender of the message has the permissions.
-	 */
-	public boolean testForPermissions(Message message, Permission... permissions) {
-		Member member = message.getMember();
-		if (member != null && member.hasPermission(permissions)) {
-			return true;
-		}
-		this.sendMessage(message.getTextChannel(), MessageUtil.createErrorMessage("You do not have permission to run this command"));
-		return false;
-	}
-
-	/**
-	 * Queues a message to be sent made up of a {@link CharSequence} to a {@link TextChannel}.
-	 * @param channel - The {@link TextChannel} to send the message to.
-	 * @param message - The {@link CharSequence} for the message.
-	 */
-	protected void sendMessage(TextChannel channel, CharSequence message) {
-		channel.sendTyping().queue();
-		channel.sendMessage(message).queue();
-	}
-
-	/**
-	 * Queues a embedded message to be sent to a {@link TextChannel}.
-	 * @param channel - The {@link TextChannel} to send the message to.
-	 * @param message - The {@link MessageEmbed} for the message.
-	 */
-	protected void sendMessage(TextChannel channel, MessageEmbed message) {
-		channel.sendTyping().queue();
-		channel.sendMessage(message).queue();
 	}
 }
