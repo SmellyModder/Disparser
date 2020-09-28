@@ -25,9 +25,10 @@ dependencies {
 <br> You can also download the source for this repository and build Disparser using the `gradlew build` command. </br>
 
 ## Features
-* Command Handlers for processing commands from messages
+* Command Handlers for processing commands from messages.
 * An index-based argument system that's simple and easy to work with.
 * A feedback system for command message output.
+* A Command Context system for parsing arguments from a message to be executed by a command.
 * Command prefix support.
 * A `ArgumentReader` class for reading components of a string to parse them into arguments.
 * An aliases system for commands.
