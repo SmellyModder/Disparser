@@ -67,9 +67,9 @@ public final class NumberArgument implements Argument<Number> {
                 Number number = NUMBER_FORMAT.parse(arg);
                 double adouble = number.doubleValue();
                 if (adouble > this.maximum) {
-                    throw DisparserExceptions.VALUE_TOO_HIGH.create(adouble, this.maximum);
+                    throw DisparserExceptions.VALUE_TOO_HIGH_EXCEPTION.create(adouble, this.maximum);
                 } else if (adouble < this.minimum) {
-                    throw DisparserExceptions.VALUE_TOO_LOW.create(adouble, this.minimum);
+                    throw DisparserExceptions.VALUE_TOO_LOW_EXCEPTION.create(adouble, this.minimum);
                 }
                 return ParsedArgument.parse(number);
             } catch (ParseException e) {

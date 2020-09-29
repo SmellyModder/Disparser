@@ -58,9 +58,9 @@ public final class FloatArgument implements Argument<Float> {
 	public ParsedArgument<Float> parse(ArgumentReader reader) throws Exception {
 		float afloat = reader.nextFloat();
 		if (afloat > this.maximum) {
-			throw DisparserExceptions.VALUE_TOO_HIGH.create(afloat, this.maximum);
+			throw DisparserExceptions.VALUE_TOO_HIGH_EXCEPTION.create(afloat, this.maximum);
 		} else if (afloat < this.minimum) {
-			throw DisparserExceptions.VALUE_TOO_LOW.create(afloat, this.minimum);
+			throw DisparserExceptions.VALUE_TOO_LOW_EXCEPTION.create(afloat, this.minimum);
 		}
 		return ParsedArgument.parse(afloat);
 	}

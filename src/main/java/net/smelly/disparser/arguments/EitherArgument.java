@@ -3,7 +3,6 @@ package net.smelly.disparser.arguments;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.arguments.EitherArgument.Either;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,7 +20,7 @@ import java.util.function.Function;
  * @param <FA> - The first argument matching the type of F
  * @param <SA> - The second argument matching the type of S
  */
-public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argument<S>> implements Argument<Either<F, S>> {
+public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argument<S>> implements Argument<EitherArgument.Either<F, S>> {
 	private final FA firstArgument;
 	private final SA secondArgument;
 	

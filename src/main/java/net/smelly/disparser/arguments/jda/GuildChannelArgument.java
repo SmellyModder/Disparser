@@ -3,7 +3,7 @@ package net.smelly.disparser.arguments.jda;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.DynamicCommandExceptionCreator;
+import net.smelly.disparser.feedback.DisparserExceptions;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.GuildChannel;
 
@@ -15,13 +15,6 @@ import javax.annotation.Nullable;
  * @author Luke Tonon
  */
 public final class GuildChannelArgument implements Argument<GuildChannel> {
-	public static final DynamicCommandExceptionCreator<Long> CHANNEL_NOT_FOUND_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
-		return String.format("Channel with id `%d` could not be found", id);
-	}));
-	public static final DynamicCommandExceptionCreator<String> INVALID_ID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
-		return String.format("`%s` is not a valid channel id", id);
-	}));
-
 	@Nullable
 	private final JDA jda;
 	
@@ -54,10 +47,10 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					throw CHANNEL_NOT_FOUND_EXCEPTION.create(parsedLong);
+					throw DisparserExceptions.CHANNEL_NOT_FOUND_EXCEPTION.create(parsedLong);
 				}
 			} catch (NumberFormatException exception) {
-				throw INVALID_ID_EXCEPTION.create(arg);
+				throw DisparserExceptions.INVALID_CHANNEL_ID_EXCEPTION.create(arg);
 			}
 		});
 	}

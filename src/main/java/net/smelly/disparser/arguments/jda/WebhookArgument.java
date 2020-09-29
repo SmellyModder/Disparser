@@ -3,7 +3,7 @@ package net.smelly.disparser.arguments.jda;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.DynamicCommandExceptionCreator;
+import net.smelly.disparser.feedback.DisparserExceptions;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Webhook;
 
@@ -16,12 +16,6 @@ import javax.annotation.Nullable;
  * @author Luke Tonon
  */
 public final class WebhookArgument implements Argument<Webhook> {
-	private static final DynamicCommandExceptionCreator<Long> WEBHOOK_NOT_FOUND_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
-		return String.format("Webhook with id `%d` could not be found", id);
-	}));
-	private static final DynamicCommandExceptionCreator<String> INVALID_ID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
-		return String.format("`%s` is not a valid webhook id", id);
-	}));
 	@Nullable
 	private final JDA jda;
 	
@@ -54,10 +48,10 @@ public final class WebhookArgument implements Argument<Webhook> {
 				if (foundWebhook != null) {
 					return ParsedArgument.parse(foundWebhook);
 				} else {
-					throw WEBHOOK_NOT_FOUND_EXCEPTION.create(parsedLong);
+					throw DisparserExceptions.WEBHOOK_NOT_FOUND_EXCEPTION.create(parsedLong);
 				}
 			} catch (NumberFormatException exception) {
-				throw INVALID_ID_EXCEPTION.create(arg);
+				throw DisparserExceptions.INVALID_WEBHOOK_ID_EXCEPTION.create(arg);
 			}
 		});
 	}

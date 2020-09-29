@@ -58,9 +58,9 @@ public final class ByteArgument implements Argument<Byte> {
 	public ParsedArgument<Byte> parse(ArgumentReader reader) throws Exception {
 		byte abyte = reader.nextByte();
 		if (abyte > this.maximum) {
-			throw DisparserExceptions.VALUE_TOO_HIGH.create(abyte, this.maximum);
+			throw DisparserExceptions.VALUE_TOO_HIGH_EXCEPTION.create(abyte, this.maximum);
 		} else if (abyte < this.minimum) {
-			throw DisparserExceptions.VALUE_TOO_LOW.create(abyte, this.minimum);
+			throw DisparserExceptions.VALUE_TOO_LOW_EXCEPTION.create(abyte, this.minimum);
 		}
 		return ParsedArgument.parse(abyte);
 	}

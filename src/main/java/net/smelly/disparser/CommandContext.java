@@ -1,10 +1,7 @@
 package net.smelly.disparser;
 
 import net.smelly.disparser.annotations.NullWhenErrored;
-import net.smelly.disparser.feedback.DynamicCommandExceptionCreator;
-import net.smelly.disparser.feedback.FeedbackHandler;
-import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
-import net.smelly.disparser.feedback.SimpleCommandExceptionCreator;
+import net.smelly.disparser.feedback.*;
 import net.smelly.disparser.util.MessageUtil;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -22,13 +19,6 @@ import java.util.stream.Collectors;
  * @author Luke Tonon
  */
 public class CommandContext {
-	protected static final SimpleCommandExceptionCreator PERMISSION_EXCEPTION = new SimpleCommandExceptionCreator("You do not have permission to run this command!");
-	protected static final SimpleCommandExceptionCreator NO_ARGUMENTS_EXCEPTION = new SimpleCommandExceptionCreator("No arguments are present!");
-	protected static final SimpleCommandExceptionCreator MISSING_ARGUMENT_EXCEPTION = new SimpleCommandExceptionCreator("An argument is missing");
-	protected static final SimpleCommandExceptionCreator MISSING_ARGUMENTS_EXCEPTION = new SimpleCommandExceptionCreator("Multiple arguments are missing, view this command's arguments!");
-	protected static final SimpleCommandExceptionCreator SPECIFIC_MISSING_ARGUMENT_EXCEPTION = new SimpleCommandExceptionCreator("Argument is missing");
-	protected static final DynamicCommandExceptionCreator<List<String>> SPECIFIC_MISSING_ARGUMENTS_EXCEPTION = DynamicCommandExceptionCreator.createInstance((missingArgs) -> MessageUtil.createFormattedSentenceOfCollection(missingArgs) + " arguments are missing");
-
 	private final GuildMessageReceivedEvent event;
 	private final List<ParsedArgument<?>> parsedArguments;
 	private final FeedbackHandler feedbackHandler;
@@ -57,7 +47,7 @@ public class CommandContext {
 		if (member == null) return Optional.empty();
 
 		if (!command.hasPermissions(member)) {
-			feedbackHandler.sendError(PERMISSION_EXCEPTION.create());
+			feedbackHandler.sendError(DisparserExceptions.PERMISSION_EXCEPTION.create());
 			return Optional.empty();
 		}
 
@@ -75,7 +65,7 @@ public class CommandContext {
 							parsedArguments.add(parsedArg);
 						} else {
 							if (!reader.hasNextArg()) {
-								feedbackHandler.sendError(SPECIFIC_MISSING_ARGUMENT_EXCEPTION.createForArgument(i + 1));
+								feedbackHandler.sendError(DisparserExceptions.SPECIFIC_MISSING_ARGUMENT_EXCEPTION.createForArgument(i + 1));
 								return Optional.empty();
 							}
 							try {
@@ -154,21 +144,21 @@ public class CommandContext {
 			int mandatorySize = commandArgumentsSize - optionalArguments.size();
 			if (readerArgumentLength < mandatorySize) {
 				if (readerArgumentLength == 0) {
-					feedbackHandler.sendError(NO_ARGUMENTS_EXCEPTION.create());
+					feedbackHandler.sendError(DisparserExceptions.NO_ARGUMENTS_EXCEPTION.create());
 					return false;
 				}
 				
 				if (readerArgumentLength - mandatorySize < -1) {
-					feedbackHandler.sendError(MISSING_ARGUMENTS_EXCEPTION.create());
+					feedbackHandler.sendError(DisparserExceptions.MISSING_ARGUMENTS_EXCEPTION.create());
 				} else {
-					feedbackHandler.sendError(MISSING_ARGUMENT_EXCEPTION.create());
+					feedbackHandler.sendError(DisparserExceptions.MISSING_ARGUMENT_EXCEPTION.create());
 				}
 				return false;
 			}
 		} else {
 			if (readerArgumentLength < commandArgumentsSize) {
 				if (readerArgumentLength == 0) {
-					feedbackHandler.sendError(NO_ARGUMENTS_EXCEPTION.create());
+					feedbackHandler.sendError(DisparserExceptions.NO_ARGUMENTS_EXCEPTION.create());
 					return false;
 				}
 				
@@ -179,9 +169,9 @@ public class CommandContext {
 				}
 				
 				if (missingArgs.size() > 1) {
-					feedbackHandler.sendError(SPECIFIC_MISSING_ARGUMENTS_EXCEPTION.create(missingArgs));
+					feedbackHandler.sendError(DisparserExceptions.SPECIFIC_MISSING_ARGUMENTS_EXCEPTION.create(missingArgs));
 				} else {
-					feedbackHandler.sendError(SPECIFIC_MISSING_ARGUMENT_EXCEPTION.createForArgument(1));
+					feedbackHandler.sendError(DisparserExceptions.SPECIFIC_MISSING_ARGUMENT_EXCEPTION.createForArgument(1));
 				}
 				return false;
 			}
@@ -234,7 +224,7 @@ public class CommandContext {
 
 	/**
 	 * Gets the {@link ParsedArgument#getResult()} for a {@link ParsedArgument} for this {@link CommandContext} by an index.
-	 * @see {@link #getParsedArgument(int)}
+	 * @see #getParsedArgument(int)
 	 * @param argument - The index of the {@link ParsedArgument} to get its {@link ParsedArgument#getResult()}.
 	 * @param <A> - The type of the {@link ParsedArgument#getResult()}.
 	 * @return - The {@link ParsedArgument#getResult()} for an index.
@@ -249,7 +239,7 @@ public class CommandContext {
 	 * Gets the {@link ParsedArgument#getResult()} for a {@link ParsedArgument} for this {@link CommandContext} by an index.
 	 * If the result of {@link ParsedArgument#getResult()} is null then it will return {@param other}.
 	 * This should only be used for optional arguments. Moreover, arguments that have {@link Argument#isOptional()} return true.
-	 * @see {@link #getParsedArgument(int)}.
+	 * @see #getParsedArgument(int)
 	 * @param argument - The index of the {@link ParsedArgument#getResult()}.
 	 * @param other - The result to return if {@link ParsedArgument#getResult()} is null.
 	 * @param <A> - The type of the {@link ParsedArgument#getResult()}.

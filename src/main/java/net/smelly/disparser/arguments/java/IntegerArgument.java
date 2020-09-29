@@ -58,9 +58,9 @@ public final class IntegerArgument implements Argument<Integer> {
 	public ParsedArgument<Integer> parse(ArgumentReader reader) throws Exception {
 		int integer = reader.nextInt();
 		if (integer > this.maximum) {
-			throw DisparserExceptions.VALUE_TOO_HIGH.create(integer, this.maximum);
+			throw DisparserExceptions.VALUE_TOO_HIGH_EXCEPTION.create(integer, this.maximum);
 		} else if (integer < this.minimum) {
-			throw DisparserExceptions.VALUE_TOO_LOW.create(integer, this.minimum);
+			throw DisparserExceptions.VALUE_TOO_LOW_EXCEPTION.create(integer, this.minimum);
 		}
 		return ParsedArgument.parse(integer);
 	}

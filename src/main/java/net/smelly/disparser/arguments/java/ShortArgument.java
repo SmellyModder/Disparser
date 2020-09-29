@@ -58,9 +58,9 @@ public final class ShortArgument implements Argument<Short> {
 	public ParsedArgument<Short> parse(ArgumentReader reader) throws Exception {
 		short ashort = reader.nextShort();
 		if (ashort > this.maximum) {
-			throw DisparserExceptions.VALUE_TOO_HIGH.create(ashort, this.maximum);
+			throw DisparserExceptions.VALUE_TOO_HIGH_EXCEPTION.create(ashort, this.maximum);
 		} else if (ashort < this.minimum) {
-			throw DisparserExceptions.VALUE_TOO_LOW.create(ashort, this.minimum);
+			throw DisparserExceptions.VALUE_TOO_LOW_EXCEPTION.create(ashort, this.minimum);
 		}
 		return ParsedArgument.parse(ashort);
 	}

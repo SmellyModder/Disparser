@@ -3,7 +3,7 @@ package net.smelly.disparser.arguments.jda;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.SimpleCommandExceptionCreator;
+import net.smelly.disparser.feedback.DisparserExceptions;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
  * @author Luke Tonon
  */
 public final class TextChannelArgument implements Argument<TextChannel> {
-	private static final SimpleCommandExceptionCreator MENTION_CHANNEL_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionCreator("Text Channel in mention could not be found");
 	private static final Pattern MENTION_PATTERN = Pattern.compile("^<#(\\d+)>$");
 	
 	@Nullable
@@ -55,7 +54,7 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					throw GuildChannelArgument.CHANNEL_NOT_FOUND_EXCEPTION.create(parsedId);
+					throw DisparserExceptions.CHANNEL_NOT_FOUND_EXCEPTION.create(parsedId);
 				}
 			} catch (NumberFormatException exception) {
 				Matcher matcher = MENTION_PATTERN.matcher(arg);
@@ -66,11 +65,11 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 					if (foundChannel != null) {
 						return ParsedArgument.parse(foundChannel);
 					} else {
-						throw MENTION_CHANNEL_NOT_FOUND_EXCEPTION.create();
+						throw DisparserExceptions.MENTION_CHANNEL_NOT_FOUND_EXCEPTION.create();
 					}
 				}
 
-				throw GuildChannelArgument.INVALID_ID_EXCEPTION.create(arg);
+				throw DisparserExceptions.INVALID_CHANNEL_ID_EXCEPTION.create(arg);
 			}
 		});
 	}

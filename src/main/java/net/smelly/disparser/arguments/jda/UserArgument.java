@@ -3,8 +3,7 @@ package net.smelly.disparser.arguments.jda;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.DynamicCommandExceptionCreator;
-import net.smelly.disparser.feedback.SimpleCommandExceptionCreator;
+import net.smelly.disparser.feedback.DisparserExceptions;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 
@@ -19,19 +18,12 @@ import java.util.regex.Pattern;
  * @author Luke Tonon
  */
 public final class UserArgument implements Argument<User> {
-	private static final DynamicCommandExceptionCreator<Long> USER_NOT_FOUND_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
-		return String.format("User with id `%d` could not be found", id);
-	}));
-	private static final SimpleCommandExceptionCreator MENTION_USER_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionCreator("Member in mention could not be found");
-	public static final DynamicCommandExceptionCreator<String> INVALID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
-		return String.format("`%s` is not a valid member id or valid user mention", id);
-	}));
 	private static final Pattern MENTION_PATTERN = Pattern.compile("^<@!?(\\d+)>$");
 	
 	@Nullable
 	private final JDA jda;
 	
-	private UserArgument(JDA jda) {
+	private UserArgument(@Nullable JDA jda) {
 		this.jda = jda;
 	}
 	
@@ -60,7 +52,7 @@ public final class UserArgument implements Argument<User> {
 				if (foundUser != null) {
 					return ParsedArgument.parse(foundUser);
 				} else {
-					throw USER_NOT_FOUND_EXCEPTION.create(id);
+					throw DisparserExceptions.USER_NOT_FOUND_EXCEPTION.create(id);
 				}
 			} catch (NumberFormatException exception) {
 				Matcher matcher = MENTION_PATTERN.matcher(arg);
@@ -70,11 +62,11 @@ public final class UserArgument implements Argument<User> {
 					if (foundUser != null) {
 						return ParsedArgument.parse(foundUser);
 					} else {
-						throw MENTION_USER_NOT_FOUND_EXCEPTION.create();
+						throw DisparserExceptions.MENTION_USER_NOT_FOUND_EXCEPTION.create();
 					}
 				}
 
-				throw INVALID_EXCEPTION.create(arg);
+				throw DisparserExceptions.INVALID_USER_EXCEPTION.create(arg);
 			}
 		});
 	}

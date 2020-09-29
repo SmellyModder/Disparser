@@ -5,6 +5,7 @@ import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.smelly.disparser.feedback.DisparserExceptions;
 
 import javax.annotation.Nullable;
 
@@ -47,10 +48,10 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					throw GuildChannelArgument.CHANNEL_NOT_FOUND_EXCEPTION.create(parsedLong);
+					throw DisparserExceptions.CHANNEL_NOT_FOUND_EXCEPTION.create(parsedLong);
 				}
 			} catch (NumberFormatException exception) {
-				throw GuildChannelArgument.INVALID_ID_EXCEPTION.create(arg);
+				throw DisparserExceptions.INVALID_CHANNEL_ID_EXCEPTION.create(arg);
 			}
 		});
 	}

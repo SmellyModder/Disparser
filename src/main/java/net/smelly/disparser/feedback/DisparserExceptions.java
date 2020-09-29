@@ -1,11 +1,22 @@
 package net.smelly.disparser.feedback;
 
+import net.smelly.disparser.util.MessageUtil;
+
+import java.util.List;
+
 /**
  * This class contains many built-in {@link CommandExceptionCreator}s useful for creating exceptions.
  * All of these fields are used internally in Disparser.
  * @author Luke Tonon
  */
 public final class DisparserExceptions {
+	public static final SimpleCommandExceptionCreator PERMISSION_EXCEPTION = new SimpleCommandExceptionCreator("You do not have permission to run this command!");
+	public static final SimpleCommandExceptionCreator NO_ARGUMENTS_EXCEPTION = new SimpleCommandExceptionCreator("No arguments are present!");
+	public static final SimpleCommandExceptionCreator MISSING_ARGUMENT_EXCEPTION = new SimpleCommandExceptionCreator("An argument is missing");
+	public static final SimpleCommandExceptionCreator MISSING_ARGUMENTS_EXCEPTION = new SimpleCommandExceptionCreator("Multiple arguments are missing, view this command's arguments!");
+	public static final SimpleCommandExceptionCreator SPECIFIC_MISSING_ARGUMENT_EXCEPTION = new SimpleCommandExceptionCreator("Argument is missing");
+	public static final DynamicCommandExceptionCreator<List<String>> SPECIFIC_MISSING_ARGUMENTS_EXCEPTION = DynamicCommandExceptionCreator.createInstance((missingArgs) -> MessageUtil.createFormattedSentenceOfCollection(missingArgs) + " arguments are missing");
+
 	public static final DynamicCommandExceptionCreator<String> INVALID_INTEGER_EXCEPTION = DynamicCommandExceptionCreator.createInstance(integer -> {
 		return String.format("`%s` is not a valid integer!", integer);
 	});
@@ -50,11 +61,11 @@ public final class DisparserExceptions {
 		return String.format("`%s` exceeds the length of %o", string, length);
 	});
 
-	public static final BiDynamicCommandExceptionCreator<Number, Number> VALUE_TOO_HIGH = BiDynamicCommandExceptionCreator.createInstance((value, max) -> {
+	public static final BiDynamicCommandExceptionCreator<Number, Number> VALUE_TOO_HIGH_EXCEPTION = BiDynamicCommandExceptionCreator.createInstance((value, max) -> {
 		return String.format("Value (`%1$s`) cannot be greater than %2$s", value, max);
 	});
 
-	public static final BiDynamicCommandExceptionCreator<Number, Number> VALUE_TOO_LOW = BiDynamicCommandExceptionCreator.createInstance((value, min) -> {
+	public static final BiDynamicCommandExceptionCreator<Number, Number> VALUE_TOO_LOW_EXCEPTION = BiDynamicCommandExceptionCreator.createInstance((value, min) -> {
 		return String.format("Value (`%1$s`) cannot be lower than %2$s", value, min);
 	});
 
@@ -79,4 +90,40 @@ public final class DisparserExceptions {
 	public static final BiDynamicCommandExceptionCreator<String, Integer> NOT_ENOUGH_EMOJIS_EXCEPTION = BiDynamicCommandExceptionCreator.createInstance((string, max) -> {
 		return String.format("`%1$s` contains less than %2$s emojis", string, max);
 	});
+
+	public static final SimpleCommandExceptionCreator MENTION_CHANNEL_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionCreator("Text Channel in mention could not be found");
+
+	public static final DynamicCommandExceptionCreator<Long> CHANNEL_NOT_FOUND_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("Channel with id `%d` could not be found", id);
+	}));
+
+	public static final DynamicCommandExceptionCreator<String> INVALID_CHANNEL_ID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("`%s` is not a valid channel id", id);
+	}));
+
+	public static final DynamicCommandExceptionCreator<Long> USER_NOT_FOUND_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("User with id `%d` could not be found", id);
+	}));
+
+	public static final SimpleCommandExceptionCreator MENTION_USER_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionCreator("Member in mention could not be found");
+
+	public static final DynamicCommandExceptionCreator<String> INVALID_USER_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("`%s` is not a valid member id or valid user mention", id);
+	}));
+
+	public static final DynamicCommandExceptionCreator<Long> WEBHOOK_NOT_FOUND_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("Webhook with id `%d` could not be found", id);
+	}));
+
+	public static final DynamicCommandExceptionCreator<String> INVALID_WEBHOOK_ID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("`%s` is not a valid webhook id", id);
+	}));
+
+	public static final DynamicCommandExceptionCreator<Long> GUILD_NOT_FOUND_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("Guild with id `%d` could not be found", id);
+	}));
+
+	public static final DynamicCommandExceptionCreator<String> INVALID_GUILD_ID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("`%s` is not a valid guild id", id);
+	}));
 }
