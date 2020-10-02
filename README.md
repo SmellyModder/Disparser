@@ -28,6 +28,7 @@ dependencies {
 * Command Handlers for processing commands from messages.
 * An index-based argument system that's simple and easy to work with.
 * A feedback system for command message output.
+* A command exception system.
 * A Command Context system for parsing arguments from a message to be executed by a command.
 * Command prefix support.
 * A `ArgumentReader` class for reading components of a string to parse them into arguments.
