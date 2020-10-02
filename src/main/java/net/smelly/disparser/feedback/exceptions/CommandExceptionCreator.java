@@ -1,4 +1,4 @@
-package net.smelly.disparser.feedback;
+package net.smelly.disparser.feedback.exceptions;
 
 /**
  * A simple interface used for creating new instances of an exception.

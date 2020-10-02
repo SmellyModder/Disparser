@@ -3,7 +3,7 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.DisparserExceptions;
+import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 /**
  * A simple argument for parsing bytes.

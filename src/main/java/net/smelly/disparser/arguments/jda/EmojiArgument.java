@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.DisparserExceptions;
+import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;

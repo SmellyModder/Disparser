@@ -1,4 +1,4 @@
-package net.smelly.disparser.feedback;
+package net.smelly.disparser.feedback.exceptions;
 
 import javax.annotation.Nullable;
 import java.util.function.BiFunction;

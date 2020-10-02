@@ -2,6 +2,7 @@ package net.smelly.disparser;
 
 import net.smelly.disparser.annotations.NullWhenErrored;
 import net.smelly.disparser.feedback.*;
+import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 import net.smelly.disparser.util.MessageUtil;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;

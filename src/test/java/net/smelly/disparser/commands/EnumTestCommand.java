@@ -3,8 +3,8 @@ package net.smelly.disparser.commands;
 import net.smelly.disparser.Command;
 import net.smelly.disparser.CommandContext;
 import net.smelly.disparser.arguments.java.EnumArgument;
-import net.smelly.disparser.feedback.CommandSyntaxException;
-import net.smelly.disparser.feedback.SimpleCommandExceptionCreator;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.SimpleCommandExceptionCreator;
 
 public class EnumTestCommand extends Command {
 	//Simple exception test.

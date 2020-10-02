@@ -1,4 +1,4 @@
-package net.smelly.disparser.feedback;
+package net.smelly.disparser.feedback.exceptions;
 
 import net.smelly.disparser.util.MessageUtil;
 

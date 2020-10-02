@@ -5,7 +5,7 @@ import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.smelly.disparser.feedback.DisparserExceptions;
+import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 import javax.annotation.Nullable;
 
