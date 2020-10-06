@@ -6,6 +6,7 @@
  * <p>
  * {@link net.smelly.disparser.annotations}
  * {@link net.smelly.disparser.arguments}
+ * {@link net.smelly.disparser.feedback}
  * {@link net.smelly.disparser.util}
  * </p>
  *
