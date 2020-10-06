@@ -6,14 +6,14 @@ import net.smelly.disparser.arguments.java.NumberArgument;
 
 public final class NumberTestCommand extends Command {
 
-    public NumberTestCommand() {
-        super("number", NumberArgument.get());
-    }
+	public NumberTestCommand() {
+		super("number", NumberArgument.get());
+	}
 
-    @Override
-    public void processCommand(CommandContext context) {
-        Number number = context.getParsedResult(0);
-        context.getFeedbackHandler().sendFeedback(number.toString());
-    }
+	@Override
+	public void processCommand(CommandContext context) {
+		Number number = context.getParsedResult(0);
+		context.getFeedbackHandler().sendFeedback(number.toString());
+	}
 
 }

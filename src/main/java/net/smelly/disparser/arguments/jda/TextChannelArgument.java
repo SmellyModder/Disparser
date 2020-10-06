@@ -15,35 +15,36 @@ import java.util.regex.Pattern;
 /**
  * An argument that can parse text channels by their ID or a mention of the text channel.
  * Define a JDA to get the text channel from or leave null to use the JDA of the message that was sent.
- * 
+ *
  * @author Luke Tonon
  */
 public final class TextChannelArgument implements Argument<TextChannel> {
 	private static final Pattern MENTION_PATTERN = Pattern.compile("^<#(\\d+)>$");
-	
+
 	@Nullable
 	private final JDA jda;
-	
+
 	private TextChannelArgument(@Nullable JDA jda) {
 		this.jda = jda;
 	}
-	
+
 	/**
 	 * @return A default instance.
 	 */
 	public static TextChannelArgument get() {
 		return new TextChannelArgument(null);
 	}
-	
+
 	/**
 	 * If you only want to get text channels of the guild that the message was sent from then use {@link #get()}.
+	 *
 	 * @param jda - JDA to get the channel from.
 	 * @return An instance of this argument with a JDA.
 	 */
 	public static TextChannelArgument create(JDA jda) {
 		return new TextChannelArgument(jda);
 	}
-	
+
 	@Override
 	public ParsedArgument<TextChannel> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {
@@ -58,7 +59,7 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 				}
 			} catch (NumberFormatException exception) {
 				Matcher matcher = MENTION_PATTERN.matcher(arg);
-				
+
 				if (matcher.matches()) {
 					long parsedId = Long.parseLong(matcher.group(1));
 					TextChannel foundChannel = this.findhannelWithId(guild, parsedId);

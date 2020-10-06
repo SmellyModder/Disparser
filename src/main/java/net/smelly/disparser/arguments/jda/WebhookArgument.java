@@ -12,33 +12,34 @@ import javax.annotation.Nullable;
 /**
  * An argument that can parse webhooks by their ID.
  * Define a JDA to get the webhook from or leave null to use the JDA of the message that was sent.
- * 
+ *
  * @author Luke Tonon
  */
 public final class WebhookArgument implements Argument<Webhook> {
 	@Nullable
 	private final JDA jda;
-	
+
 	private WebhookArgument(JDA jda) {
 		this.jda = jda;
 	}
-	
+
 	/**
 	 * @return A default instance.
 	 */
 	public static WebhookArgument get() {
 		return new WebhookArgument(null);
 	}
-	
+
 	/**
 	 * If you only want to get webhooks of the guild that the message was sent from then use {@link #get()}.
+	 *
 	 * @param jda - JDA to get the webhook from.
 	 * @return An instance of this argument with a JDA.
 	 */
 	public static WebhookArgument create(JDA jda) {
 		return new WebhookArgument(jda);
 	}
-	
+
 	@Override
 	public ParsedArgument<Webhook> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {

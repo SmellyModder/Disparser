@@ -8,8 +8,9 @@ import java.util.function.BiFunction;
  * The function takes in three generic type objects and parses them to a string to be used for creating a message for a {@link CommandSyntaxException}.
  * This class can store the three generic objects internally to be re-used for creating a {@link CommandSyntaxException}.
  * <p> Simply put, this class is a tri version of {@link DynamicCommandExceptionCreator}. </p>
- * @see DynamicCommandExceptionCreator
+ *
  * @author Luke Tonon
+ * @see DynamicCommandExceptionCreator
  */
 public class TriDynamicCommandExceptionCreator<T, U, V> implements CommandExceptionCreator<CommandSyntaxException> {
 	private final TriFunction<T, U, V> function;

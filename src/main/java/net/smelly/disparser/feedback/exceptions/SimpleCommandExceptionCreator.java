@@ -5,9 +5,10 @@ import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 /**
  * A simple class for sending an exception with a message.
+ *
+ * @author Luke Tonon
  * @see CommandExceptionCreator
  * @see CommandSyntaxException
- * @author Luke Tonon
  */
 public final class SimpleCommandExceptionCreator implements CommandExceptionCreator<CommandSyntaxException> {
 	private final String message;

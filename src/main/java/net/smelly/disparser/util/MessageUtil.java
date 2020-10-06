@@ -7,15 +7,16 @@ import java.util.Collection;
 
 /**
  * A class that holds some useful message functions, all of which are used in Disparser.
- * 
+ *
  * @author Luke Tonon
  */
 public final class MessageUtil {
 	/**
 	 * Creates a simple error message as a {@link MessageEmbed}.
-	 * @see <a href="https://cdn.discordapp.com/attachments/667088262287851551/748744108939411496/errored_test.PNG">Errored Message</a>
+	 *
 	 * @param message - The error reason message.
 	 * @return a simple error message as a {@link MessageEmbed}.
+	 * @see <a href="https://cdn.discordapp.com/attachments/667088262287851551/748744108939411496/errored_test.PNG">Errored Message</a>
 	 */
 	public static MessageEmbed createErrorMessage(String message) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -27,9 +28,10 @@ public final class MessageUtil {
 
 	/**
 	 * Creates a simple successful completion message as a {@link MessageEmbed}.
-	 * @see <a href="https://cdn.discordapp.com/attachments/667088262287851551/748744125808902145/sucessful_test.PNG">Sucessful Message</a>
+	 *
 	 * @param message - The message to be displayed.
 	 * @return a simple successful completion message as a {@link MessageEmbed}.
+	 * @see <a href="https://cdn.discordapp.com/attachments/667088262287851551/748744125808902145/sucessful_test.PNG">Sucessful Message</a>
 	 */
 	public static MessageEmbed createSuccessfulMessage(String message) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -42,6 +44,7 @@ public final class MessageUtil {
 	/**
 	 * Gets the ordinal for an integer.
 	 * 1st, 2nd, 3rd, 4th, etc...
+	 *
 	 * @param value - The integer.
 	 * @return the ordinal for an integer.
 	 */
@@ -63,6 +66,7 @@ public final class MessageUtil {
 
 	/**
 	 * Creates an English formatted sentence of a collection.
+	 *
 	 * @param collection - The collection to format.
 	 * @return an English formatted sentence of a collection.
 	 */

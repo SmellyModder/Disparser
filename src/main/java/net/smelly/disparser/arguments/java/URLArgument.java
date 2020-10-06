@@ -15,7 +15,8 @@ import java.net.URL;
  */
 public final class URLArgument implements Argument<URL> {
 
-	private URLArgument() {}
+	private URLArgument() {
+	}
 
 	/**
 	 * @return The default instance.

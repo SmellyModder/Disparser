@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Holds an {@link ArgumentReader} for reading arguments of a message a list of parsed arguments, and the {@link GuildMessageReceivedEvent} that the command was sent from.
  * <p> Use this for processing commands in {@link Command#processCommand(CommandContext)}. </p>
- * 
+ *
  * @author Luke Tonon
  */
 public class CommandContext {
@@ -24,7 +24,7 @@ public class CommandContext {
 	private final List<ParsedArgument<?>> parsedArguments;
 	private final FeedbackHandler feedbackHandler;
 	private final ArgumentReader reader;
-	
+
 	private CommandContext(GuildMessageReceivedEvent event, List<ParsedArgument<?>> parsedArguments, FeedbackHandlerBuilder feedbackHandlerBuilder) {
 		this.event = event;
 		this.parsedArguments = parsedArguments;
@@ -35,8 +35,9 @@ public class CommandContext {
 	/**
 	 * Creates an {@link Optional} {@link CommandContext} for a {@link Command} with a {@link FeedbackHandlerBuilder} to use for building a {@link FeedbackHandler} for sending parsing feedback.
 	 * If an error occurs when parsing the {@link CommandContext} for the command this will return an empty optional.
-	 * @param event The {@link GuildMessageReceivedEvent} to use for parsing the command's arguments.
-	 * @param command The {@link Command} to try to parse and create an {@link CommandContext} for.
+	 *
+	 * @param event                  The {@link GuildMessageReceivedEvent} to use for parsing the command's arguments.
+	 * @param command                The {@link Command} to try to parse and create an {@link CommandContext} for.
 	 * @param feedbackHandlerBuilder The {@link FeedbackHandlerBuilder} to use for building a {@link FeedbackHandler} for sending feedback.
 	 * @return An {@link Optional} {@link CommandContext} made for a {@link Command}, empty if an error occurs when parsing the arguments.
 	 */
@@ -99,9 +100,10 @@ public class CommandContext {
 	 * Creates an {@link Optional} {@link CommandContext} using the {@link #create(GuildMessageReceivedEvent, Command, FeedbackHandlerBuilder)} method.
 	 * First this method will try to find a matching command for a {@link CommandHandler} and then process that command.
 	 * The term "disparse" is used here since it performs all of Disparser's core parsing and processing actions for a command in one method.
+	 *
 	 * @param event The {@link GuildMessageReceivedEvent} to use for parsing the command's arguments.
-	 * @see #create(GuildMessageReceivedEvent, Command, FeedbackHandlerBuilder).
 	 * @return An {@link Optional} {@link CommandContext} made for a {@link Command}, empty if an error occurs when parsing the arguments.
+	 * @see #create(GuildMessageReceivedEvent, Command, FeedbackHandlerBuilder).
 	 */
 	public static Optional<CommandContext> createAndDisparse(final CommandHandler commandHandler, final GuildMessageReceivedEvent event) {
 		String firstComponent = event.getMessage().getContentRaw().split(" ")[0];
@@ -125,13 +127,13 @@ public class CommandContext {
 		}
 		return Optional.empty();
 	}
-	
+
 	/**
 	 * Tests to check if all the command's arguments are present in the message.
 	 * A message will be sent to the reader's channel {@link ArgumentReader#getChannel()} if an argument or multiple arguments are missing.
-	 * 
-	 * @param reader - The {@link ArgumentReader} to read the arguments.
-	 * @param commandArguments - The list of {@link Argument}s for a command.
+	 *
+	 * @param reader               - The {@link ArgumentReader} to read the arguments.
+	 * @param commandArguments     - The list of {@link Argument}s for a command.
 	 * @param hasOptionalArguments - If the command has {@link net.smelly.disparser.annotations.Optional} {@link Argument}s.
 	 * @return True if no arguments and false if an argument or multiple arguments are missing
 	 */
@@ -148,7 +150,7 @@ public class CommandContext {
 					feedbackHandler.sendError(DisparserExceptions.NO_ARGUMENTS_EXCEPTION.create());
 					return false;
 				}
-				
+
 				if (readerArgumentLength - mandatorySize < -1) {
 					feedbackHandler.sendError(DisparserExceptions.MISSING_ARGUMENTS_EXCEPTION.create());
 				} else {
@@ -162,13 +164,13 @@ public class CommandContext {
 					feedbackHandler.sendError(DisparserExceptions.NO_ARGUMENTS_EXCEPTION.create());
 					return false;
 				}
-				
+
 				List<String> missingArgs = new ArrayList<>(commandArgumentsSize - readerArgumentLength);
 				for (int i = readerArgumentLength; i < commandArgumentsSize; i++) {
 					int argumentOrder = i + 1;
 					missingArgs.add(argumentOrder + MessageUtil.getOrdinalForInteger(argumentOrder));
 				}
-				
+
 				if (missingArgs.size() > 1) {
 					feedbackHandler.sendError(DisparserExceptions.SPECIFIC_MISSING_ARGUMENTS_EXCEPTION.create(missingArgs));
 				} else {
@@ -204,8 +206,9 @@ public class CommandContext {
 
 	/**
 	 * Use this to get the {@link FeedbackHandler} for this {@link CommandContext} to send feedback when processing commands.
-	 * @see FeedbackHandler
+	 *
 	 * @return The {@link FeedbackHandler} for this {@link CommandContext}.
+	 * @see FeedbackHandler
 	 */
 	public FeedbackHandler getFeedbackHandler() {
 		return this.feedbackHandler;
@@ -214,8 +217,9 @@ public class CommandContext {
 	/**
 	 * Gets a {@link ParsedArgument} for this {@link CommandContext} by an index.
 	 * The list of {@link #parsedArguments} matches the {@link Command#getArguments()} for this {@link CommandContext}.
+	 *
 	 * @param argument - The index of the argument.
-	 * @param <A> - The type of the {@link ParsedArgument}.
+	 * @param <A>      - The type of the {@link ParsedArgument}.
 	 * @return The {@link ParsedArgument} for an index.
 	 */
 	@SuppressWarnings("unchecked")
@@ -225,10 +229,11 @@ public class CommandContext {
 
 	/**
 	 * Gets the {@link ParsedArgument#getResult()} for a {@link ParsedArgument} for this {@link CommandContext} by an index.
-	 * @see #getParsedArgument(int)
+	 *
 	 * @param argument - The index of the {@link ParsedArgument} to get its {@link ParsedArgument#getResult()}.
-	 * @param <A> - The type of the {@link ParsedArgument#getResult()}.
+	 * @param <A>      - The type of the {@link ParsedArgument#getResult()}.
 	 * @return - The {@link ParsedArgument#getResult()} for an index.
+	 * @see #getParsedArgument(int)
 	 */
 	@NullWhenErrored
 	public <A> A getParsedResult(int argument) {
@@ -240,11 +245,12 @@ public class CommandContext {
 	 * Gets the {@link ParsedArgument#getResult()} for a {@link ParsedArgument} for this {@link CommandContext} by an index.
 	 * If the result of {@link ParsedArgument#getResult()} is null then it will return {@param other}.
 	 * This should only be used for optional arguments. Moreover, arguments that have {@link Argument#isOptional()} return true.
-	 * @see #getParsedArgument(int)
+	 *
 	 * @param argument - The index of the {@link ParsedArgument#getResult()}.
-	 * @param other - The result to return if {@link ParsedArgument#getResult()} is null.
-	 * @param <A> - The type of the {@link ParsedArgument#getResult()}.
+	 * @param other    - The result to return if {@link ParsedArgument#getResult()} is null.
+	 * @param <A>      - The type of the {@link ParsedArgument#getResult()}.
 	 * @return - The {@link ParsedArgument#getResult()} for an index or if it's not present then returns the other result.
+	 * @see #getParsedArgument(int)
 	 */
 	@SuppressWarnings("unchecked")
 	public <A> A getParsedResultOrElse(int argument, A other) {
@@ -253,9 +259,10 @@ public class CommandContext {
 
 	/**
 	 * Checks if a {@link ParsedArgument#getResult()} for an index is present and then accepts a consumer on that result.
+	 *
 	 * @param argument - The index of the {@link ParsedArgument#getResult()}.
 	 * @param consumer - The consumer to accept on the result if it's present.
-	 * @param <A> - The type of the {@link ParsedArgument#getResult()}.
+	 * @param <A>      - The type of the {@link ParsedArgument#getResult()}.
 	 */
 	@SuppressWarnings("unchecked")
 	public <A> void ifParsedResultPresent(int argument, Consumer<A> consumer) {

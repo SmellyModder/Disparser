@@ -7,6 +7,7 @@ import java.util.function.Function;
  * This class contains a function for creating a {@link CommandSyntaxException}.
  * The function takes in a generic type object and parses it to a string to be used for creating a message for a {@link CommandSyntaxException}.
  * This class can store a object internally to be re-used for creating a {@link CommandSyntaxException}.
+ *
  * @author Luke Tonon
  */
 public class DynamicCommandExceptionCreator<T> implements CommandExceptionCreator<CommandSyntaxException> {

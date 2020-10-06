@@ -7,7 +7,7 @@ import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 /**
  * A simple argument for parsing shorts.
- * 
+ *
  * @author Luke Tonon
  */
 public final class ShortArgument implements Argument<Short> {
@@ -28,6 +28,7 @@ public final class ShortArgument implements Argument<Short> {
 
 	/**
 	 * Creates a new {@link ShortArgument} that clamps the parsable value.
+	 *
 	 * @param min Minimum value
 	 * @param max Maximum value
 	 * @return a new {@link ShortArgument} that clamps the parsable value.
@@ -38,6 +39,7 @@ public final class ShortArgument implements Argument<Short> {
 
 	/**
 	 * Creates a new {@link ShortArgument} that minimums the parsable value.
+	 *
 	 * @param min Minimum value
 	 * @return a new {@link ShortArgument} that minimums the parsable value.
 	 */
@@ -47,6 +49,7 @@ public final class ShortArgument implements Argument<Short> {
 
 	/**
 	 * Creates a new {@link ShortArgument} that maxes the parsable value.
+	 *
 	 * @param max Maximum value
 	 * @return a new {@link ShortArgument} that maxes the parsable value.
 	 */

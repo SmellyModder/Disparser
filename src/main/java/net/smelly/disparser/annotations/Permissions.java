@@ -13,7 +13,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Used to merge or overwrite a command instance's permissions when registering it to a {@link CommandHandler}.
- * 
+ *
  * @author Luke Tonon
  */
 @Documented
@@ -22,12 +22,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Permissions {
 	/**
 	 * This will merge or overwrite the command's existing permissions depending on the value of {@link #mergePermissions()}.
+	 *
 	 * @return - The permissions for the command.
 	 */
 	Permission[] value();
-	
+
 	/**
 	 * @return - If it should merge these permissions with the existing permissions.
 	 */
-	 boolean mergePermissions() default false;
+	boolean mergePermissions() default false;
 }

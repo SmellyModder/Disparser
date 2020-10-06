@@ -6,8 +6,9 @@ import javax.annotation.Nullable;
 
 /**
  * An exception that represents a command syntax exception.
- * @see SimpleCommandExceptionCreator
+ *
  * @author Luke Tonon
+ * @see SimpleCommandExceptionCreator
  */
 @SuppressWarnings("serial")
 public class CommandSyntaxException extends Exception {
@@ -17,6 +18,7 @@ public class CommandSyntaxException extends Exception {
 
 	/**
 	 * A simple constructor that sets a message for this exception.
+	 *
 	 * @param message Message for the exception, {@link #getMessage()}.
 	 */
 	public CommandSyntaxException(String message) {
@@ -25,7 +27,8 @@ public class CommandSyntaxException extends Exception {
 
 	/**
 	 * A constructor that sets a message for this exception and an argument index to be processed in {@link #getMessage()}.
-	 * @param message Message for the exception.
+	 *
+	 * @param message       Message for the exception.
 	 * @param argumentIndex Index of the argument to be processed in {@link #getMessage()}.
 	 * @see #getMessage()
 	 */

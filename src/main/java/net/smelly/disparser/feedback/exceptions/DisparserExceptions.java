@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * This class contains many built-in {@link CommandExceptionCreator}s useful for creating exceptions.
  * All of these fields are used internally in Disparser.
+ *
  * @author Luke Tonon
  */
 public final class DisparserExceptions {

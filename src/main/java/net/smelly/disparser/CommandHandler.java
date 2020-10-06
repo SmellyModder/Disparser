@@ -20,15 +20,16 @@ import java.util.stream.Collectors;
 /**
  * Handles all the command execution.
  * <p> This is a {@link ListenerAdapter} so it can be used as a JDA event listener. <p>
- * 
+ *
  * @author Luke Tonon
  */
 public class CommandHandler extends ListenerAdapter {
 	public final Map<String, Command> aliasMap = Collections.synchronizedMap(new HashMap<>());
 	private Function<Guild, String> prefixFunction = (guild) -> "!";
 	private FeedbackHandlerBuilder feedbackHandlerBuilder = FeedbackHandlerBuilder.SIMPLE_BUILDER;
-	
-	private CommandHandler() {}
+
+	private CommandHandler() {
+	}
 
 	protected CommandHandler(String prefix) {
 		this((guild) -> prefix);
@@ -42,7 +43,7 @@ public class CommandHandler extends ListenerAdapter {
 		this.prefixFunction = prefixFunction;
 		this.registerCommands(Arrays.asList(commands));
 	}
-	
+
 	protected void registerCommands(List<Command> commands) {
 		synchronized (this.aliasMap) {
 			commands.forEach(this::registerCommand);
@@ -51,6 +52,7 @@ public class CommandHandler extends ListenerAdapter {
 
 	/**
 	 * Registers all command fields from a class. All fields <b> MUST </b> be static to be registered.
+	 *
 	 * @param commandsClazz - The class to lookup command fields to register.
 	 */
 	protected void registerCommands(Class<?> commandsClazz) {
@@ -82,7 +84,8 @@ public class CommandHandler extends ListenerAdapter {
 
 	/**
 	 * Registers a command for an alias.
-	 * @param alias - The alias for this command.
+	 *
+	 * @param alias   - The alias for this command.
 	 * @param command - The command to register.
 	 */
 	protected void registerCommand(String alias, Command command) {
@@ -95,6 +98,7 @@ public class CommandHandler extends ListenerAdapter {
 
 	/**
 	 * Registers a command by all its aliases.
+	 *
 	 * @param command - The command to register.
 	 */
 	protected void registerCommand(Command command) {
@@ -105,6 +109,7 @@ public class CommandHandler extends ListenerAdapter {
 
 	/**
 	 * Applies {@link Aliases} and {@link Permissions}s to {@link Command} fields in a class.
+	 *
 	 * @param clazz - The class to have its fields be applied.
 	 * @return This {@link CommandHandler}.
 	 */
@@ -132,6 +137,7 @@ public class CommandHandler extends ListenerAdapter {
 
 	/**
 	 * Applies an {@link Aliases} to a {@link Command}.
+	 *
 	 * @param command - The command to have the {@link Aliases} applied to.
 	 */
 	private void applyAliases(Command command, @Nullable Aliases aliases) {
@@ -146,6 +152,7 @@ public class CommandHandler extends ListenerAdapter {
 
 	/**
 	 * Applies an {@link Permissions} to a {@link Command}.
+	 *
 	 * @param command - The command to have the {@link Permissions} applied to.
 	 */
 	private void applyPermissions(Command command, @Nullable Permissions permissions) {
@@ -156,14 +163,15 @@ public class CommandHandler extends ListenerAdapter {
 		}
 		this.registerCommand(command);
 	}
-	
+
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		CommandContext.createAndDisparse(this, event);
 	}
-	
+
 	/**
 	 * Override this in your own {@link CommandHandler} if you wish to have the prefix be more dynamic and/or configurable.
+	 *
 	 * @param guild - The guild belonging to the sent command.
 	 * @return The prefix for the commands.
 	 */
@@ -175,6 +183,7 @@ public class CommandHandler extends ListenerAdapter {
 	 * Gets this handler's {@link FeedbackHandlerBuilder}.
 	 * This is used for creating a {@link FeedbackHandler} to be used for sending feedback when processing commands.
 	 * <p> This returns {@link FeedbackHandlerBuilder#SIMPLE_BUILDER} by default. </p>
+	 *
 	 * @return This {@link FeedbackHandlerBuilder} for this {@link CommandHandler}.
 	 */
 	public FeedbackHandlerBuilder getFeedbackHandlerBuilder() {
@@ -190,6 +199,7 @@ public class CommandHandler extends ListenerAdapter {
 
 		/**
 		 * Sets a prefix for the {@link CommandHandler}.
+		 *
 		 * @param prefix - The prefix to set.
 		 * @return This builder.
 		 */
@@ -200,6 +210,7 @@ public class CommandHandler extends ListenerAdapter {
 
 		/**
 		 * Sets a prefix function for the {@link CommandHandler}.
+		 *
 		 * @param prefixFunction - The prefix function to set.
 		 * @return This builder.
 		 */
@@ -210,7 +221,8 @@ public class CommandHandler extends ListenerAdapter {
 
 		/**
 		 * Registers a command for an alias.
-		 * @param alias - The alias for this command.
+		 *
+		 * @param alias   - The alias for this command.
 		 * @param command - The command to register.
 		 * @return This builder.
 		 */
@@ -221,16 +233,18 @@ public class CommandHandler extends ListenerAdapter {
 
 		/**
 		 * Registers a command by all its aliases.
+		 *
 		 * @param command - The command to register.
 		 * @return This builder.
 		 */
 		public CommandHandlerBuilder registerCommand(Command command) {
-			this.handler.registerCommand( command);
+			this.handler.registerCommand(command);
 			return this;
 		}
 
 		/**
 		 * Registers multiple commands by their aliases.
+		 *
 		 * @param commands - The commands to register.
 		 * @return This builder.
 		 */
@@ -241,6 +255,7 @@ public class CommandHandler extends ListenerAdapter {
 
 		/**
 		 * Registers all command fields from a class. All fields MUST be static.
+		 *
 		 * @param commandsClazz - The class to lookup command fields to register.
 		 * @return This builder.
 		 */
@@ -251,6 +266,7 @@ public class CommandHandler extends ListenerAdapter {
 
 		/**
 		 * Applies annotated {@link Aliases} and {@link Permissions} annotations to {@link Command} fields in a class.
+		 *
 		 * @param clazz - The class to have its fields be applied.
 		 * @return This builder.
 		 */
@@ -261,6 +277,7 @@ public class CommandHandler extends ListenerAdapter {
 
 		/**
 		 * Applies an {@link Aliases} to a {@link Command}.
+		 *
 		 * @param command - The command to have the {@link Aliases} applied to.
 		 * @param aliases - The {@link Aliases} annotation to apply.
 		 * @return This builder.
@@ -272,7 +289,8 @@ public class CommandHandler extends ListenerAdapter {
 
 		/**
 		 * Applies an {@link Permissions} to a {@link Command}.
-		 * @param command - The command to have the {@link Permissions} applied to.
+		 *
+		 * @param command     - The command to have the {@link Permissions} applied to.
 		 * @param permissions - The {@link Permissions} annotation to apply.
 		 * @return This builder.
 		 */
@@ -283,6 +301,7 @@ public class CommandHandler extends ListenerAdapter {
 
 		/**
 		 * Sets a {@link FeedbackHandlerBuilder} for the {@link CommandHandler}.
+		 *
 		 * @return This builder.
 		 */
 		public CommandHandlerBuilder setFeedbackBuilder(FeedbackHandlerBuilder feedbackBuilder) {

@@ -12,7 +12,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Used to merge or overwrite a command instance's aliases when registering it to a {@link CommandHandler}.
- * 
+ *
  * @author Luke Tonon
  */
 @Documented
@@ -21,10 +21,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Aliases {
 	/**
 	 * This will merge or overwrite the command's existing aliases depending on the value of {@link #mergeAliases()}.
+	 *
 	 * @return The aliases for the command.
 	 */
 	String[] value();
-	
+
 	/**
 	 * @return If it should merge these aliases with the existing aliases.
 	 */

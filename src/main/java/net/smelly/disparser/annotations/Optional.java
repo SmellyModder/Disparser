@@ -9,10 +9,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Annotate this on argument types to make them optional.
- * 
+ *
  * @author Luke Tonon
  */
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface Optional {}
+public @interface Optional {
+}

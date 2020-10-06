@@ -7,7 +7,7 @@ import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 /**
  * A simple argument for parsing bytes.
- * 
+ *
  * @author Luke Tonon
  */
 public final class FloatArgument implements Argument<Float> {
@@ -28,6 +28,7 @@ public final class FloatArgument implements Argument<Float> {
 
 	/**
 	 * Creates a new {@link FloatArgument} that clamps the parsable value.
+	 *
 	 * @param min Minimum value
 	 * @param max Maximum value
 	 * @return a new {@link FloatArgument} that clamps the parsable value.
@@ -38,6 +39,7 @@ public final class FloatArgument implements Argument<Float> {
 
 	/**
 	 * Creates a new {@link FloatArgument} that minimums the parsable value.
+	 *
 	 * @param min Minimum value
 	 * @return a new {@link FloatArgument} that minimums the parsable value.
 	 */
@@ -47,6 +49,7 @@ public final class FloatArgument implements Argument<Float> {
 
 	/**
 	 * Creates a new {@link FloatArgument} that maxes the parsable value.
+	 *
 	 * @param max Max value
 	 * @return a new {@link FloatArgument} that maxes the parsable value.
 	 */

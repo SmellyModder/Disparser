@@ -9,16 +9,16 @@ import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 /**
  * An argument that can parse guilds by their ID for a JDA.
- * 
+ *
  * @author Luke Tonon
  */
 public final class GuildArgument implements Argument<Guild> {
 	private final JDA jda;
-	
+
 	private GuildArgument(JDA jda) {
 		this.jda = jda;
 	}
-	
+
 	/**
 	 * @param jda - The JDA to get the guild from.
 	 * @return An instance of this argument with a JDA.
@@ -26,7 +26,7 @@ public final class GuildArgument implements Argument<Guild> {
 	public static GuildArgument get(JDA jda) {
 		return new GuildArgument(jda);
 	}
-	
+
 	@Override
 	public ParsedArgument<Guild> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {

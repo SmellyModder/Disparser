@@ -8,8 +8,9 @@ import java.util.function.BiFunction;
  * The function takes in two generic type objects and parses them to a string to be used for creating a message for a {@link CommandSyntaxException}.
  * This class can store the two generic objects internally to be re-used for creating a {@link CommandSyntaxException}.
  * <p> Simply put, this class is a bi version of {@link DynamicCommandExceptionCreator}. </p>
- * @see DynamicCommandExceptionCreator
+ *
  * @author Luke Tonon
+ * @see DynamicCommandExceptionCreator
  */
 public class BiDynamicCommandExceptionCreator<T, U> implements CommandExceptionCreator<CommandSyntaxException> {
 	private final BiFunction<T, U, String> function;
@@ -45,7 +46,7 @@ public class BiDynamicCommandExceptionCreator<T, U> implements CommandExceptionC
 		return new CommandSyntaxException(this.function.apply(this.first, this.second), argument);
 	}
 
-	public CommandSyntaxException createForArgument(T first,  U second, int argument) {
+	public CommandSyntaxException createForArgument(T first, U second, int argument) {
 		return new CommandSyntaxException(this.function.apply(first, second), argument);
 	}
 }

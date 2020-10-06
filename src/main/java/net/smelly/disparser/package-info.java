@@ -1,7 +1,7 @@
 /**
  * This is the main package for Disparser.
  * <p> It contains all the core classes for Disparser and many other classes in Disparser work around them. </p>
- *
+ * <p>
  * Internal Packages:
  * <p>
  * {@link net.smelly.disparser.annotations}

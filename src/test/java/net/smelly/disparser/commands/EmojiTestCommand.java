@@ -11,7 +11,7 @@ import java.util.Random;
 public final class EmojiTestCommand extends Command {
 
 	public EmojiTestCommand() {
-		super("emoji", EmojiArgument.getMultipleClamped(2, 6,false));
+		super("emoji", EmojiArgument.getMultipleClamped(2, 6, false));
 	}
 
 	@Override

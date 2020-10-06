@@ -12,16 +12,16 @@ import java.util.function.Consumer;
  * <p>
  * {@link #result} should <b> always </b> be null when a parsing error occurs.
  * </p>
- * @author Luke Tonon
  *
  * @param <A> - The type for this parsed argument.
+ * @author Luke Tonon
  */
 public final class ParsedArgument<A> {
 	private static final ParsedArgument<?> EMPTY = new ParsedArgument<>(null);
 
 	@NullWhenErrored
 	private final A result;
-	
+
 	private ParsedArgument(@Nullable final A readArgument) {
 		this.result = readArgument;
 	}
@@ -35,8 +35,8 @@ public final class ParsedArgument<A> {
 	}
 
 	/**
-	 * @throws NullPointerException if other value is null
 	 * @return The parsed result or other result if null.
+	 * @throws NullPointerException if other value is null
 	 */
 	public A getOrOtherResult(@Nonnull A other) {
 		Objects.requireNonNull(other);
@@ -52,6 +52,7 @@ public final class ParsedArgument<A> {
 
 	/**
 	 * Checks if this {@link ParsedArgument} has a parsed result and then accepts a consumer on the result.
+	 *
 	 * @param consumer - The consumer to accept on the result.
 	 */
 	public void ifHasResult(Consumer<A> consumer) {
@@ -60,9 +61,9 @@ public final class ParsedArgument<A> {
 
 	/**
 	 * @param result - The result.
-	 * @param <A> - The type of the result.
-	 * @throws NullPointerException if value is null
+	 * @param <A>    - The type of the result.
 	 * @return A new {@link ParsedArgument} that contains a non-null result.
+	 * @throws NullPointerException if value is null
 	 */
 	public static <A> ParsedArgument<A> parse(@Nonnull final A result) {
 		Objects.requireNonNull(result);
@@ -71,7 +72,7 @@ public final class ParsedArgument<A> {
 
 	/**
 	 * @param result - The result.
-	 * @param <A> - The type of the result.
+	 * @param <A>    - The type of the result.
 	 * @return A new {@link ParsedArgument} that contains a nullable result.
 	 */
 	public static <A> ParsedArgument<A> parseNullable(@Nullable final A result) {

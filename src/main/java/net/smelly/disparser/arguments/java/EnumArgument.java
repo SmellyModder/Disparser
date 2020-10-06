@@ -7,25 +7,24 @@ import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 /**
  * An argument that parses values of an enum by their name.
- * 
- * @author Luke Tonon
  *
  * @param <E> - The type of enum.
+ * @author Luke Tonon
  */
 public final class EnumArgument<E extends Enum<?>> implements Argument<E> {
 	private final E[] values;
-	
+
 	private EnumArgument(Class<E> type) {
 		this.values = type.getEnumConstants();
 	}
-	
+
 	/**
 	 * @return An instance containing all the possible values of an enum.
 	 */
 	public static <E extends Enum<?>> EnumArgument<E> get(Class<E> type) {
 		return new EnumArgument<>(type);
 	}
-	
+
 	@Override
 	public ParsedArgument<E> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {

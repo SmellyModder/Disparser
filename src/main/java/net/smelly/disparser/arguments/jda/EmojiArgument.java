@@ -16,9 +16,9 @@ import java.util.regex.Pattern;
  * An argument for parsing an {@link Activity.Emoji}.
  * Use {@link EmojiArgument.Multiple} for parsing multiple emojis.
  * {@link Activity.Emoji} is an object for representing an emoji.
- * @see Activity.Emoji
  *
  * @author Luke Tonon
+ * @see Activity.Emoji
  */
 public final class EmojiArgument implements Argument<Activity.Emoji> {
 	private static final Pattern UNICODE_EMOJI_PATTERN = Pattern.compile("[^\\p{L}\\p{N}\\p{P}\\p{Z}]", Pattern.UNICODE_CHARACTER_CLASS);
@@ -53,8 +53,8 @@ public final class EmojiArgument implements Argument<Activity.Emoji> {
 	}
 
 	/**
-	 * @param minEmojis The minimum amount of emojis that must be parsed.
-	 * @param maxEmojis The max amount of emojis able to be parsed.
+	 * @param minEmojis         The minimum amount of emojis that must be parsed.
+	 * @param maxEmojis         The max amount of emojis able to be parsed.
 	 * @param allowCustomEmotes Should custom emojis be able to be parsed.
 	 * @return An instance that parses multiple emojis.
 	 */
@@ -63,7 +63,7 @@ public final class EmojiArgument implements Argument<Activity.Emoji> {
 	}
 
 	/**
-	 * @param minEmojis The minimum amount of emojis that must be parsed.
+	 * @param minEmojis         The minimum amount of emojis that must be parsed.
 	 * @param allowCustomEmotes Should custom emojis be able to be parsed.
 	 * @return An instance that parses multiple emojis.
 	 */
@@ -72,7 +72,7 @@ public final class EmojiArgument implements Argument<Activity.Emoji> {
 	}
 
 	/**
-	 * @param maxEmojis The max amount of emojis able to be parsed.
+	 * @param maxEmojis         The max amount of emojis able to be parsed.
 	 * @param allowCustomEmotes Should custom emojis be able to be parsed.
 	 * @return An instance that parses multiple emojis.
 	 */

@@ -7,7 +7,7 @@ import net.smelly.disparser.annotations.Optional;
 
 /**
  * Test of optional argument annotation.
- * 
+ *
  * @author Luke Tonon
  */
 @Optional

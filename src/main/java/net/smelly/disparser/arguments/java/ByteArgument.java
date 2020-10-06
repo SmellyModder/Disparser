@@ -7,7 +7,7 @@ import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 /**
  * A simple argument for parsing bytes.
- * 
+ *
  * @author Luke Tonon
  */
 public final class ByteArgument implements Argument<Byte> {
@@ -18,7 +18,7 @@ public final class ByteArgument implements Argument<Byte> {
 		this.minimum = minimum;
 		this.maximum = maximum;
 	}
-	
+
 	/**
 	 * @return The default instance.
 	 */
@@ -28,6 +28,7 @@ public final class ByteArgument implements Argument<Byte> {
 
 	/**
 	 * Creates a new {@link ByteArgument} that clamps the parsable value.
+	 *
 	 * @param min Minimum value
 	 * @param max Maximum value
 	 * @return a new {@link ByteArgument} that clamps the parsable value.
@@ -38,6 +39,7 @@ public final class ByteArgument implements Argument<Byte> {
 
 	/**
 	 * Creates a new {@link ByteArgument} that minimums the parsable value.
+	 *
 	 * @param min Minimum value
 	 * @return a new {@link ByteArgument} that minimums the parsable value.
 	 */
@@ -47,13 +49,14 @@ public final class ByteArgument implements Argument<Byte> {
 
 	/**
 	 * Creates a new {@link ByteArgument} that maxes the parsable value.
+	 *
 	 * @param max Max value
 	 * @return a new {@link ByteArgument} that maxes the parsable value.
 	 */
 	public static ByteArgument getMax(byte max) {
 		return new ByteArgument(Byte.MIN_VALUE, max);
 	}
-	
+
 	@Override
 	public ParsedArgument<Byte> parse(ArgumentReader reader) throws Exception {
 		byte abyte = reader.nextByte();

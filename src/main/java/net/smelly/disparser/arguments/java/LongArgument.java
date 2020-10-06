@@ -7,7 +7,7 @@ import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 /**
  * A simple argument for parsing longs.
- * 
+ *
  * @author Luke Tonon
  */
 public final class LongArgument implements Argument<Long> {
@@ -28,6 +28,7 @@ public final class LongArgument implements Argument<Long> {
 
 	/**
 	 * Creates a new {@link LongArgument} that clamps the parsable value.
+	 *
 	 * @param min Minimum value
 	 * @param max Maximum value
 	 * @return a new {@link LongArgument} that clamps the parsable value.
@@ -38,6 +39,7 @@ public final class LongArgument implements Argument<Long> {
 
 	/**
 	 * Creates a new {@link LongArgument} that minimums the parsable value.
+	 *
 	 * @param min Minimum value
 	 * @return a new {@link LongArgument} that minimums the parsable value.
 	 */
@@ -47,6 +49,7 @@ public final class LongArgument implements Argument<Long> {
 
 	/**
 	 * Creates a new {@link LongArgument} that maxes the parsable value.
+	 *
 	 * @param max Maximum value
 	 * @return a new {@link LongArgument} that maxes the parsable value.
 	 */

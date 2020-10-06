@@ -21,11 +21,11 @@ public final class TestBot {
 		botBuilder.setStatus(OnlineStatus.ONLINE);
 		botBuilder.setActivity(Activity.of(ActivityType.DEFAULT, "Disparsing!"));
 		botBuilder.addEventListeners(
-			new CommandHandler.CommandHandlerBuilder()
-				.setPrefix("!")
-				.registerCommands(Commands.class)
-				.setFeedbackBuilder(TestCustomFeedbackHandler::new)
-				.build()
+				new CommandHandler.CommandHandlerBuilder()
+						.setPrefix("!")
+						.registerCommands(Commands.class)
+						.setFeedbackBuilder(TestCustomFeedbackHandler::new)
+						.build()
 		);
 		BOT = botBuilder.build();
 	}

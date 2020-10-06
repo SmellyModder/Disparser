@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 
 /**
  * A simple argument for parsing strings.
- * 
+ *
  * @author Luke Tonon
  */
 public final class StringArgument implements Argument<String> {
@@ -19,7 +19,7 @@ public final class StringArgument implements Argument<String> {
 	private StringArgument(@Nullable Integer maxChars) {
 		this.maxChars = maxChars;
 	}
-	
+
 	/**
 	 * @return The default instance.
 	 */
@@ -34,7 +34,7 @@ public final class StringArgument implements Argument<String> {
 	public static StringArgument create(int maxChars) {
 		return new StringArgument(maxChars);
 	}
-	
+
 	@Override
 	public ParsedArgument<String> parse(ArgumentReader reader) throws Exception {
 		String nextArgument = reader.nextArgument();

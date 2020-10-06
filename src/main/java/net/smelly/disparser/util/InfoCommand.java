@@ -12,13 +12,13 @@ import java.util.Map;
 
 /**
  * A simple base command for an info command.
- * 
+ *
  * @author Luke Tonon
  */
 public class InfoCommand extends Command {
 	private MessageEmbed mainInfoMessage;
 	private Map<String, MessageEmbed> commandInfoMessages;
-	
+
 	public InfoCommand(MessageEmbed mainInfoMessage) {
 		super("info", StringArgument.get().asOptional());
 		this.mainInfoMessage = mainInfoMessage;
@@ -26,6 +26,7 @@ public class InfoCommand extends Command {
 
 	/**
 	 * Sets the main info {@link MessageEmbed} for this {@link InfoCommand}.
+	 *
 	 * @param mainInfoMessage - The main info {@link MessageEmbed}.
 	 * @return This {@link InfoCommand}.
 	 */
@@ -49,11 +50,11 @@ public class InfoCommand extends Command {
 
 	/**
 	 * Puts a {@link MessageEmbed} for a command name.
-	 * @see {@link #setCommandInfoMessages}.
 	 *
 	 * @param commandName - The name to put as the key.
 	 * @param commandInfo - The {@link MessageEmbed} to be displayed for the info of the {@param commandName} key.
 	 * @return This {@link InfoCommand}.
+	 * @see {@link #setCommandInfoMessages}.
 	 */
 	public InfoCommand putCommandInfo(String commandName, MessageEmbed commandInfo) {
 		if (this.commandInfoMessages == null) this.commandInfoMessages = Collections.synchronizedMap(new HashMap<>());
@@ -63,6 +64,7 @@ public class InfoCommand extends Command {
 
 	/**
 	 * Processes the command.
+	 *
 	 * @param context - The {@link CommandContext} for this command.
 	 */
 	@Override

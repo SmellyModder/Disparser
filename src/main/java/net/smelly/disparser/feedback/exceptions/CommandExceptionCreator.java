@@ -5,8 +5,8 @@ package net.smelly.disparser.feedback.exceptions;
  * Ideally all types implementing this interface can be used as builders for an exception.
  * Types implementing this interface can add more create methods if they wish.
  *
- * @author Luke Tonon
  * @param <E> The type of exception to create.
+ * @author Luke Tonon
  */
 public interface CommandExceptionCreator<E extends Exception> {
 	E create();

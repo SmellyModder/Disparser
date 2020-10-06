@@ -12,6 +12,7 @@ import java.util.function.Function;
 /**
  * Used to read {@link Argument}s from a message
  * <p> Stores the channel of the message and stores the message down into its individual components </p>
+ *
  * @author Luke Tonon
  */
 public final class ArgumentReader {
@@ -19,24 +20,25 @@ public final class ArgumentReader {
 	private final TextChannel channel;
 	private final String[] messageComponents;
 	private int currentComponent;
-	
+
 	private ArgumentReader(FeedbackHandler feedbackHandler, TextChannel channel, String[] messageComponents) {
 		this.feedbackHandler = feedbackHandler;
 		this.channel = channel;
 		this.messageComponents = messageComponents;
 	}
-	
+
 	/**
 	 * Creates an ArgumentReader for a {@link Message and {@link FeedbackHandler}.
 	 * Use the {@link FeedbackHandler} to send feedback when parsing arguments.
+	 *
 	 * @param feedbackHandler - The {@link FeedbackHandler} for this {@link ArgumentReader}.
-	 * @param message - The {@link Message} for this {@link ArgumentReader}.
+	 * @param message         - The {@link Message} for this {@link ArgumentReader}.
 	 * @return {@link ArgumentReader} for the message.
 	 */
 	public static ArgumentReader create(final FeedbackHandler feedbackHandler, final Message message) {
 		return new ArgumentReader(feedbackHandler, message.getTextChannel(), message.getContentRaw().split(" "));
 	}
-	
+
 	public TextChannel getChannel() {
 		return this.channel;
 	}
@@ -130,15 +132,16 @@ public final class ArgumentReader {
 			throw DisparserExceptions.INVALID_DOUBLE_EXCEPTION.create(nextArg);
 		}
 	}
-	
+
 	public boolean nextBoolean() {
 		return Boolean.parseBoolean(this.nextArgument());
 	}
-	
+
 	/**
 	 * Used to convert strings to non-primitive type arguments.
+	 *
 	 * @param parser - A {@link Function} to parse the next string argument to an {@link ParsedArgument}.
-	 * @param <A> - The type of the argument.
+	 * @param <A>    - The type of the argument.
 	 * @return The object({@link A}) read from the reader.
 	 */
 	public <A> ParsedArgument<A> parseNextArgument(final Parser<A> parser) throws Exception {
@@ -148,6 +151,7 @@ public final class ArgumentReader {
 	/**
 	 * Tries to parse the next argument in the message.
 	 * If it fails to parse the next argument it will not shift the {@link #currentComponent} forward.
+	 *
 	 * @param argument - The argument to try to parse.
 	 * @return The parsed argument. If it fails, the parsed argument's result will be null and an error message will be included in the parsed argument.
 	 */
@@ -160,10 +164,11 @@ public final class ArgumentReader {
 			return ParsedArgument.empty();
 		}
 	}
-	
+
 	/**
 	 * Gets the next argument in the message's components.
 	 * <p> Should ideally only be called once in {@link Argument#parse(ArgumentReader)}. </p>
+	 *
 	 * @return The next argument.
 	 */
 	public String nextArgument() {
@@ -173,9 +178,10 @@ public final class ArgumentReader {
 		}
 		return this.messageComponents[this.currentComponent];
 	}
-	
+
 	/**
 	 * If the reader has a next argument in its components.
+	 *
 	 * @return If the reader has a next argument in its components.
 	 */
 	public boolean hasNextArg() {

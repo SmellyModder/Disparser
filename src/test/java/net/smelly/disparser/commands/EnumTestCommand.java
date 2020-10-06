@@ -29,9 +29,9 @@ public class EnumTestCommand extends Command {
 		B("Bees..."),
 		C("Chad"),
 		Z("");
-		
+
 		private final String message;
-		
+
 		TestEnum(String message) {
 			this.message = message;
 		}

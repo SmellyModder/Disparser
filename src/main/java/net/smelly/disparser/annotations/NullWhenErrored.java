@@ -23,4 +23,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Nonnull(when = When.MAYBE)
 @Target({FIELD, METHOD})
 @Retention(RUNTIME)
-public @interface NullWhenErrored {}
+public @interface NullWhenErrored {
+}
