@@ -127,4 +127,14 @@ public final class DisparserExceptions {
 	public static final DynamicCommandExceptionCreator<String> INVALID_GUILD_ID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
 		return String.format("`%s` is not a valid guild id", id);
 	}));
+
+	public static final DynamicCommandExceptionCreator<Long> ROLE_NOT_FOUND_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("Role with id `%d` could not be found", id);
+	}));
+
+	public static final DynamicCommandExceptionCreator<String> INVALID_ROLE_ID_EXCEPTION = DynamicCommandExceptionCreator.createInstance((id -> {
+		return String.format("`%s` is not a valid role id", id);
+	}));
+
+	public static final SimpleCommandExceptionCreator MENTION_ROLE_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionCreator("Role in mention could not be found");
 }

@@ -33,6 +33,9 @@ public class Commands {
 	@Aliases(value = {"emoji_test"}, mergeAliases = true)
 	public static final EmojiTestCommand EMOJI_TEST_COMMAND = new EmojiTestCommand();
 
+	@Aliases(value = {"role_test"}, mergeAliases = true)
+	public static final RoleTestCommand ROLE_TEST_COMMAND = new RoleTestCommand();
+
 	@Aliases(value = {"normal_test"}, mergeAliases = true)
 	public static final TestCommand TEST_COMMAND = new TestCommand();
 }
