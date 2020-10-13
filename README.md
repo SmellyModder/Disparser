@@ -1,4 +1,4 @@
-[![](https://cdn.discordapp.com/attachments/667088262287851551/758404732539895828/badge.png)](https://jitpack.io/#SmellyModder/Disparser/1.2.0)
+[![](https://cdn.discordapp.com/attachments/667088262287851551/765724389244534825/disparser-1.3.0.PNG)](https://jitpack.io/#SmellyModder/Disparser/1.3.0)
 
 <img align="right" src="https://cdn.discordapp.com/attachments/667088262287851551/740459139141992469/disparser_logo.png" height="200" width="200">
 
