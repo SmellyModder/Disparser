@@ -1,7 +1,8 @@
 package net.smelly.disparser;
 
 import net.smelly.disparser.annotations.NullWhenErrored;
-import net.smelly.disparser.feedback.*;
+import net.smelly.disparser.feedback.FeedbackHandler;
+import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
 import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 import net.smelly.disparser.util.MessageUtil;
 import net.dv8tion.jda.api.entities.Member;
