@@ -1,10 +1,10 @@
 package net.smelly.disparser;
 
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
-import net.smelly.disparser.feedback.FeedbackHandler;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.smelly.disparser.feedback.FeedbackHandler;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 import net.smelly.disparser.util.MessageUtil;
 
 import java.util.function.Function;

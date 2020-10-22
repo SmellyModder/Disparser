@@ -1,6 +1,5 @@
 package net.smelly.disparser;
 
-import net.smelly.disparser.commands.Commands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -9,9 +8,11 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.smelly.disparser.commands.Commands;
 import net.smelly.disparser.feedback.SimpleFeedbackHandler;
 
 import javax.security.auth.login.LoginException;
+import java.util.concurrent.Executors;
 
 public final class TestBot {
 	private static JDA BOT;
@@ -25,6 +26,7 @@ public final class TestBot {
 						.setPrefix("!")
 						.registerCommands(Commands.class)
 						.setFeedbackBuilder(TestCustomFeedbackHandler::new)
+						.setExecutorService(Executors.newFixedThreadPool(6))
 						.build()
 		);
 		BOT = botBuilder.build();

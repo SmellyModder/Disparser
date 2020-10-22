@@ -1,22 +1,26 @@
 package net.smelly.disparser;
 
-import net.smelly.disparser.annotations.Optional;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.smelly.disparser.annotations.Optional;
+import net.smelly.disparser.properties.AliasesProperty;
+import net.smelly.disparser.properties.CommandProperty;
+import net.smelly.disparser.properties.PermissionsProperty;
+import org.apache.commons.collections4.list.UnmodifiableList;
+import org.apache.commons.collections4.set.UnmodifiableSet;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
- * Abstract class for a command.
+ * Abstract class for a command. All fields in this class are unmodifiable for thread-safety.
  *
  * @author Luke Tonon
  */
 public abstract class Command {
-	private Set<String> aliases;
-	private Set<Permission> requiredPermissions;
-	private final List<Argument<?>> arguments;
+	private final AliasesProperty aliasesProperty;
+	private final PermissionsProperty permissionsProperty;
+	private final UnmodifiableSet<CommandProperty<?, ?>> properties;
+	private final UnmodifiableList<Argument<?>> arguments;
 
 	public Command(String name) {
 		this(name, new Argument[0]);
@@ -27,13 +31,24 @@ public abstract class Command {
 	}
 
 	public Command(Set<String> aliases, Set<Permission> permissions, Argument<?>... args) {
-		this.aliases = aliases;
-		this.requiredPermissions = permissions;
+		this.aliasesProperty = AliasesProperty.create(aliases);
+		this.permissionsProperty = PermissionsProperty.create(permissions);
 		List<Argument<?>> setupArguments = new ArrayList<>();
 		for (Argument<?> argument : args) {
 			setupArguments.add(argument.getClass().isAnnotationPresent(Optional.class) ? argument.asOptional() : argument);
 		}
-		this.arguments = setupArguments;
+		Set<CommandProperty<?, ?>> properties = new HashSet<>();
+		properties.add(this.aliasesProperty);
+		properties.add(this.permissionsProperty);
+		this.properties = (UnmodifiableSet<CommandProperty<?, ?>>) UnmodifiableSet.unmodifiableSet(properties);
+		this.arguments = new UnmodifiableList<>(setupArguments);
+	}
+
+	public Command(AliasesProperty aliasesProperty, PermissionsProperty permissionsProperty, List<Argument<?>> arguments, Set<CommandProperty<?, ?>> properties) {
+		this.aliasesProperty = aliasesProperty;
+		this.permissionsProperty = permissionsProperty;
+		this.arguments = (UnmodifiableList<Argument<?>>) UnmodifiableList.unmodifiableList(arguments);
+		this.properties = (UnmodifiableSet<CommandProperty<?, ?>>) UnmodifiableSet.unmodifiableSet(properties);
 	}
 
 	/**
@@ -43,37 +58,37 @@ public abstract class Command {
 	 */
 	public abstract void processCommand(CommandContext context) throws Exception;
 
-	public void setAliases(Set<String> aliases) {
-		this.aliases = aliases;
+	/**
+	 * Gets this command's {@link AliasesProperty}.
+	 *
+	 * @return This command's {@link AliasesProperty}.
+	 */
+	public AliasesProperty getAliasesProperty() {
+		return this.aliasesProperty;
 	}
 
 	/**
-	 * @return This command's aliases.
+	 * Gets this command's {@link PermissionsProperty}.
+	 *
+	 * @return This command's {@link PermissionsProperty}.
 	 */
-	public Set<String> getAliases() {
-		return this.aliases;
-	}
-
-	public void setRequiredPermissions(Set<Permission> requiredPermissions) {
-		this.requiredPermissions = requiredPermissions;
+	public PermissionsProperty getPermissionsProperty() {
+		return this.permissionsProperty;
 	}
 
 	/**
-	 * @return This command's required permissions.
+	 * Gets this's command's properties.
+	 *
+	 * @return This's command's properties.
 	 */
-	public Set<Permission> getRequiredPermissions() {
-		return this.requiredPermissions;
+	public UnmodifiableSet<CommandProperty<?, ?>> getProperties() {
+		return this.properties;
 	}
 
 	/**
 	 * @return This command's arguments.
 	 */
-	@Nullable
-	public List<Argument<?>> getArguments() {
+	public UnmodifiableList<Argument<?>> getArguments() {
 		return this.arguments;
-	}
-
-	public boolean hasPermissions(Member member) {
-		return member.hasPermission(this.getRequiredPermissions());
 	}
 }

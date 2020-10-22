@@ -1,8 +1,5 @@
 package net.smelly.disparser.feedback.exceptions;
 
-import net.smelly.disparser.feedback.exceptions.CommandExceptionCreator;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
-
 /**
  * A simple class for sending an exception with a message.
  *

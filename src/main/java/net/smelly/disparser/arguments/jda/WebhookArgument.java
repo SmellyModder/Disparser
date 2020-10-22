@@ -1,11 +1,11 @@
 package net.smelly.disparser.arguments.jda;
 
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Webhook;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
 import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Webhook;
 
 import javax.annotation.Nullable;
 

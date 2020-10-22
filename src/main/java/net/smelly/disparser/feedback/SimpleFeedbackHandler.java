@@ -1,9 +1,9 @@
 package net.smelly.disparser.feedback;
 
-import net.smelly.disparser.CommandContext;
-import net.smelly.disparser.util.MessageUtil;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.smelly.disparser.CommandContext;
+import net.smelly.disparser.util.MessageUtil;
 
 /**
  * A simple implementation class of {@link FeedbackHandler}.

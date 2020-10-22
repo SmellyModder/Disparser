@@ -6,7 +6,7 @@ import net.smelly.disparser.ParsedArgument;
 import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * An argument that parses a {@link Color}.

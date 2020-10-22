@@ -1,16 +1,18 @@
 package net.smelly.disparser;
 
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.smelly.disparser.annotations.NullWhenErrored;
 import net.smelly.disparser.feedback.FeedbackHandler;
 import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
 import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 import net.smelly.disparser.util.MessageUtil;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -42,14 +44,14 @@ public class CommandContext {
 	 * @param feedbackHandlerBuilder The {@link FeedbackHandlerBuilder} to use for building a {@link FeedbackHandler} for sending feedback.
 	 * @return An {@link Optional} {@link CommandContext} made for a {@link Command}, empty if an error occurs when parsing the arguments.
 	 */
-	public static Optional<CommandContext> create(final GuildMessageReceivedEvent event, final Command command, final FeedbackHandlerBuilder feedbackHandlerBuilder) {
+	public static Optional<CommandContext> create(final GuildMessageReceivedEvent event, final Command command, final Set<Permission> permissions, final FeedbackHandlerBuilder feedbackHandlerBuilder) {
 		CommandContext commandContext = new CommandContext(event, new ArrayList<>(), feedbackHandlerBuilder);
 		FeedbackHandler feedbackHandler = commandContext.getFeedbackHandler();
 
 		Member member = event.getMember();
 		if (member == null) return Optional.empty();
 
-		if (!command.hasPermissions(member)) {
+		if (!member.hasPermission(permissions)) {
 			feedbackHandler.sendError(DisparserExceptions.PERMISSION_EXCEPTION.create());
 			return Optional.empty();
 		}
@@ -98,32 +100,30 @@ public class CommandContext {
 	}
 
 	/**
-	 * Creates an {@link Optional} {@link CommandContext} using the {@link #create(GuildMessageReceivedEvent, Command, FeedbackHandlerBuilder)} method.
+	 * Creates an {@link Optional} {@link CommandContext} using the {@link #create(GuildMessageReceivedEvent, Command, Set, FeedbackHandlerBuilder)} method.
 	 * First this method will try to find a matching command for a {@link CommandHandler} and then process that command.
 	 * The term "disparse" is used here since it performs all of Disparser's core parsing and processing actions for a command in one method.
 	 *
 	 * @param event The {@link GuildMessageReceivedEvent} to use for parsing the command's arguments.
 	 * @return An {@link Optional} {@link CommandContext} made for a {@link Command}, empty if an error occurs when parsing the arguments.
-	 * @see #create(GuildMessageReceivedEvent, Command, FeedbackHandlerBuilder).
+	 * @see #create(GuildMessageReceivedEvent, Command, Set, FeedbackHandlerBuilder).
 	 */
 	public static Optional<CommandContext> createAndDisparse(final CommandHandler commandHandler, final GuildMessageReceivedEvent event) {
 		String firstComponent = event.getMessage().getContentRaw().split(" ")[0];
 		String prefix = commandHandler.getPrefix(event.getGuild());
 		if (firstComponent.startsWith(prefix)) {
-			synchronized (commandHandler.aliasMap) {
-				Command command = commandHandler.aliasMap.get(firstComponent.substring(prefix.length()));
-				if (command != null) {
-					Optional<CommandContext> commandContext = create(event, command, commandHandler.getFeedbackHandlerBuilder());
-					commandContext.ifPresent(context -> {
-						try {
-							command.processCommand(context);
-						} catch (Exception exception) {
-							context.getFeedbackHandler().sendError(exception);
-							exception.printStackTrace();
-						}
-					});
-					return commandContext;
-				}
+			Command command = commandHandler.aliasMap.get(firstComponent.substring(prefix.length()));
+			if (command != null) {
+				Optional<CommandContext> commandContext = create(event, command, commandHandler.getPermissions(command), commandHandler.getFeedbackHandlerBuilder());
+				commandContext.ifPresent(context -> {
+					try {
+						command.processCommand(context);
+					} catch (Exception exception) {
+						context.getFeedbackHandler().sendError(exception);
+						exception.printStackTrace();
+					}
+				});
+				return commandContext;
 			}
 		}
 		return Optional.empty();

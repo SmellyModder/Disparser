@@ -36,6 +36,9 @@ public class Commands {
 	@Aliases(value = {"role_test"}, mergeAliases = true)
 	public static final RoleTestCommand ROLE_TEST_COMMAND = new RoleTestCommand();
 
+	@Aliases(value = {"sum_test"}, mergeAliases = true)
+	public static final BigSumTestCommand SUM_TEST_COMMAND = new BigSumTestCommand();
+
 	@Aliases(value = {"normal_test"}, mergeAliases = true)
 	public static final TestCommand TEST_COMMAND = new TestCommand();
 }

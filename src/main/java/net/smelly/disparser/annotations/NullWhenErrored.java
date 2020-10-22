@@ -1,7 +1,7 @@
 package net.smelly.disparser.annotations;
 
-import net.smelly.disparser.ParsedArgument;
 import net.smelly.disparser.Argument;
+import net.smelly.disparser.ParsedArgument;
 
 import javax.annotation.Nonnull;
 import javax.annotation.meta.TypeQualifierNickname;

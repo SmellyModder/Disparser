@@ -1,7 +1,7 @@
 package net.smelly.disparser.annotations;
 
-import net.smelly.disparser.CommandHandler;
 import net.dv8tion.jda.api.Permission;
+import net.smelly.disparser.CommandHandler;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
