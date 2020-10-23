@@ -27,6 +27,7 @@ dependencies {
 
 ## Features
 * Command Handlers for processing commands from messages.
+* A thread-safe infastructure to allow concurrent command processing.
 * An index-based argument system that's simple and easy to work with.
 * A feedback system for command message output.
 * A command exception system.
