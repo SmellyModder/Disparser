@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.smelly.disparser.commands.Commands;
+import net.smelly.disparser.concurrent.DisparsingThreadFactory;
 import net.smelly.disparser.feedback.SimpleFeedbackHandler;
 
 import javax.security.auth.login.LoginException;
@@ -26,7 +27,7 @@ public final class TestBot {
 						.setPrefix("!")
 						.registerCommands(Commands.class)
 						.setFeedbackBuilder(TestCustomFeedbackHandler::new)
-						.setExecutorService(Executors.newFixedThreadPool(6))
+						.setExecutorService(Executors.newFixedThreadPool(6, new DisparsingThreadFactory("Test")))
 						.build()
 		);
 		BOT = botBuilder.build();

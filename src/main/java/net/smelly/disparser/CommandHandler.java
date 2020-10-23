@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.smelly.disparser.annotations.Aliases;
 import net.smelly.disparser.annotations.Permissions;
+import net.smelly.disparser.concurrent.DisparsingThreadFactory;
 import net.smelly.disparser.feedback.FeedbackHandler;
 import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
 import net.smelly.disparser.properties.AliasesProperty;
@@ -116,12 +117,19 @@ public class CommandHandler extends ListenerAdapter {
 		return this.feedbackHandlerBuilder;
 	}
 
+	/**
+	 * Shuts down this handler's {@link #executorService}.
+	 */
+	public void shutdown() {
+		this.executorService.shutdown();
+	}
+
 	public static class CommandHandlerBuilder {
 		private final Map<String, Command> aliasMap = new HashMap<>();
 		private final Map<Command, CommandPropertyMap.PropertyMap> commandPropertyMap = new HashMap<>();
 		private Function<Guild, String> prefixFunction = guild -> "!";
 		private FeedbackHandlerBuilder feedbackHandlerBuilder = FeedbackHandlerBuilder.SIMPLE_BUILDER;
-		private ExecutorService executorService = Executors.newSingleThreadExecutor();
+		private ExecutorService executorService = Executors.newSingleThreadExecutor(new DisparsingThreadFactory("Default"));
 
 		/**
 		 * Sets a prefix for the {@link CommandHandler}.

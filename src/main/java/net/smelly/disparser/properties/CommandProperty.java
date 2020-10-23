@@ -90,3 +90,4 @@ public interface CommandProperty<T, A extends Annotation> {
 		}
 
 	}
+}
