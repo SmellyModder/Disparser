@@ -2,6 +2,8 @@ package net.smelly.disparser.feedback;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * This interface is used for sending feedback in text channels when a command is processed.
  * Implement this on types that will be used for sending command feedback.
@@ -10,37 +12,37 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
  * @see SimpleFeedbackHandler
  * @see FeedbackHandlerBuilder#SIMPLE_BUILDER
  */
+@ThreadSafe
 public interface FeedbackHandler {
 	/**
-	 * Sends a {@link CharSequence} to a text channel.
+	 * Sends a {@link CommandMessage} to a {@link net.dv8tion.jda.api.entities.TextChannel}.
 	 *
-	 * @param charSequence The {@link CharSequence} to send.
+	 * @param commandMessage The {@link CommandMessage} to send.
 	 */
-	void sendFeedback(CharSequence charSequence);
+	void sendFeedback(CommandMessage commandMessage);
 
 	/**
-	 * Sends a {@link MessageEmbed} to a text channel.
+	 * Sends a {@link MessageEmbed} to a {@link net.dv8tion.jda.api.entities.TextChannel}.
 	 *
 	 * @param messageEmbed The {@link MessageEmbed} to send.
 	 */
 	void sendFeedback(MessageEmbed messageEmbed);
 
 	/**
-	 * Sends a success message to a text channel.
-	 * This is equivalent to {@link #sendFeedback(CharSequence)} with the difference being this should include a 'success' effect.
+	 * Sends a success message to a {@link net.dv8tion.jda.api.entities.TextChannel}.
+	 * This is equivalent to {@link #sendFeedback(CommandMessage)} with the difference being this should include a 'success' detail with the message.
 	 *
 	 * @param message The message to be used for the success message.
-	 * @see SimpleFeedbackHandler#sendSuccess(String).
-	 * @see net.smelly.disparser.util.MessageUtil#createSuccessfulMessage(String) .
+	 * @see SimpleFeedbackHandler#sendSuccess(CommandMessage).
+	 * @see net.smelly.disparser.util.MessageUtil#createSuccessfulMessage(String).
 	 */
-	void sendSuccess(String message);
+	void sendSuccess(CommandMessage message);
 
 	/**
-	 * Sends an error message to a text channel.
-	 * <p> Ideally this should send the exception's {@link Exception#getMessage()}. </p>
+	 * Sends an {@link Exception} as an error to a {@link net.dv8tion.jda.api.entities.TextChannel}.
 	 *
 	 * @param exception The exception to send the error message for.
-	 * @see SimpleFeedbackHandler#sendSuccess(String).
+	 * @see SimpleFeedbackHandler#sendSuccess(CommandMessage).
 	 * @see net.smelly.disparser.util.MessageUtil#createErrorMessage(String).
 	 */
 	void sendError(Exception exception);

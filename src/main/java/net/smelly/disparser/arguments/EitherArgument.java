@@ -6,6 +6,7 @@ import net.smelly.disparser.ParsedArgument;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.function.Function;
 
 /**
@@ -19,6 +20,7 @@ import java.util.function.Function;
  * @param <SA> - The second argument matching the type of S
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argument<S>> implements Argument<EitherArgument.Either<F, S>> {
 	private final FA firstArgument;
 	private final SA secondArgument;

@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class TextChannelArgument implements Argument<TextChannel> {
 	private static final Pattern MENTION_PATTERN = Pattern.compile("^<#(\\d+)>$");
 
@@ -55,7 +56,7 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					throw DisparserExceptions.CHANNEL_NOT_FOUND_EXCEPTION.create(parsedId);
+					throw reader.getExceptionProvider().getChannelNotFoundException().create(parsedId);
 				}
 			} catch (NumberFormatException exception) {
 				Matcher matcher = MENTION_PATTERN.matcher(arg);
@@ -66,11 +67,11 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 					if (foundChannel != null) {
 						return ParsedArgument.parse(foundChannel);
 					} else {
-						throw DisparserExceptions.MENTION_CHANNEL_NOT_FOUND_EXCEPTION.create();
+						throw reader.getExceptionProvider().getMentionChannelNotFoundException().create();
 					}
 				}
 
-				throw DisparserExceptions.INVALID_CHANNEL_ID_EXCEPTION.create(arg);
+				throw reader.getExceptionProvider().getInvalidChannelIdException().create(arg);
 			}
 		});
 	}

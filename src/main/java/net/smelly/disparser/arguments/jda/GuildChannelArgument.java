@@ -5,15 +5,16 @@ import net.dv8tion.jda.api.entities.GuildChannel;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * An argument that can parse guilds by their ID for a JDA or the message sent's guild.
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class GuildChannelArgument implements Argument<GuildChannel> {
 	@Nullable
 	private final JDA jda;
@@ -48,10 +49,10 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					throw DisparserExceptions.CHANNEL_NOT_FOUND_EXCEPTION.create(parsedLong);
+					throw reader.getExceptionProvider().getChannelNotFoundException().create(parsedLong);
 				}
 			} catch (NumberFormatException exception) {
-				throw DisparserExceptions.INVALID_CHANNEL_ID_EXCEPTION.create(arg);
+				throw reader.getExceptionProvider().getInvalidChannelIdException().create(arg);
 			}
 		});
 	}

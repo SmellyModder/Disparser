@@ -9,6 +9,7 @@ import net.smelly.disparser.CommandContext;
 import net.smelly.disparser.arguments.java.EnumArgument;
 import net.smelly.disparser.arguments.jda.RoleArgument;
 import net.smelly.disparser.arguments.jda.UserArgument;
+import net.smelly.disparser.feedback.FormattedCommandMessage;
 
 public final class RoleTestCommand extends Command {
 
@@ -24,7 +25,7 @@ public final class RoleTestCommand extends Command {
 		Role role = context.getParsedResult(2);
 		Action action = context.getParsedResult(0);
 		(action == Action.ADD ? guild.addRoleToMember(user.getIdLong(), role) : guild.removeRoleFromMember(user.getIdLong(), role)).queue();
-		context.getFeedbackHandler().sendSuccess(String.format(action.message, role.getName(), user.getName()));
+		context.getFeedbackHandler().sendSuccess(new FormattedCommandMessage(action.message, role.getName(), user.getName()));
 	}
 
 	enum Action {

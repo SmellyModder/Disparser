@@ -3,13 +3,15 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * A simple argument for parsing shorts.
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class ShortArgument implements Argument<Short> {
 	private final short minimum;
 	private final short maximum;
@@ -61,9 +63,9 @@ public final class ShortArgument implements Argument<Short> {
 	public ParsedArgument<Short> parse(ArgumentReader reader) throws Exception {
 		short ashort = reader.nextShort();
 		if (ashort > this.maximum) {
-			throw DisparserExceptions.VALUE_TOO_HIGH_EXCEPTION.create(ashort, this.maximum);
+			throw reader.getExceptionProvider().getValueTooHighException().create(ashort, this.maximum);
 		} else if (ashort < this.minimum) {
-			throw DisparserExceptions.VALUE_TOO_LOW_EXCEPTION.create(ashort, this.minimum);
+			throw reader.getExceptionProvider().getValueTooLowException().create(ashort, this.minimum);
 		}
 		return ParsedArgument.parse(ashort);
 	}

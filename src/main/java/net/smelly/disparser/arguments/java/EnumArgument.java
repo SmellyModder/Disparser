@@ -3,7 +3,8 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * An argument that parses values of an enum by their name.
@@ -11,6 +12,7 @@ import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
  * @param <E> - The type of enum.
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class EnumArgument<E extends Enum<?>> implements Argument<E> {
 	private final E[] values;
 
@@ -33,7 +35,7 @@ public final class EnumArgument<E extends Enum<?>> implements Argument<E> {
 					return ParsedArgument.parse(type);
 				}
 			}
-			throw DisparserExceptions.INVALID_ENUM_EXCEPTION.create(arg);
+			throw reader.getExceptionProvider().getInvalidEnumException().create(arg);
 		});
 	}
 }

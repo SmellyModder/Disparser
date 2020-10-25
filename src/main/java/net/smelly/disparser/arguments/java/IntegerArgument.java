@@ -3,13 +3,15 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * A simple argument for parsing integers.
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class IntegerArgument implements Argument<Integer> {
 	private final int minimum;
 	private final int maximum;
@@ -61,9 +63,9 @@ public final class IntegerArgument implements Argument<Integer> {
 	public ParsedArgument<Integer> parse(ArgumentReader reader) throws Exception {
 		int integer = reader.nextInt();
 		if (integer > this.maximum) {
-			throw DisparserExceptions.VALUE_TOO_HIGH_EXCEPTION.create(integer, this.maximum);
+			throw reader.getExceptionProvider().getValueTooHighException().create(integer, this.maximum);
 		} else if (integer < this.minimum) {
-			throw DisparserExceptions.VALUE_TOO_LOW_EXCEPTION.create(integer, this.minimum);
+			throw reader.getExceptionProvider().getValueTooHighException().create(integer, this.minimum);
 		}
 		return ParsedArgument.parse(integer);
 	}

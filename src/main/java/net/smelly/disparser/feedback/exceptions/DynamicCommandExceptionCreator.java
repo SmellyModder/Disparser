@@ -1,6 +1,9 @@
 package net.smelly.disparser.feedback.exceptions;
 
+import net.smelly.disparser.feedback.CommandMessage;
+
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.function.Function;
 
 /**
@@ -10,21 +13,22 @@ import java.util.function.Function;
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public class DynamicCommandExceptionCreator<T> implements CommandExceptionCreator<CommandSyntaxException> {
-	private final Function<T, String> function;
+	private final Function<T, CommandMessage> function;
 	@Nullable
 	private final T object;
 
-	public DynamicCommandExceptionCreator(Function<T, String> function) {
+	public DynamicCommandExceptionCreator(Function<T, CommandMessage> function) {
 		this(null, function);
 	}
 
-	public DynamicCommandExceptionCreator(@Nullable T object, Function<T, String> function) {
+	public DynamicCommandExceptionCreator(@Nullable T object, Function<T, CommandMessage> function) {
 		this.object = object;
 		this.function = function;
 	}
 
-	public static <T> DynamicCommandExceptionCreator<T> createInstance(Function<T, String> function) {
+	public static <T> DynamicCommandExceptionCreator<T> createInstance(Function<T, CommandMessage> function) {
 		return new DynamicCommandExceptionCreator<>(function);
 	}
 
@@ -35,13 +39,5 @@ public class DynamicCommandExceptionCreator<T> implements CommandExceptionCreato
 
 	public CommandSyntaxException create(T object) {
 		return new CommandSyntaxException(this.function.apply(object));
-	}
-
-	public CommandSyntaxException createForArgument(int argument) {
-		return new CommandSyntaxException(this.function.apply(this.object), argument);
-	}
-
-	public CommandSyntaxException createForArgument(T object, int argument) {
-		return new CommandSyntaxException(this.function.apply(object), argument);
 	}
 }

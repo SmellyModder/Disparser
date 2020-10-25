@@ -2,12 +2,15 @@ package net.smelly.disparser;
 
 import net.smelly.disparser.annotations.Optional;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * Implemented on classes to be used as arguments in {@link Command}.
  *
  * @param <T> Type of this argument
  * @author Luke Tonon
  */
+@ThreadSafe
 public interface Argument<T> {
 	/**
 	 * Parses the argument into a {@link ParsedArgument}

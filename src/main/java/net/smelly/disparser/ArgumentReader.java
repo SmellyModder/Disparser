@@ -3,8 +3,8 @@ package net.smelly.disparser;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.smelly.disparser.feedback.FeedbackHandler;
+import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
 import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 import net.smelly.disparser.util.MessageUtil;
 
 import java.util.function.Function;
@@ -17,28 +17,34 @@ import java.util.function.Function;
  */
 public final class ArgumentReader {
 	private final FeedbackHandler feedbackHandler;
+	private final BuiltInExceptionProvider exceptionProvider;
 	private final TextChannel channel;
 	private final String[] messageComponents;
 	private int currentComponent;
 
-	private ArgumentReader(FeedbackHandler feedbackHandler, TextChannel channel, String[] messageComponents) {
+	private ArgumentReader(FeedbackHandler feedbackHandler, BuiltInExceptionProvider exceptionProvider, TextChannel channel, String[] messageComponents) {
 		this.feedbackHandler = feedbackHandler;
+		this.exceptionProvider = exceptionProvider;
 		this.channel = channel;
 		this.messageComponents = messageComponents;
 	}
 
 	/**
-	 * Creates an ArgumentReader for a {@link Message and {@link FeedbackHandler}.
-	 * Use the {@link FeedbackHandler} to send feedback when parsing arguments.
+	 * Creates an ArgumentReader for a {@link Message} with a {@link FeedbackHandler} and {@link BuiltInExceptionProvider}.
+	 * Use the {@link FeedbackHandler} to send feedback when parsing arguments and use the {@link BuiltInExceptionProvider} to throw the built-in exceptions.
 	 *
-	 * @param feedbackHandler - The {@link FeedbackHandler} for this {@link ArgumentReader}.
-	 * @param message         - The {@link Message} for this {@link ArgumentReader}.
+	 * @param feedbackHandler   The {@link FeedbackHandler} for this {@link ArgumentReader}.
+	 * @param exceptionProvider The {@link BuiltInExceptionProvider} for this {@link ArgumentReader}..
+	 * @param message           The {@link Message} for this {@link ArgumentReader}.
 	 * @return {@link ArgumentReader} for the message.
 	 */
-	public static ArgumentReader create(final FeedbackHandler feedbackHandler, final Message message) {
-		return new ArgumentReader(feedbackHandler, message.getTextChannel(), message.getContentRaw().split(" "));
+	public static ArgumentReader create(final FeedbackHandler feedbackHandler, final BuiltInExceptionProvider exceptionProvider, final Message message) {
+		return new ArgumentReader(feedbackHandler, exceptionProvider, message.getTextChannel(), message.getContentRaw().split(" "));
 	}
 
+	/**
+	 * @return The {@link TextChannel} belonging to this {@link ArgumentReader}.
+	 */
 	public TextChannel getChannel() {
 		return this.channel;
 	}
@@ -55,6 +61,13 @@ public final class ArgumentReader {
 	 */
 	public FeedbackHandler getFeedbackHandler() {
 		return this.feedbackHandler;
+	}
+
+	/**
+	 * @return This reader's {@link BuiltInExceptionProvider}.
+	 */
+	public BuiltInExceptionProvider getExceptionProvider() {
+		return this.exceptionProvider;
 	}
 
 	/**
@@ -76,7 +89,7 @@ public final class ArgumentReader {
 		try {
 			return Integer.parseInt(nextArg);
 		} catch (NumberFormatException exception) {
-			throw DisparserExceptions.INVALID_INTEGER_EXCEPTION.create(nextArg);
+			throw this.exceptionProvider.getInvalidIntegerException().create(nextArg);
 		}
 	}
 
@@ -85,14 +98,14 @@ public final class ArgumentReader {
 		try {
 			return Long.parseLong(nextArg);
 		} catch (NumberFormatException exception) {
-			throw DisparserExceptions.INVALID_LONG_EXCEPTION.create(nextArg);
+			throw this.exceptionProvider.getInvalidLongException().create(nextArg);
 		}
 	}
 
 	public Character nextChar() throws CommandSyntaxException {
 		String nextArg = this.nextArgument();
 		if (nextArg.length() > 1) {
-			throw DisparserExceptions.INVALID_CHAR_EXCEPTION.create(nextArg);
+			throw this.exceptionProvider.getInvalidCharException().create(nextArg);
 		}
 		return nextArg.charAt(0);
 	}
@@ -102,7 +115,7 @@ public final class ArgumentReader {
 		try {
 			return Short.parseShort(nextArg);
 		} catch (NumberFormatException exception) {
-			throw DisparserExceptions.INVALID_SHORT_EXCEPTION.create(nextArg);
+			throw this.exceptionProvider.getInvalidShortException().create(nextArg);
 		}
 	}
 
@@ -111,7 +124,7 @@ public final class ArgumentReader {
 		try {
 			return Byte.parseByte(nextArg);
 		} catch (NumberFormatException exception) {
-			throw DisparserExceptions.INVALID_BYTE_EXCEPTION.create(nextArg);
+			throw this.exceptionProvider.getInvalidByteException().create(nextArg);
 		}
 	}
 
@@ -120,7 +133,7 @@ public final class ArgumentReader {
 		try {
 			return Float.parseFloat(nextArg);
 		} catch (NumberFormatException exception) {
-			throw DisparserExceptions.INVALID_FLOAT_EXCEPTION.create(nextArg);
+			throw this.exceptionProvider.getInvalidFloatException().create(nextArg);
 		}
 	}
 
@@ -129,7 +142,7 @@ public final class ArgumentReader {
 		try {
 			return Double.parseDouble(nextArg);
 		} catch (NumberFormatException exception) {
-			throw DisparserExceptions.INVALID_DOUBLE_EXCEPTION.create(nextArg);
+			throw this.exceptionProvider.getInvalidDoubleException().create(nextArg);
 		}
 	}
 

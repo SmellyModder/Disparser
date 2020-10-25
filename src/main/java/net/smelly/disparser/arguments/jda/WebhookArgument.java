@@ -5,9 +5,9 @@ import net.dv8tion.jda.api.entities.Webhook;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * An argument that can parse webhooks by their ID.
@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class WebhookArgument implements Argument<Webhook> {
 	@Nullable
 	private final JDA jda;
@@ -49,10 +50,10 @@ public final class WebhookArgument implements Argument<Webhook> {
 				if (foundWebhook != null) {
 					return ParsedArgument.parse(foundWebhook);
 				} else {
-					throw DisparserExceptions.WEBHOOK_NOT_FOUND_EXCEPTION.create(parsedLong);
+					throw reader.getExceptionProvider().getWebhookNotFoundException().create(parsedLong);
 				}
 			} catch (NumberFormatException exception) {
-				throw DisparserExceptions.INVALID_WEBHOOK_ID_EXCEPTION.create(arg);
+				throw reader.getExceptionProvider().getInvalidWebhookIdException().create(arg);
 			}
 		});
 	}

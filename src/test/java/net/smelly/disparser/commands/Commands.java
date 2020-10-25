@@ -1,8 +1,8 @@
 package net.smelly.disparser.commands;
 
+import net.dv8tion.jda.api.Permission;
 import net.smelly.disparser.annotations.Aliases;
 import net.smelly.disparser.annotations.Permissions;
-import net.dv8tion.jda.api.Permission;
 
 public class Commands {
 	@Aliases(value = {"optional", "test_optional"}, mergeAliases = true)

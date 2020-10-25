@@ -9,6 +9,8 @@ import net.smelly.disparser.annotations.Permissions;
 import net.smelly.disparser.concurrent.DisparsingThreadFactory;
 import net.smelly.disparser.feedback.FeedbackHandler;
 import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
+import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProviderBuilder;
+import net.smelly.disparser.feedback.exceptions.DisparserExceptionProvider;
 import net.smelly.disparser.properties.AliasesProperty;
 import net.smelly.disparser.properties.CommandProperty;
 import net.smelly.disparser.properties.CommandPropertyMap;
@@ -16,6 +18,7 @@ import net.smelly.disparser.properties.PermissionsProperty;
 import org.apache.commons.collections4.set.UnmodifiableSet;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -34,22 +37,25 @@ import java.util.function.Function;
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public class CommandHandler extends ListenerAdapter {
 	protected final ConcurrentHashMap<String, Command> aliasMap = new ConcurrentHashMap<>();
 	protected final CommandPropertyMap commandPropertyMap;
 	protected final Function<Guild, String> prefixFunction;
 	protected final FeedbackHandlerBuilder feedbackHandlerBuilder;
+	protected final BuiltInExceptionProviderBuilder exceptionProviderBuilder;
 	protected final ExecutorService executorService;
 
-	protected CommandHandler(CommandPropertyMap commandPropertyMap, Function<Guild, String> prefixFunction, FeedbackHandlerBuilder feedbackHandlerBuilder, ExecutorService executorService) {
+	protected CommandHandler(CommandPropertyMap commandPropertyMap, Function<Guild, String> prefixFunction, FeedbackHandlerBuilder feedbackHandlerBuilder, BuiltInExceptionProviderBuilder exceptionProviderBuilder, ExecutorService executorService) {
 		this.commandPropertyMap = commandPropertyMap;
 		this.prefixFunction = prefixFunction;
 		this.feedbackHandlerBuilder = feedbackHandlerBuilder;
+		this.exceptionProviderBuilder = exceptionProviderBuilder;
 		this.executorService = executorService;
 	}
 
-	protected CommandHandler(String prefix, FeedbackHandlerBuilder feedbackHandlerBuilder) {
-		this(CommandPropertyMap.createEmpty(), guild -> prefix, feedbackHandlerBuilder, Executors.newSingleThreadExecutor());
+	protected CommandHandler(String prefix, FeedbackHandlerBuilder feedbackHandlerBuilder, BuiltInExceptionProviderBuilder exceptionProviderBuilder) {
+		this(CommandPropertyMap.createEmpty(), guild -> prefix, feedbackHandlerBuilder, exceptionProviderBuilder, Executors.newSingleThreadExecutor());
 	}
 
 	protected void registerCommands(Collection<Command> command) {
@@ -109,12 +115,23 @@ public class CommandHandler extends ListenerAdapter {
 	/**
 	 * Gets this handler's {@link FeedbackHandlerBuilder}.
 	 * This is used for creating a {@link FeedbackHandler} to be used for sending feedback when processing commands.
-	 * <p> This returns {@link FeedbackHandlerBuilder#SIMPLE_BUILDER} by default. </p>
+	 * <p> This is {@link FeedbackHandlerBuilder#SIMPLE_BUILDER} by default. </p>
 	 *
-	 * @return This {@link FeedbackHandlerBuilder} for this {@link CommandHandler}.
+	 * @return The {@link FeedbackHandlerBuilder} for this {@link CommandHandler}.
 	 */
 	public FeedbackHandlerBuilder getFeedbackHandlerBuilder() {
 		return this.feedbackHandlerBuilder;
+	}
+
+	/**
+	 * Gets this handler's {@link BuiltInExceptionProviderBuilder}.
+	 * This is used for creating a {@link net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider} to be used for creating exceptions for a text channel.
+	 * <p> This is {@link DisparserExceptionProvider#BUILDER} by default. </p>
+	 *
+	 * @return The {@link BuiltInExceptionProviderBuilder} for this {@link CommandHandler}.
+	 */
+	public BuiltInExceptionProviderBuilder getExceptionProviderBuilder() {
+		return this.exceptionProviderBuilder;
 	}
 
 	/**
@@ -129,6 +146,7 @@ public class CommandHandler extends ListenerAdapter {
 		private final Map<Command, CommandPropertyMap.PropertyMap> commandPropertyMap = new HashMap<>();
 		private Function<Guild, String> prefixFunction = guild -> "!";
 		private FeedbackHandlerBuilder feedbackHandlerBuilder = FeedbackHandlerBuilder.SIMPLE_BUILDER;
+		private BuiltInExceptionProviderBuilder exceptionProviderBuilder = DisparserExceptionProvider.BUILDER;
 		private ExecutorService executorService = Executors.newSingleThreadExecutor(new DisparsingThreadFactory("Default"));
 
 		/**
@@ -254,6 +272,17 @@ public class CommandHandler extends ListenerAdapter {
 		}
 
 		/**
+		 * Sets a {@link BuiltInExceptionProviderBuilder} for the {@link CommandHandler}.
+		 *
+		 * @param exceptionProviderBuilder The {@link BuiltInExceptionProviderBuilder} to set.
+		 * @return This builder.
+		 */
+		public CommandHandlerBuilder setExceptionProviderBuilder(BuiltInExceptionProviderBuilder exceptionProviderBuilder) {
+			this.exceptionProviderBuilder = exceptionProviderBuilder;
+			return this;
+		}
+
+		/**
 		 * Sets the {@link ExecutorService} for the {@link CommandHandler}.
 		 *
 		 * @param executorService The {@link ExecutorService} to set.
@@ -268,7 +297,7 @@ public class CommandHandler extends ListenerAdapter {
 		 * @return Returns the built {@link CommandHandler}.
 		 */
 		public CommandHandler build() {
-			CommandHandler commandHandler = new CommandHandler(CommandPropertyMap.create(this.commandPropertyMap), this.prefixFunction, this.feedbackHandlerBuilder, this.executorService);
+			CommandHandler commandHandler = new CommandHandler(CommandPropertyMap.create(this.commandPropertyMap), this.prefixFunction, this.feedbackHandlerBuilder, this.exceptionProviderBuilder, this.executorService);
 			commandHandler.aliasMap.putAll(this.aliasMap);
 			return commandHandler;
 		}

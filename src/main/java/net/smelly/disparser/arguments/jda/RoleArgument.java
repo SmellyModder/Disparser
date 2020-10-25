@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.entities.Role;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class RoleArgument implements Argument<Role> {
 	private static final Pattern MENTION_PATTERN = Pattern.compile("<@&(\\d+)>");
 
@@ -54,7 +55,7 @@ public final class RoleArgument implements Argument<Role> {
 				if (foundRole != null) {
 					return ParsedArgument.parse(foundRole);
 				} else {
-					throw DisparserExceptions.ROLE_NOT_FOUND_EXCEPTION.create(parsedId);
+					throw reader.getExceptionProvider().getRoleNotFoundException().create(parsedId);
 				}
 			} catch (NumberFormatException exception) {
 				Matcher matcher = MENTION_PATTERN.matcher(arg);
@@ -65,11 +66,11 @@ public final class RoleArgument implements Argument<Role> {
 					if (foundRole != null) {
 						return ParsedArgument.parse(foundRole);
 					} else {
-						throw DisparserExceptions.MENTION_ROLE_NOT_FOUND_EXCEPTION.create();
+						throw reader.getExceptionProvider().getMentionRoleNotFoundException().create();
 					}
 				}
 
-				throw DisparserExceptions.INVALID_ROLE_ID_EXCEPTION.create(arg);
+				throw reader.getExceptionProvider().getInvalidRoleIdException().create(arg);
 			}
 		});
 	}

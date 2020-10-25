@@ -4,6 +4,7 @@ import net.smelly.disparser.annotations.NullWhenErrored;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -16,6 +17,7 @@ import java.util.function.Consumer;
  * @param <A> - The type for this parsed argument.
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class ParsedArgument<A> {
 	private static final ParsedArgument<?> EMPTY = new ParsedArgument<>(null);
 
@@ -24,6 +26,35 @@ public final class ParsedArgument<A> {
 
 	private ParsedArgument(@Nullable final A readArgument) {
 		this.result = readArgument;
+	}
+
+	/**
+	 * @param result - The result.
+	 * @param <A>    - The type of the result.
+	 * @return A new {@link ParsedArgument} that contains a non-null result.
+	 * @throws NullPointerException if value is null
+	 */
+	public static <A> ParsedArgument<A> parse(@Nonnull final A result) {
+		Objects.requireNonNull(result);
+		return new ParsedArgument<>(result);
+	}
+
+	/**
+	 * @param result - The result.
+	 * @param <A>    - The type of the result.
+	 * @return A new {@link ParsedArgument} that contains a nullable result.
+	 */
+	public static <A> ParsedArgument<A> parseNullable(@Nullable final A result) {
+		return result == null ? empty() : new ParsedArgument<>(result);
+	}
+
+	/**
+	 * @param <A> - The type of the result.
+	 * @return A new {@link ParsedArgument} that contains a null result.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <A> ParsedArgument<A> empty() {
+		return (ParsedArgument<A>) EMPTY;
 	}
 
 	/**
@@ -57,35 +88,6 @@ public final class ParsedArgument<A> {
 	 */
 	public void ifHasResult(Consumer<A> consumer) {
 		if (this.hasResult()) consumer.accept(this.result);
-	}
-
-	/**
-	 * @param result - The result.
-	 * @param <A>    - The type of the result.
-	 * @return A new {@link ParsedArgument} that contains a non-null result.
-	 * @throws NullPointerException if value is null
-	 */
-	public static <A> ParsedArgument<A> parse(@Nonnull final A result) {
-		Objects.requireNonNull(result);
-		return new ParsedArgument<>(result);
-	}
-
-	/**
-	 * @param result - The result.
-	 * @param <A>    - The type of the result.
-	 * @return A new {@link ParsedArgument} that contains a nullable result.
-	 */
-	public static <A> ParsedArgument<A> parseNullable(@Nullable final A result) {
-		return result == null ? empty() : new ParsedArgument<>(result);
-	}
-
-	/**
-	 * @param <A> - The type of the result.
-	 * @return A new {@link ParsedArgument} that contains a null result.
-	 */
-	@SuppressWarnings("unchecked")
-	public static <A> ParsedArgument<A> empty() {
-		return (ParsedArgument<A>) EMPTY;
 	}
 
 	@Override

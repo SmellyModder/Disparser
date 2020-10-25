@@ -4,11 +4,14 @@ import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * A simple argument for parsing booleans.
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class BooleanArgument implements Argument<Boolean> {
 
 	private BooleanArgument() {

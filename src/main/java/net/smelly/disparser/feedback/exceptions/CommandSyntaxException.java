@@ -1,8 +1,8 @@
 package net.smelly.disparser.feedback.exceptions;
 
-import net.smelly.disparser.util.MessageUtil;
+import net.smelly.disparser.feedback.CommandMessage;
 
-import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * An exception that represents a command syntax exception.
@@ -10,39 +10,30 @@ import javax.annotation.Nullable;
  * @author Luke Tonon
  * @see SimpleCommandExceptionCreator
  */
+@ThreadSafe
 @SuppressWarnings("serial")
 public class CommandSyntaxException extends Exception {
-	private final String message;
-	@Nullable
-	private final Integer argumentIndex;
+	private final CommandMessage message;
 
 	/**
 	 * A simple constructor that sets a message for this exception.
 	 *
 	 * @param message Message for the exception, {@link #getMessage()}.
 	 */
-	public CommandSyntaxException(String message) {
-		this(message, null);
-	}
-
-	/**
-	 * A constructor that sets a message for this exception and an argument index to be processed in {@link #getMessage()}.
-	 *
-	 * @param message       Message for the exception.
-	 * @param argumentIndex Index of the argument to be processed in {@link #getMessage()}.
-	 * @see #getMessage()
-	 */
-	public CommandSyntaxException(String message, @Nullable Integer argumentIndex) {
-		super(message, null, true, false);
+	public CommandSyntaxException(CommandMessage message) {
+		super(message.getMessage(null), null, true, false);
 		this.message = message;
-		this.argumentIndex = argumentIndex;
 	}
 
 	@Override
 	public String getMessage() {
-		if (this.argumentIndex != null) {
-			return String.format("Error at **%o%s** argument: %s", this.argumentIndex, MessageUtil.getOrdinalForInteger(this.argumentIndex), this.message);
-		}
+		return this.message.getMessage(null);
+	}
+
+	/**
+	 * @return The {@link CommandMessage} belonging to this {@link CommandSyntaxException}.
+	 */
+	public CommandMessage getCommandMessage() {
 		return this.message;
 	}
 }

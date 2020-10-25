@@ -17,7 +17,7 @@ public final class EmojiTestCommand extends Command {
 	@Override
 	public void processCommand(CommandContext context) throws Exception {
 		List<Activity.Emoji> emojis = context.getParsedResult(0);
-		context.getFeedbackHandler().sendFeedback(emojis.get(new Random().nextInt(emojis.size())).getAsMention());
+		context.getFeedbackHandler().sendFeedback(channel -> emojis.get(new Random().nextInt(emojis.size())).getAsMention());
 	}
 
 }

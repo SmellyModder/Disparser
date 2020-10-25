@@ -3,8 +3,8 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -14,6 +14,7 @@ import java.text.ParseException;
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class NumberArgument implements Argument<Number> {
 	private static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
 
@@ -70,13 +71,13 @@ public final class NumberArgument implements Argument<Number> {
 				Number number = NUMBER_FORMAT.parse(arg);
 				double adouble = number.doubleValue();
 				if (adouble > this.maximum) {
-					throw DisparserExceptions.VALUE_TOO_HIGH_EXCEPTION.create(adouble, this.maximum);
+					throw reader.getExceptionProvider().getValueTooHighException().create(adouble, this.maximum);
 				} else if (adouble < this.minimum) {
-					throw DisparserExceptions.VALUE_TOO_LOW_EXCEPTION.create(adouble, this.minimum);
+					throw reader.getExceptionProvider().getValueTooHighException().create(adouble, this.minimum);
 				}
 				return ParsedArgument.parse(number);
 			} catch (ParseException e) {
-				throw DisparserExceptions.INVALID_NUMBER_EXCEPTION.create(arg);
+				throw reader.getExceptionProvider().getInvalidNumberException().create(arg);
 			}
 		});
 	}

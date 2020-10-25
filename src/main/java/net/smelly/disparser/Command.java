@@ -9,6 +9,7 @@ import net.smelly.disparser.properties.PermissionsProperty;
 import org.apache.commons.collections4.list.UnmodifiableList;
 import org.apache.commons.collections4.set.UnmodifiableSet;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.*;
 
 /**
@@ -16,6 +17,7 @@ import java.util.*;
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public abstract class Command {
 	private final AliasesProperty aliasesProperty;
 	private final PermissionsProperty permissionsProperty;

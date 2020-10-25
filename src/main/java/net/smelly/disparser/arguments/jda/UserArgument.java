@@ -5,9 +5,9 @@ import net.dv8tion.jda.api.entities.User;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class UserArgument implements Argument<User> {
 	private static final Pattern MENTION_PATTERN = Pattern.compile("^<@!?(\\d+)>$");
 
@@ -53,7 +54,7 @@ public final class UserArgument implements Argument<User> {
 				if (foundUser != null) {
 					return ParsedArgument.parse(foundUser);
 				} else {
-					throw DisparserExceptions.USER_NOT_FOUND_EXCEPTION.create(id);
+					throw reader.getExceptionProvider().getUserNotFoundException().create(id);
 				}
 			} catch (NumberFormatException exception) {
 				Matcher matcher = MENTION_PATTERN.matcher(arg);
@@ -63,11 +64,11 @@ public final class UserArgument implements Argument<User> {
 					if (foundUser != null) {
 						return ParsedArgument.parse(foundUser);
 					} else {
-						throw DisparserExceptions.MENTION_USER_NOT_FOUND_EXCEPTION.create();
+						throw reader.getExceptionProvider().getMentionUserNotFoundException().create();
 					}
 				}
 
-				throw DisparserExceptions.INVALID_USER_EXCEPTION.create(arg);
+				throw reader.getExceptionProvider().getInvalidUserException().create(arg);
 			}
 		});
 	}

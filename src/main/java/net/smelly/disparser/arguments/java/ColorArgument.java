@@ -4,8 +4,8 @@ import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
 import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.awt.*;
 
 /**
@@ -14,6 +14,7 @@ import java.awt.*;
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class ColorArgument implements Argument<Color> {
 	private final EnumArgument<ColorType> colorTypeEnumArgument;
 
@@ -37,7 +38,7 @@ public final class ColorArgument implements Argument<Color> {
 		try {
 			return ParsedArgument.parse(new Color(reader.nextInt()));
 		} catch (CommandSyntaxException e) {
-			throw DisparserExceptions.INVALID_COLOR_EXCEPTION.create(reader.getCurrentMessageComponent());
+			throw reader.getExceptionProvider().getInvalidColorException().create(reader.getCurrentMessageComponent());
 		}
 	}
 

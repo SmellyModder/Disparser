@@ -4,8 +4,8 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
  * @author Luke Tonon
  * @see Activity.Emoji
  */
+@ThreadSafe
 public final class EmojiArgument implements Argument<Activity.Emoji> {
 	private static final Pattern UNICODE_EMOJI_PATTERN = Pattern.compile("[^\\p{L}\\p{N}\\p{P}\\p{Z}]", Pattern.UNICODE_CHARACTER_CLASS);
 	private static final Pattern CUSTOM_EMOJI_PATTERN = Pattern.compile("<(a?):(\\w+):(\\d+)>");
@@ -90,16 +91,16 @@ public final class EmojiArgument implements Argument<Activity.Emoji> {
 			Matcher matcher = CUSTOM_EMOJI_PATTERN.matcher(string);
 			if (matcher.find()) {
 				if (this.allowCustomEmotes) {
-					throw DisparserExceptions.CUSTOM_EMOJI_EXCEPTION.create();
+					throw reader.getExceptionProvider().getCustomEmojiException().create();
 				}
 				try {
 					return ParsedArgument.parse(new Activity.Emoji(matcher.group(2), Long.parseLong(matcher.group(3)), !matcher.group(1).isEmpty()));
 				} catch (NumberFormatException e) {
-					throw DisparserExceptions.INVALID_EMOJI_EXCEPTION.create(string);
+					throw reader.getExceptionProvider().getInvalidEmojiException().create(string);
 				}
 			}
 		}
-		throw DisparserExceptions.INVALID_EMOJI_EXCEPTION.create(string);
+		throw reader.getExceptionProvider().getInvalidEmojiException().create(string);
 	}
 
 	/**
@@ -133,27 +134,27 @@ public final class EmojiArgument implements Argument<Activity.Emoji> {
 			Matcher matcher = CUSTOM_EMOJI_PATTERN.matcher(string);
 			if (matcher.find()) {
 				if (!this.allowCustomEmotes) {
-					throw DisparserExceptions.CUSTOM_EMOJI_EXCEPTION.create();
+					throw reader.getExceptionProvider().getCustomEmojiException().create();
 				}
 				emojis.add(new Activity.Emoji(matcher.group(2), Long.parseLong(matcher.group(3)), !matcher.group(1).isEmpty()));
 				while (matcher.find()) {
 					try {
 						emojis.add(new Activity.Emoji(matcher.group(2), Long.parseLong(matcher.group(3)), !matcher.group(1).isEmpty()));
 					} catch (NumberFormatException e) {
-						throw DisparserExceptions.INVALID_EMOJI_EXCEPTION.create(matcher.group());
+						throw reader.getExceptionProvider().getInvalidEmojiException().create(matcher.group());
 					}
 				}
 			}
 			int size = emojis.size();
 			if (size > 0) {
 				if (size > this.max) {
-					throw DisparserExceptions.TOO_MANY_EMOJIS_EXCEPTION.create(string, this.max);
+					throw reader.getExceptionProvider().getTooManyEmojisException().create(string, this.max);
 				} else if (size < this.min) {
-					throw DisparserExceptions.NOT_ENOUGH_EMOJIS_EXCEPTION.create(string, this.min);
+					throw reader.getExceptionProvider().getNotEnoughEmojisException().create(string, this.min);
 				}
 				return ParsedArgument.parse(emojis);
 			}
-			throw DisparserExceptions.NO_VALID_EMOJIS_EXCEPTION.create(string);
+			throw reader.getExceptionProvider().getNoValidEmojisException().create(string);
 		}
 	}
 }

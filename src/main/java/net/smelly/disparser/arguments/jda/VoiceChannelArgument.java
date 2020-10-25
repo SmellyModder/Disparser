@@ -5,9 +5,9 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * An argument that can parse voice channels by their ID.
@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 	@Nullable
 	private final JDA jda;
@@ -49,10 +50,10 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
-					throw DisparserExceptions.CHANNEL_NOT_FOUND_EXCEPTION.create(parsedLong);
+					throw reader.getExceptionProvider().getChannelNotFoundException().create(parsedLong);
 				}
 			} catch (NumberFormatException exception) {
-				throw DisparserExceptions.INVALID_CHANNEL_ID_EXCEPTION.create(arg);
+				throw reader.getExceptionProvider().getInvalidChannelIdException().create(arg);
 			}
 		});
 	}

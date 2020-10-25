@@ -5,13 +5,15 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * An argument that can parse guilds by their ID for a JDA.
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class GuildArgument implements Argument<Guild> {
 	private final JDA jda;
 
@@ -36,10 +38,10 @@ public final class GuildArgument implements Argument<Guild> {
 				if (guild != null) {
 					return ParsedArgument.parse(guild);
 				} else {
-					throw DisparserExceptions.GUILD_NOT_FOUND_EXCEPTION.create(id);
+					throw reader.getExceptionProvider().getGuildNotFoundException().create(id);
 				}
 			} catch (NumberFormatException exception) {
-				throw DisparserExceptions.INVALID_GUILD_ID_EXCEPTION.create(arg);
+				throw reader.getExceptionProvider().getInvalidGuildIdException().create(arg);
 			}
 		});
 	}

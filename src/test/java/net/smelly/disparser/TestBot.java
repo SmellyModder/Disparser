@@ -1,16 +1,15 @@
 package net.smelly.disparser;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Activity.ActivityType;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.smelly.disparser.commands.Commands;
 import net.smelly.disparser.concurrent.DisparsingThreadFactory;
-import net.smelly.disparser.feedback.SimpleFeedbackHandler;
+import net.smelly.disparser.feedback.TestExceptionProvider;
+import net.smelly.disparser.feedback.TestFeedbackHandler;
 
 import javax.security.auth.login.LoginException;
 import java.util.concurrent.Executors;
@@ -26,40 +25,11 @@ public final class TestBot {
 				new CommandHandler.CommandHandlerBuilder()
 						.setPrefix("!")
 						.registerCommands(Commands.class)
-						.setFeedbackBuilder(TestCustomFeedbackHandler::new)
+						.setFeedbackBuilder(TestFeedbackHandler::new)
+						.setExceptionProviderBuilder(TestExceptionProvider::new)
 						.setExecutorService(Executors.newFixedThreadPool(6, new DisparsingThreadFactory("Test")))
 						.build()
 		);
 		BOT = botBuilder.build();
-	}
-
-	static class TestCustomFeedbackHandler extends SimpleFeedbackHandler {
-		private final String pfp;
-
-		private TestCustomFeedbackHandler(TextChannel textChannel) {
-			super(textChannel);
-			this.pfp = BOT.getSelfUser().getAvatarUrl();
-		}
-
-		@Override
-		public void sendSuccess(String message) {
-			EmbedBuilder embedBuilder = new EmbedBuilder();
-			embedBuilder.setThumbnail(this.pfp);
-			embedBuilder.setColor(7506394);
-			embedBuilder.setTitle(":white_check_mark: " + "Command Successful");
-			embedBuilder.appendDescription(message);
-			this.sendFeedback(embedBuilder.build());
-		}
-
-		@Override
-		public void sendError(Exception exception) {
-			EmbedBuilder embedBuilder = new EmbedBuilder();
-			embedBuilder.setThumbnail(this.pfp);
-			embedBuilder.setColor(14495300);
-			embedBuilder.setTitle(":x: " + "Command Failed");
-			embedBuilder.appendDescription("**Reason: **" + exception.getMessage());
-			this.sendFeedback(embedBuilder.build());
-		}
-
 	}
 }

@@ -3,13 +3,15 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * A simple argument for parsing bytes.
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class ByteArgument implements Argument<Byte> {
 	private final byte minimum;
 	private final byte maximum;
@@ -61,9 +63,9 @@ public final class ByteArgument implements Argument<Byte> {
 	public ParsedArgument<Byte> parse(ArgumentReader reader) throws Exception {
 		byte abyte = reader.nextByte();
 		if (abyte > this.maximum) {
-			throw DisparserExceptions.VALUE_TOO_HIGH_EXCEPTION.create(abyte, this.maximum);
+			throw reader.getExceptionProvider().getValueTooHighException().create(abyte, this.maximum);
 		} else if (abyte < this.minimum) {
-			throw DisparserExceptions.VALUE_TOO_LOW_EXCEPTION.create(abyte, this.minimum);
+			throw reader.getExceptionProvider().getValueTooLowException().create(abyte, this.minimum);
 		}
 		return ParsedArgument.parse(abyte);
 	}

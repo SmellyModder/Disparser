@@ -3,13 +3,15 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * A simple argument for parsing longs.
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class LongArgument implements Argument<Long> {
 	private final long minimum;
 	private final long maximum;
@@ -61,9 +63,9 @@ public final class LongArgument implements Argument<Long> {
 	public ParsedArgument<Long> parse(ArgumentReader reader) throws Exception {
 		long along = reader.nextLong();
 		if (along > this.maximum) {
-			throw DisparserExceptions.VALUE_TOO_HIGH_EXCEPTION.create(along, this.maximum);
+			throw reader.getExceptionProvider().getValueTooHighException().create(along, this.maximum);
 		} else if (along < this.minimum) {
-			throw DisparserExceptions.VALUE_TOO_LOW_EXCEPTION.create(along, this.minimum);
+			throw reader.getExceptionProvider().getValueTooHighException().create(along, this.minimum);
 		}
 		return ParsedArgument.parse(along);
 	}

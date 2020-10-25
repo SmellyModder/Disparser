@@ -3,8 +3,8 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.DisparserExceptions;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -13,6 +13,7 @@ import java.net.URL;
  *
  * @author Luke Tonon
  */
+@ThreadSafe
 public final class URLArgument implements Argument<URL> {
 
 	private URLArgument() {
@@ -34,7 +35,7 @@ public final class URLArgument implements Argument<URL> {
 		try {
 			return ParsedArgument.parse(new URL(next));
 		} catch (MalformedURLException e) {
-			throw DisparserExceptions.INVALID_URL_EXCEPTION.create(next);
+			throw reader.getExceptionProvider().getInvalidURLException().create(next);
 		}
 	}
 

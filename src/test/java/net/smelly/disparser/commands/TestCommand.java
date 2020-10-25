@@ -11,7 +11,7 @@ public class TestCommand extends Command {
 
 	@Override
 	public void processCommand(CommandContext context) {
-		context.getEvent().getChannel().sendMessage("This is a Test!").queue();
+		context.getFeedbackHandler().sendFeedback(channel -> "This is a Test!");
 	}
 
 }

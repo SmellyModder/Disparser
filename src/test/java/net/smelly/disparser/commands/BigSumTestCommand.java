@@ -25,7 +25,7 @@ public final class BigSumTestCommand extends Command {
 	@Override
 	public void processCommand(CommandContext context) throws Exception {
 		FeedbackHandler feedbackHandler = context.getFeedbackHandler();
-		feedbackHandler.sendFeedback("Queueing random sum, this may take some time to complete!");
+		feedbackHandler.sendFeedback(channel -> "Queueing random sum, this may take some time to complete!");
 		int sumNumber = this.sumNumber.incrementAndGet();
 		this.queue.add(sumNumber);
 		int sequences = context.getParsedResult(0);

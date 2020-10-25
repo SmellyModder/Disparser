@@ -13,7 +13,7 @@ public final class NumberTestCommand extends Command {
 	@Override
 	public void processCommand(CommandContext context) {
 		Number number = context.getParsedResult(0);
-		context.getFeedbackHandler().sendFeedback(number.toString());
+		context.getFeedbackHandler().sendFeedback(channel -> number.toString());
 	}
 
 }
