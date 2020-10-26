@@ -9,21 +9,41 @@ It allows for easy and performant usage of commands with multiple aliases, permi
 Disparser will stay relatively small and simple forever, offerring simple and efficient command parsing for JDA.
 <br> *It is a WIP, so expect new features!* </br>
 
-## Usage
-If you wish to use Disparser you can add it as a dependency by following these steps in your `build.gradle`
+# Installing
+Latest Stable Version: [![](https://cdn.discordapp.com/attachments/667088262287851551/765724389244534825/disparser-1.3.0.PNG)](https://jitpack.io/#SmellyModder/Disparser/1.3.0)
+<br>Disparser's master branch is frequently updated, making it unstable, so it's recommended you use one of the release tags on the repository here as they are stable.</br>
+## Gradle
 * Add the maven in your `repositories` section:
-```
+```gradle
 repositories {
     maven { url 'https://jitpack.io' }
 }
 ```
 * Add it as a dependency in your `dependencies` section:
-```
+```gradle
 dependencies {
     implementation 'com.github.SmellyModder:Disparser:{version}'
 }
 ```
-<br> You can also download the source for this repository and build Disparser using the `gradlew build` command. </br>
+## Maven
+* Add the repository to your build file
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+* Add the dependency
+```xml
+<dependency>
+    <groupId>com.github.SmellyModder</groupId>
+    <artifactId>Disparser</artifactId>
+    <version>VERSION</version>
+</dependency>
+```
+<br> You can also download the source for this repository and build Disparser using the `gradlew build` command.</br>
 
 ## Features
 * Command Handlers for processing commands from messages.
