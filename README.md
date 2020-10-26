@@ -46,4 +46,4 @@ dependencies {
 * A thread-safe infrastructure to make concurrent command processing possible (Already in master branch, no public release yet).
 * A command properties system (Already in master branch, no public release yet).
 * Private Message Support
-* Localization Support
+* Localization Support (Already in master branch, no public release yet).
