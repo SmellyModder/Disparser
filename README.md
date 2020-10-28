@@ -46,8 +46,44 @@ dependencies {
 <br> You can also download the source for this repository and build Disparser using the `gradlew build` command.</br>
 
 # Usage
-Coming soon:tm:
+At the core of Disparser there's `CommandContext`, a container object used for processing commands. 
+<br> A `CommandContext` holds a list of `ParsedArgument`s, a `GuildMessageReceivedEvent`, a `FeedbackHandler`, a `BuiltInExceptionProvider`, and a `ArgumentReader`. </br>
+Disparser is a W.I.P project so major changes to things are possible, but this usage section will always remain updated.
+## Creating a new Command
+Below is an example of a command that renames a Text Channel.
+```Java
+public class RenameChannelTestCommand extends Command {
 
+	public RenameChannelTestCommand() {
+		super("rename", TextChannelArgument.get().asOptional(), StringArgument.get());
+	}
+
+	@Override
+	public void processCommand(CommandContext context) {
+		GuildMessageReceivedEvent event = context.getEvent();
+		TextChannel channel = context.getParsedResultOrElse(0, event.getChannel());
+		channel.getManager().setName(context.getParsedResult(1)).queue();
+	}
+
+}
+```
+## Building a CommandHandler
+`CommandHandler` is a `ListenerAdapter` where it listens to `GuildMessageReceivedEvent` to attempt to parse a command.
+Below is an example of a fairly simple `CommandHandlerBuilder` being used to build a `CommandHandler` and add it as an event listener to a bot.
+
+```Java
+botBuilder.addEventListeners(
+	new CommandHandler.CommandHandlerBuilder()
+		.setPrefix("!")
+		.registerCommands(new RenameChannelTestCommand())
+		.setFeedbackBuilder(TestFeedbackHandler::new)
+		.setExceptionProviderBuilder(TestExceptionProvider::new)
+		.setExecutorService(Executors.newFixedThreadPool(6, new DisparsingThreadFactory("Test")))
+		.build()
+);
+```
+Above are the basic foundations of Disparser.
+<br> Docs for all of the other features Disparser has to offer are coming soon! </br>
 ## Features
 * Command Handlers for processing commands from messages.
 * An index-based argument system that's simple and easy to work with.
