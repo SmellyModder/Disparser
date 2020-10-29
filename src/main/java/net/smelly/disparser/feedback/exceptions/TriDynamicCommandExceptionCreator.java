@@ -7,9 +7,9 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * This class contains a {@link TriFunction} for creating a {@link CommandSyntaxException}.
- * The function takes in three generic type objects and parses them to a string to be used for creating a message for a {@link CommandSyntaxException}.
+ * The function takes in three generic type objects and uses them to create a {@link CommandMessage} to be used for creating a {@link CommandSyntaxException}.
  * This class can store the three generic objects internally to be re-used for creating a {@link CommandSyntaxException}.
- * <p> Simply put, this class is a tri version of {@link DynamicCommandExceptionCreator}. </p>
+ * <p> Simply put, this class is a triple version of {@link DynamicCommandExceptionCreator}. </p>
  *
  * @author Luke Tonon
  * @see DynamicCommandExceptionCreator
