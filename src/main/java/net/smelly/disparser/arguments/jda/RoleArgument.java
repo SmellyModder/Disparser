@@ -48,7 +48,7 @@ public final class RoleArgument implements Argument<Role> {
 	@Override
 	public ParsedArgument<Role> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {
-			Guild guild = reader.getChannel().getGuild();
+			Guild guild = reader.getGuild();
 			try {
 				long parsedId = Long.parseLong(arg);
 				Role foundRole = this.findRole(guild, parsedId);
@@ -76,7 +76,7 @@ public final class RoleArgument implements Argument<Role> {
 	}
 
 	@Nullable
-	private Role findRole(Guild guild, long id) {
-		return this.jda != null ? this.jda.getRoleById(id) : guild.getRoleById(id);
+	private Role findRole(@Nullable Guild guild, long id) {
+		return this.jda != null ? this.jda.getRoleById(id) : guild != null ? guild.getRoleById(id) : null;
 	}
 }

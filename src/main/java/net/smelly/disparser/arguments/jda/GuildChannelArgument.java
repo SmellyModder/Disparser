@@ -2,6 +2,7 @@ package net.smelly.disparser.arguments.jda;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.Message;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
@@ -45,7 +46,7 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long parsedLong = Long.parseLong(arg);
-				GuildChannel foundChannel = this.jda != null ? this.jda.getGuildChannelById(parsedLong) : reader.getChannel().getGuild().getGuildChannelById(parsedLong);
+				GuildChannel foundChannel = this.jda != null ? this.jda.getGuildChannelById(parsedLong) : this.getGuildChannelById(reader.getMessage(), parsedLong);
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
@@ -55,5 +56,10 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 				throw reader.getExceptionProvider().getInvalidChannelIdException().create(arg);
 			}
 		});
+	}
+
+	@Nullable
+	private GuildChannel getGuildChannelById(Message message, long parsedLong) {
+		return message.isFromGuild() ? message.getGuild().getGuildChannelById(parsedLong) : null;
 	}
 }

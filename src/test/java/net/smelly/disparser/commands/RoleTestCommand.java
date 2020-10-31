@@ -3,25 +3,23 @@ package net.smelly.disparser.commands;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.smelly.disparser.Command;
-import net.smelly.disparser.CommandContext;
 import net.smelly.disparser.arguments.java.EnumArgument;
 import net.smelly.disparser.arguments.jda.RoleArgument;
 import net.smelly.disparser.arguments.jda.UserArgument;
+import net.smelly.disparser.context.GuildMessageCommandContext;
 import net.smelly.disparser.feedback.FormattedCommandMessage;
 
-public final class RoleTestCommand extends Command {
+public final class RoleTestCommand extends Command<GuildMessageCommandContext> {
 
 	public RoleTestCommand() {
 		super("role", EnumArgument.get(Action.class), UserArgument.get().asOptional(), RoleArgument.get());
 	}
 
 	@Override
-	public void processCommand(CommandContext context) throws Exception {
-		GuildMessageReceivedEvent event = context.getEvent();
-		User user = context.getParsedResultOrElse(1, event.getAuthor());
-		Guild guild = event.getGuild();
+	public void processCommand(GuildMessageCommandContext context) throws Exception {
+		User user = context.getParsedResultOrElse(1, context.getAuthor());
+		Guild guild = context.getGuild();
 		Role role = context.getParsedResult(2);
 		Action action = context.getParsedResult(0);
 		(action == Action.ADD ? guild.addRoleToMember(user.getIdLong(), role) : guild.removeRoleFromMember(user.getIdLong(), role)).queue();

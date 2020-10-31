@@ -11,7 +11,7 @@ import net.smelly.disparser.annotations.Optional;
  * @author Luke Tonon
  */
 @Optional
-public class OptionalTestArgument implements Argument<Integer> {
+public final class OptionalTestArgument implements Argument<Integer> {
 
 	@Override
 	public ParsedArgument<Integer> parse(ArgumentReader reader) throws Exception {

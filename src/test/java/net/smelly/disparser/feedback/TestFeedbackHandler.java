@@ -1,14 +1,14 @@
 package net.smelly.disparser.feedback;
 
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 import net.smelly.disparser.util.MessageUtil;
 
 public final class TestFeedbackHandler implements FeedbackHandler {
-	private final TextChannel channel;
+	private final MessageChannel channel;
 
-	public TestFeedbackHandler(TextChannel channel) {
+	public TestFeedbackHandler(MessageChannel channel) {
 		this.channel = channel;
 	}
 

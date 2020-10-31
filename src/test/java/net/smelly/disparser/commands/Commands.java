@@ -2,9 +2,11 @@ package net.smelly.disparser.commands;
 
 import net.dv8tion.jda.api.Permission;
 import net.smelly.disparser.annotations.Aliases;
+import net.smelly.disparser.annotations.Context;
 import net.smelly.disparser.annotations.Permissions;
+import net.smelly.disparser.context.GuildMessageCommandContext;
 
-public class Commands {
+public final class Commands {
 	@Aliases(value = {"optional", "test_optional"}, mergeAliases = true)
 	public static final OptionalTestCommand OPTIONAL_TEST = new OptionalTestCommand();
 
@@ -14,6 +16,7 @@ public class Commands {
 	@Aliases(value = {"enum_test"}, mergeAliases = true)
 	public static final EnumTestCommand ENUM_TEST = new EnumTestCommand();
 
+	@Context(GuildMessageCommandContext.class)
 	@Permissions(Permission.ADMINISTRATOR)
 	@Aliases(value = {"rename_test"}, mergeAliases = true)
 	public static final RenameChannelTestCommand RENAME_CHANNEL_TEST = new RenameChannelTestCommand();
@@ -33,6 +36,7 @@ public class Commands {
 	@Aliases(value = {"emoji_test"}, mergeAliases = true)
 	public static final EmojiTestCommand EMOJI_TEST_COMMAND = new EmojiTestCommand();
 
+	@Context(GuildMessageCommandContext.class)
 	@Aliases(value = {"role_test"}, mergeAliases = true)
 	public static final RoleTestCommand ROLE_TEST_COMMAND = new RoleTestCommand();
 

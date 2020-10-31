@@ -1,24 +1,25 @@
 package net.smelly.disparser;
 
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.smelly.disparser.annotations.Optional;
+import net.smelly.disparser.context.CommandContext;
 import net.smelly.disparser.properties.AliasesProperty;
 import net.smelly.disparser.properties.CommandProperty;
 import net.smelly.disparser.properties.PermissionsProperty;
 import org.apache.commons.collections4.list.UnmodifiableList;
 import org.apache.commons.collections4.set.UnmodifiableSet;
 
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 import java.util.*;
 
 /**
- * Abstract class for a command. All fields in this class are unmodifiable for thread-safety.
+ * Abstract class for a command.
+ * <p>All fields in this class are unmodifiable for thread-safety. Extensions of this class that add more fields should also be immutable for respect to thread-safety.</p>
  *
  * @author Luke Tonon
  */
-@ThreadSafe
-public abstract class Command {
+@Immutable
+public abstract class Command<C extends CommandContext<?>> {
 	private final AliasesProperty aliasesProperty;
 	private final PermissionsProperty permissionsProperty;
 	private final UnmodifiableSet<CommandProperty<?, ?>> properties;
@@ -56,9 +57,9 @@ public abstract class Command {
 	/**
 	 * Used for processing this command.
 	 *
-	 * @param context - The {@link CommandContext} for this command, use this to get the parsed arguments and make use of the {@link GuildMessageReceivedEvent} event
+	 * @param context The {@link CommandContext} for this command, use this to get the parsed arguments and make use of the event stored in the {@link CommandContext}.
 	 */
-	public abstract void processCommand(CommandContext context) throws Exception;
+	public abstract void processCommand(C context) throws Exception;
 
 	/**
 	 * Gets this command's {@link AliasesProperty}.
@@ -90,7 +91,7 @@ public abstract class Command {
 	/**
 	 * @return This command's arguments.
 	 */
-	public UnmodifiableList<Argument<?>> getArguments() {
+	public final UnmodifiableList<Argument<?>> getArguments() {
 		return this.arguments;
 	}
 }

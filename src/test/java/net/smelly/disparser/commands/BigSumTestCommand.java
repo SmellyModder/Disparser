@@ -2,8 +2,8 @@ package net.smelly.disparser.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.smelly.disparser.Command;
-import net.smelly.disparser.CommandContext;
 import net.smelly.disparser.arguments.java.IntegerArgument;
+import net.smelly.disparser.context.MessageCommandContext;
 import net.smelly.disparser.feedback.FeedbackHandler;
 
 import java.util.Random;
@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Threading test.
  */
-public final class BigSumTestCommand extends Command {
+public final class BigSumTestCommand extends Command<MessageCommandContext> {
 	private final AtomicInteger sumNumber = new AtomicInteger();
 	private final ConcurrentLinkedQueue<Integer> queue = new ConcurrentLinkedQueue<>();
 
@@ -23,7 +23,7 @@ public final class BigSumTestCommand extends Command {
 	}
 
 	@Override
-	public void processCommand(CommandContext context) throws Exception {
+	public void processCommand(MessageCommandContext context) throws Exception {
 		FeedbackHandler feedbackHandler = context.getFeedbackHandler();
 		feedbackHandler.sendFeedback(channel -> "Queueing random sum, this may take some time to complete!");
 		int sumNumber = this.sumNumber.incrementAndGet();

@@ -1,14 +1,14 @@
 package net.smelly.disparser.commands;
 
 import net.smelly.disparser.Command;
-import net.smelly.disparser.CommandContext;
 import net.smelly.disparser.arguments.java.URLArgument;
+import net.smelly.disparser.context.MessageCommandContext;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-public final class URLTestCommand extends Command {
+public final class URLTestCommand extends Command<MessageCommandContext> {
 	private static final String USER_AGENT = "User-Agent";
 	private static final String BOT_USER_AGENT = "DiscordBot (https://github.com/DV8FromTheWorld/JDA, 4.2.0_204)";
 
@@ -17,7 +17,7 @@ public final class URLTestCommand extends Command {
 	}
 
 	@Override
-	public void processCommand(CommandContext context) throws Exception {
+	public void processCommand(MessageCommandContext context) throws Exception {
 		URL url = context.getParsedResult(0);
 		URLConnection connection = url.openConnection();
 		connection.setRequestProperty(USER_AGENT, BOT_USER_AGENT);

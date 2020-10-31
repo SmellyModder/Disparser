@@ -4,7 +4,6 @@ import net.smelly.disparser.annotations.NullWhenErrored;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -17,7 +16,6 @@ import java.util.function.Consumer;
  * @param <A> - The type for this parsed argument.
  * @author Luke Tonon
  */
-@ThreadSafe
 public final class ParsedArgument<A> {
 	private static final ParsedArgument<?> EMPTY = new ParsedArgument<>(null);
 

@@ -1,12 +1,12 @@
 package net.smelly.disparser.feedback;
 
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * This interface is used to build {@link FeedbackHandler}s.
- * Implement this on types that will be used to build a {@link FeedbackHandler}.
+ * <p>Implement this on types that will be used to build a {@link FeedbackHandler}.</p>
  *
  * @author Luke Tonon
  * @see FeedbackHandler
@@ -19,8 +19,8 @@ public interface FeedbackHandlerBuilder {
 	/**
 	 * Builds a {@link FeedbackHandler}.
 	 *
-	 * @param textChannel The {@link TextChannel} for building this {@link FeedbackHandler}.
+	 * @param channel The {@link MessageChannel} for building this {@link FeedbackHandler}.
 	 * @return a built {@link FeedbackHandler}.
 	 */
-	FeedbackHandler build(TextChannel textChannel);
+	FeedbackHandler build(MessageChannel channel);
 }

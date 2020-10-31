@@ -49,10 +49,10 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 	@Override
 	public ParsedArgument<TextChannel> parse(ArgumentReader reader) throws Exception {
 		return reader.parseNextArgument((arg) -> {
-			Guild guild = reader.getChannel().getGuild();
+			Guild guild = reader.getGuild();
 			try {
 				long parsedId = Long.parseLong(arg);
-				TextChannel foundChannel = this.findhannelWithId(guild, parsedId);
+				TextChannel foundChannel = this.findChannelWithId(guild, parsedId);
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
@@ -63,7 +63,7 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 
 				if (matcher.matches()) {
 					long parsedId = Long.parseLong(matcher.group(1));
-					TextChannel foundChannel = this.findhannelWithId(guild, parsedId);
+					TextChannel foundChannel = this.findChannelWithId(guild, parsedId);
 					if (foundChannel != null) {
 						return ParsedArgument.parse(foundChannel);
 					} else {
@@ -77,7 +77,7 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 	}
 
 	@Nullable
-	private TextChannel findhannelWithId(Guild guild, long id) {
-		return this.jda != null ? this.jda.getTextChannelById(id) : guild.getTextChannelById(id);
+	private TextChannel findChannelWithId(@Nullable Guild guild, long id) {
+		return this.jda != null ? this.jda.getTextChannelById(id) : guild != null ? guild.getTextChannelById(id) : null;
 	}
 }

@@ -1,6 +1,7 @@
 package net.smelly.disparser.arguments.jda;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.entities.User;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
@@ -75,6 +76,9 @@ public final class UserArgument implements Argument<User> {
 
 	@Nullable
 	private User findUserWithId(ArgumentReader reader, long id) {
-		return this.jda != null ? this.jda.getUserById(id) : reader.getChannel().getJDA().getUserById(id);
+		if (this.jda != null) {
+			return this.jda.getUserById(id);
+		}
+		return reader.getMessage().getType() == MessageType.DEFAULT ? reader.getMessage().getJDA().getUserById(id) : null;
 	}
 }

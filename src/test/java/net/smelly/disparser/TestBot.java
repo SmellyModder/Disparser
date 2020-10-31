@@ -8,6 +8,8 @@ import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.smelly.disparser.commands.Commands;
 import net.smelly.disparser.concurrent.DisparsingThreadFactory;
+import net.smelly.disparser.context.handlers.CommandHandler;
+import net.smelly.disparser.context.handlers.GuildCommandHandler;
 import net.smelly.disparser.feedback.TestExceptionProvider;
 import net.smelly.disparser.feedback.TestFeedbackHandler;
 
@@ -22,12 +24,16 @@ public final class TestBot {
 		botBuilder.setStatus(OnlineStatus.ONLINE);
 		botBuilder.setActivity(Activity.of(ActivityType.DEFAULT, "Disparsing!"));
 		botBuilder.addEventListeners(
-				new CommandHandler.CommandHandlerBuilder()
-						.setPrefix("!")
+				new CommandHandler.Builder()
+						.setPrefix("c!")
 						.registerCommands(Commands.class)
 						.setFeedbackBuilder(TestFeedbackHandler::new)
 						.setExceptionProviderBuilder(TestExceptionProvider::new)
 						.setExecutorService(Executors.newFixedThreadPool(6, new DisparsingThreadFactory("Test")))
+						.build(),
+				new GuildCommandHandler.Builder()
+						.setPrefix("g!")
+						.registerCommands(Commands.ROLE_TEST_COMMAND, Commands.RENAME_CHANNEL_TEST)
 						.build()
 		);
 		BOT = botBuilder.build();

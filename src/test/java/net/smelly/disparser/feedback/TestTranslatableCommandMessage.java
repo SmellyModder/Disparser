@@ -1,5 +1,6 @@
 package net.smelly.disparser.feedback;
 
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.annotation.Nullable;
@@ -22,8 +23,8 @@ public final class TestTranslatableCommandMessage implements CommandMessage {
 	}
 
 	@Override
-	public String getMessage(@Nullable TextChannel channel) {
-		return MAP.getOrDefault(channel != null ? channel.getGuild().getIdLong() : 0L, Language.ENGLISH_US).translator.apply(this.translatableString) + this.invalidColor;
+	public String getMessage(@Nullable MessageChannel channel) {
+		return MAP.getOrDefault(channel != null ? channel instanceof TextChannel ? ((TextChannel) channel).getGuild().getIdLong() : 0L : 0L, Language.ENGLISH_US).translator.apply(this.translatableString) + this.invalidColor;
 	}
 
 	//Example, translations really shouldn't be done like this...

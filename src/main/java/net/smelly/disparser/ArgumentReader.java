@@ -1,66 +1,41 @@
 package net.smelly.disparser;
 
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.smelly.disparser.feedback.FeedbackHandler;
 import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
 import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 import net.smelly.disparser.util.MessageUtil;
 
+import javax.annotation.Nullable;
 import java.util.function.Function;
 
 /**
- * Used to read {@link Argument}s from a message
+ * Used to read a {@link Message} and parse {@link Argument}s from it.
  * <p> Stores the channel of the message and stores the message down into its individual components </p>
  *
  * @author Luke Tonon
  */
 public final class ArgumentReader {
-	private final FeedbackHandler feedbackHandler;
 	private final BuiltInExceptionProvider exceptionProvider;
-	private final TextChannel channel;
+	private final Message message;
 	private final String[] messageComponents;
 	private int currentComponent;
 
-	private ArgumentReader(FeedbackHandler feedbackHandler, BuiltInExceptionProvider exceptionProvider, TextChannel channel, String[] messageComponents) {
-		this.feedbackHandler = feedbackHandler;
+	public ArgumentReader(BuiltInExceptionProvider exceptionProvider, Message message, String[] messageComponents) {
 		this.exceptionProvider = exceptionProvider;
-		this.channel = channel;
+		this.message = message;
 		this.messageComponents = messageComponents;
 	}
 
 	/**
-	 * Creates an ArgumentReader for a {@link Message} with a {@link FeedbackHandler} and {@link BuiltInExceptionProvider}.
-	 * Use the {@link FeedbackHandler} to send feedback when parsing arguments and use the {@link BuiltInExceptionProvider} to throw the built-in exceptions.
+	 * Creates an ArgumentReader for a {@link Message} with a {@link BuiltInExceptionProvider}.
 	 *
-	 * @param feedbackHandler   The {@link FeedbackHandler} for this {@link ArgumentReader}.
-	 * @param exceptionProvider The {@link BuiltInExceptionProvider} for this {@link ArgumentReader}..
+	 * @param exceptionProvider The {@link BuiltInExceptionProvider} for this {@link ArgumentReader}.
 	 * @param message           The {@link Message} for this {@link ArgumentReader}.
 	 * @return {@link ArgumentReader} for the message.
 	 */
-	public static ArgumentReader create(final FeedbackHandler feedbackHandler, final BuiltInExceptionProvider exceptionProvider, final Message message) {
-		return new ArgumentReader(feedbackHandler, exceptionProvider, message.getTextChannel(), message.getContentRaw().split(" "));
-	}
-
-	/**
-	 * @return The {@link TextChannel} belonging to this {@link ArgumentReader}.
-	 */
-	public TextChannel getChannel() {
-		return this.channel;
-	}
-
-	/**
-	 * @return - The split up message components for this {@link ArgumentReader}.
-	 */
-	public String[] getMessageComponents() {
-		return this.messageComponents;
-	}
-
-	/**
-	 * @return - This reader's {@link FeedbackHandler}.
-	 */
-	public FeedbackHandler getFeedbackHandler() {
-		return this.feedbackHandler;
+	public static ArgumentReader create(final BuiltInExceptionProvider exceptionProvider, final Message message) {
+		return new ArgumentReader(exceptionProvider, message, message.getContentRaw().split(" "));
 	}
 
 	/**
@@ -68,6 +43,20 @@ public final class ArgumentReader {
 	 */
 	public BuiltInExceptionProvider getExceptionProvider() {
 		return this.exceptionProvider;
+	}
+
+	/**
+	 * @return The {@link Message} belonging to this {@link ArgumentReader}.
+	 */
+	public Message getMessage() {
+		return this.message;
+	}
+
+	/**
+	 * @return - The split up message components for this {@link ArgumentReader}.
+	 */
+	public String[] getMessageComponents() {
+		return this.messageComponents;
 	}
 
 	/**
@@ -199,6 +188,11 @@ public final class ArgumentReader {
 	 */
 	public boolean hasNextArg() {
 		return this.currentComponent + 1 <= this.messageComponents.length - 1;
+	}
+
+	@Nullable
+	public Guild getGuild() {
+		return this.message.isFromGuild() ? this.message.getGuild() : null;
 	}
 
 	@FunctionalInterface

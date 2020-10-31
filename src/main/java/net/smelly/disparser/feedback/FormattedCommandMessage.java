@@ -1,6 +1,6 @@
 package net.smelly.disparser.feedback;
 
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -19,7 +19,7 @@ public class FormattedCommandMessage implements CommandMessage {
 	}
 
 	@Override
-	public String getMessage(@Nullable TextChannel channel) {
+	public String getMessage(@Nullable MessageChannel channel) {
 		return this.formattedMessage;
 	}
 }

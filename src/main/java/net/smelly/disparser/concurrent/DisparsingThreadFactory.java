@@ -1,5 +1,6 @@
 package net.smelly.disparser.concurrent;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,7 +29,7 @@ public final class DisparsingThreadFactory implements ThreadFactory {
 	}
 
 	@Override
-	public Thread newThread(Runnable runnable) {
+	public Thread newThread(@Nonnull Runnable runnable) {
 		Thread thread = new Thread(this.threadGroup, runnable, this.namePrefix + this.threadNumber.getAndIncrement(), 0);
 		if (thread.isDaemon()) {
 			thread.setDaemon(false);

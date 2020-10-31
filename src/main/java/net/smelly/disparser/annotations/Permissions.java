@@ -1,7 +1,6 @@
 package net.smelly.disparser.annotations;
 
 import net.dv8tion.jda.api.Permission;
-import net.smelly.disparser.CommandHandler;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -12,7 +11,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Used to merge or overwrite a command instance's permissions when registering it to a {@link CommandHandler}.
+ * Used to merge or overwrite a command instance's permissions when registering it to a {@link net.smelly.disparser.context.handlers.AbstractCommandHandler}.
  *
  * @author Luke Tonon
  */

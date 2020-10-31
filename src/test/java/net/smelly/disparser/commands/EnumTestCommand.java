@@ -1,13 +1,13 @@
 package net.smelly.disparser.commands;
 
 import net.smelly.disparser.Command;
-import net.smelly.disparser.CommandContext;
 import net.smelly.disparser.arguments.java.EnumArgument;
+import net.smelly.disparser.context.MessageCommandContext;
 import net.smelly.disparser.feedback.CommandMessage;
 import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 import net.smelly.disparser.feedback.exceptions.SimpleCommandExceptionCreator;
 
-public class EnumTestCommand extends Command {
+public final class EnumTestCommand extends Command<MessageCommandContext> {
 	//Simple exception test.
 	private static final SimpleCommandExceptionCreator Z_EXCEPTION = new SimpleCommandExceptionCreator(channel -> "Z is evil, it cannot be used!");
 
@@ -16,7 +16,7 @@ public class EnumTestCommand extends Command {
 	}
 
 	@Override
-	public void processCommand(CommandContext context) throws CommandSyntaxException {
+	public void processCommand(MessageCommandContext context) throws CommandSyntaxException {
 		TestEnum testEnum = context.getParsedResult(0);
 		if (testEnum == TestEnum.Z) {
 			throw Z_EXCEPTION.create();

@@ -1,6 +1,7 @@
 package net.smelly.disparser.arguments.jda;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
@@ -20,7 +21,7 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 	@Nullable
 	private final JDA jda;
 
-	private VoiceChannelArgument(JDA jda) {
+	private VoiceChannelArgument(@Nullable JDA jda) {
 		this.jda = jda;
 	}
 
@@ -46,7 +47,7 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long parsedLong = Long.parseLong(arg);
-				VoiceChannel foundChannel = this.jda != null ? this.jda.getVoiceChannelById(parsedLong) : reader.getChannel().getGuild().getVoiceChannelById(parsedLong);
+				VoiceChannel foundChannel = this.jda != null ? this.jda.getVoiceChannelById(parsedLong) : this.getVoiceChannelById(reader.getMessage(), parsedLong);
 				if (foundChannel != null) {
 					return ParsedArgument.parse(foundChannel);
 				} else {
@@ -56,5 +57,10 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 				throw reader.getExceptionProvider().getInvalidChannelIdException().create(arg);
 			}
 		});
+	}
+
+	@Nullable
+	private VoiceChannel getVoiceChannelById(Message message, long parsedLong) {
+		return message.isFromGuild() ? message.getGuild().getVoiceChannelById(parsedLong) : null;
 	}
 }

@@ -1,6 +1,8 @@
 package net.smelly.disparser.arguments.jda;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.entities.Webhook;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
@@ -8,6 +10,7 @@ import net.smelly.disparser.ParsedArgument;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.concurrent.ExecutionException;
 
 /**
  * An argument that can parse webhooks by their ID.
@@ -46,7 +49,7 @@ public final class WebhookArgument implements Argument<Webhook> {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long parsedLong = Long.parseLong(arg);
-				Webhook foundWebhook = this.jda == null ? reader.getChannel().getJDA().retrieveWebhookById(parsedLong).submit().get() : this.jda.retrieveWebhookById(parsedLong).submit().get();
+				Webhook foundWebhook = this.jda == null ? this.getWebhookById(reader.getMessage(), parsedLong) : this.jda.retrieveWebhookById(parsedLong).submit().get();
 				if (foundWebhook != null) {
 					return ParsedArgument.parse(foundWebhook);
 				} else {
@@ -56,5 +59,10 @@ public final class WebhookArgument implements Argument<Webhook> {
 				throw reader.getExceptionProvider().getInvalidWebhookIdException().create(arg);
 			}
 		});
+	}
+
+	@Nullable
+	private Webhook getWebhookById(Message message, long parsedLong) throws ExecutionException, InterruptedException {
+		return message.getType() == MessageType.DEFAULT ? message.getJDA().retrieveWebhookById(parsedLong).submit().get() : null;
 	}
 }
