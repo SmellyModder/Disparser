@@ -4,9 +4,9 @@
 <img align="right" src="https://cdn.discordapp.com/attachments/667088262287851551/740459139141992469/disparser_logo.png" height="200" width="200">
 
 # About Disparser
-Disparser is a simple command parser for JDA, the Java Discord API.
-It allows for easy and performant usage of commands with multiple aliases, permission requirements, and various arguments.
-Disparser will stay relatively small and simple forever, offerring simple and efficient command parsing for JDA.
+Disparser is a multi-threaded command parser and executor for JDA, the Java Discord API.
+It allows for sufficient and performant usage of commands with multiple aliases, permission requirements, and various arguments.
+Disparser tries to not have that many niche things in it as possible but paves the way for people to implement them with ease, offering extensible and efficient command parsing for JDA.
 <br> *It is a WIP, so expect new features!* </br>
 
 # Installing
@@ -46,8 +46,50 @@ dependencies {
 <br> You can also download the source for this repository and build Disparser using the `gradlew build` command.</br>
 
 # Usage
-Coming soon:tm: (Needs Updating)
-## Features
+## CommandContext
+At the core of Disparser, there is `CommandContext`, a wrapper class for events in JDA used in command processing.
+<br> A `CommandContext` is composed of a few things. </br>
+- A `List` of `ParsedArgument`s for getting the parsed arguments for a `Command`.
+- A `FeedbackHandler` for sending feedback when processing commands.
+- A `BuiltInExceptionProvider` for constructing built-in exceptions when processing commands.
+- An `Event` that the context wraps around for commands to process from.
+
+`CommandContext` has a generic type parameter `<E>`, which extends an `Event`. The `Event` works as the source of the `CommandContext`, and allows commands to know what type of event they're processing from. `CommandContext` is easily adaptable to any message-related event giving lots of freedom to command processing.
+
+Disparser has a few built-in extensions of `CommandContext`. 
+- `GuildMessageCommandContext` for processing commands from a `GuildMessageReceivedEvent` event.
+- `PrivateMessageCommandContext` for processing commands from a `PrivateMessageReceivedEvent` event.
+- `MessageCommandContext` for processing commands from a `MessageReceivedEvent` event which works as a combo of the `GuildMessageReceivedEvent` and `PrivateMessageReceivedEvent` events.
+
+The genericity of `CommandContext` is inclusive because it allows for all commands to not resort to using the same message-based event and provides great freedom to command processing by being easily extensible.
+
+## Commands
+`Command` is the core class used in representing a command. `Command` makes use of `CommandContext` by providing an abstract void method called `processCommand()`, which takes in a `CommandContext` of the same type as the generic type parameter for the `Command`.
+
+A `Command` also contains a few other useful things. These include a `AliasesProperty`, a `PermissionsProperty`, an `UnmodifiableSet` of `CommandProperty`s, and an `UnmodifiableList` of `Argument`s.
+
+`Command`s are immutable for respect to thread-safety, as Disparser's designed to allow for concurrency support. Because of this, changeable values about them shouldn't be stored in the `Command` and instead get stored in property maps, which Disparser has built-in support for doing. These property keys in `Command`s also work as annotation processors, and more on that later.
+
+The set `CommandProperty`s in a `Command` help tell how many `CommandProperty`s that `Command` has.
+The list of arguments in a `Command` help tell how a `CommandContext` should be created for that `Command` when parsing all the arguments into a list of `ParsedArguments`s.
+
+Below is an example of a simple command that renames a `TextChannel`:
+```Java
+public final class RenameChannelTestCommand extends Command<GuildMessageCommandContext> {
+
+	public RenameChannelTestCommand() {
+		super("rename", TextChannelArgument.get().asOptional(), StringArgument.get());
+	}
+
+	@Override
+	public void processCommand(GuildMessageCommandContext context) {
+		TextChannel channel = context.getParsedResultOrElse(0, context.getChannel());
+		channel.getManager().setName(context.getParsedResult(1)).queue();
+	}
+
+}
+```
+# Features
 * Command Handlers for processing commands from messages.
 * An index-based argument system that's simple and easy to work with.
 * A feedback system for command message output.
