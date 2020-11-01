@@ -80,7 +80,7 @@ public abstract class Command<C extends CommandContext<?>> {
 	}
 
 	/**
-	 * Gets this's command's properties.
+	 * Gets this command's properties.
 	 *
 	 * @return This's command's properties.
 	 */
