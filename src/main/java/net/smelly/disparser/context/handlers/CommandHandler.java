@@ -28,24 +28,26 @@ public class CommandHandler extends AbstractCommandHandler<MessageReceivedEvent,
 
 	@Override
 	public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
-		this.executorService.execute(() -> {
-			String firstComponent = event.getMessage().getContentRaw().split(" ")[0];
-			String prefix = this.getPrefix(event);
-			if (firstComponent.startsWith(prefix)) {
-				Command<MessageCommandContext> command = this.aliasMap.get(firstComponent.substring(prefix.length()));
-				if (command != null) {
-					Optional<MessageCommandContext> commandContext = MessageCommandContext.create(event, command, this.getPermissions(command), this.feedbackHandlerBuilder, this.exceptionProviderBuilder);
-					commandContext.ifPresent(context -> {
-						try {
-							command.processCommand(context);
-						} catch (Exception exception) {
-							context.getFeedbackHandler().sendError(exception);
-							exception.printStackTrace();
-						}
-					});
+		if (!this.executorService.isShutdown()) {
+			this.executorService.execute(() -> {
+				String firstComponent = event.getMessage().getContentRaw().split(" ")[0];
+				String prefix = this.getPrefix(event);
+				if (firstComponent.startsWith(prefix)) {
+					Command<MessageCommandContext> command = this.aliasMap.get(firstComponent.substring(prefix.length()));
+					if (command != null) {
+						Optional<MessageCommandContext> commandContext = MessageCommandContext.create(event, command, this.getPermissions(command), this.feedbackHandlerBuilder, this.exceptionProviderBuilder);
+						commandContext.ifPresent(context -> {
+							try {
+								command.processCommand(context);
+							} catch (Exception exception) {
+								context.getFeedbackHandler().sendError(exception);
+								exception.printStackTrace();
+							}
+						});
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	/**

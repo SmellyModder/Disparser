@@ -29,24 +29,26 @@ public class GuildCommandHandler extends AbstractCommandHandler<GuildMessageRece
 
 	@Override
 	public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-		this.executorService.execute(() -> {
-			String firstComponent = event.getMessage().getContentRaw().split(" ")[0];
-			String prefix = this.getPrefix(event);
-			if (firstComponent.startsWith(prefix)) {
-				Command<GuildMessageCommandContext> command = this.aliasMap.get(firstComponent.substring(prefix.length()));
-				if (command != null) {
-					Optional<GuildMessageCommandContext> commandContext = GuildMessageCommandContext.create(event, command, this.getPermissions(command), this.feedbackHandlerBuilder, this.exceptionProviderBuilder);
-					commandContext.ifPresent(context -> {
-						try {
-							command.processCommand(context);
-						} catch (Exception exception) {
-							context.getFeedbackHandler().sendError(exception);
-							exception.printStackTrace();
-						}
-					});
+		if (!this.executorService.isShutdown()) {
+			this.executorService.execute(() -> {
+				String firstComponent = event.getMessage().getContentRaw().split(" ")[0];
+				String prefix = this.getPrefix(event);
+				if (firstComponent.startsWith(prefix)) {
+					Command<GuildMessageCommandContext> command = this.aliasMap.get(firstComponent.substring(prefix.length()));
+					if (command != null) {
+						Optional<GuildMessageCommandContext> commandContext = GuildMessageCommandContext.create(event, command, this.getPermissions(command), this.feedbackHandlerBuilder, this.exceptionProviderBuilder);
+						commandContext.ifPresent(context -> {
+							try {
+								command.processCommand(context);
+							} catch (Exception exception) {
+								context.getFeedbackHandler().sendError(exception);
+								exception.printStackTrace();
+							}
+						});
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	public static class Builder extends AbstractCommandHandlerBuilder<GuildMessageReceivedEvent, GuildMessageCommandContext, GuildCommandHandler, Builder> {
