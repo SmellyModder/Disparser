@@ -46,6 +46,9 @@ dependencies {
 <br> You can also download the source for this repository and build Disparser using the `gradlew build` command.</br>
 
 # Usage
+This section goes over the basics and foundations of Disparser's core features. 
+<br> Disparser doesn't include many niche features but provides various built-in systems to make them easily implementable. </br>
+For a list of all of Disparser's features and capabilities, go to the Features section.
 ## CommandContext
 At the core of Disparser, there is `CommandContext`, a wrapper class for events in JDA used in command processing.
 <br> A `CommandContext` is composed of a few things. </br>
@@ -70,7 +73,7 @@ A `Command` also contains a few other useful things. These include a `AliasesPro
 
 `Command`s are immutable for respect to thread-safety, as Disparser's designed to allow for concurrency support. Because of this, changeable values about them shouldn't be stored in the `Command` and instead get stored in property maps, which Disparser has built-in support for doing. These property keys in `Command`s also work as annotation processors, and more on that later.
 
-The set `CommandProperty`s in a `Command` help tell how many `CommandProperty`s that `Command` has.
+The set of `CommandProperty`s in a `Command` help tell what `CommandProperty`s that `Command` has.
 The list of arguments in a `Command` help tell how a `CommandContext` should be created for that `Command` when parsing all the arguments into a list of `ParsedArguments`s.
 
 Below is an example of a simple command that renames a `TextChannel`:
@@ -89,6 +92,56 @@ public final class RenameChannelTestCommand extends Command<GuildMessageCommandC
 
 }
 ```
+## Arguments
+Disparser comes with a simple index-based argument system for commands. There are plans to improve this system, such as allowing arguments that can *cleanly* parse multiple objects from one portion of a string. This would pave the way for arguments that can parse a list of things.
+
+An `Argument` is a parameterized interface where `<T>` is the type of the object the `Argument` parses a part of a string from a `Message` into.
+
+The method in an `Argument` that does this is called `parse()`, which takes in a `ArgumentReader` and uses it to read the next argument of a string split from a `Message`. 
+This `parse()` method has a return value of a `ParsedArgument` with a parameterized type matching that of the `Argument`'s that acts very similarly to an `Optional`.
+This is done since `Arguments` in Disparser can be optional, meaning they don't have to be present in the message for executing the command.
+
+The way an `Argument` is determined to be optional is with the method `isOptional()`.
+<br> There is also the `asOptional()` method which converts an `Argument` into an instance of the `Argument`, but optional. </br>
+
+Here is an example of an `Argument` implementation that's built-in into Disparser:
+```Java
+public final class URLArgument implements Argument<URL> {
+
+	private URLArgument() {
+	}
+
+	/**
+	 * @return The default instance.
+	 */
+	public static URLArgument get() {
+		return new URLArgument();
+	}
+
+	@Override
+	public ParsedArgument<URL> parse(ArgumentReader reader) throws Exception {
+		String next = reader.nextArgument();
+		if (next.startsWith("<") && next.endsWith(">")) {
+			next = next.substring(1, next.length() - 1);
+		}
+		try {
+			return ParsedArgument.parse(new URL(next));
+		} catch (MalformedURLException e) {
+			throw reader.getExceptionProvider().getInvalidURLException().create(next);
+		}
+	}
+
+}
+```
+Now that we've gone over the core features in Disparser, we're now going to look over Disparser's other features. These other features pave the way for niche and more advanced features in Discord bots. Some of these include specialized command feedback, concurrency support, command exceptions, annotation processing, and an extensible command properties system.
+
+These features may, of course, not be useful to everyone, but have many capabilities to them and are great for high-quality Discord bots.
+
+The command feedback system is excellent for bots that will be on many servers with different languages. The command feedback system provides a basic framework for localized command messages and is just great for sending command feedback in general.
+This system also ties into with the command exception system, as it allows you to make use of built-in exceptions and have them be localized, which becomes especially useful for making use of Disparser's built-in arguments and having the error message handling for them be localized.
+
+More about these features soon:tm:...
+
 # Features
 * Command Handlers for processing commands from messages.
 * An index-based argument system that's simple and easy to work with.
