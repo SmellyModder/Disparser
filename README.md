@@ -52,17 +52,17 @@ For a list of all of Disparser's features and capabilities, go to the Features s
 ## CommandContext
 At the core of Disparser, there is `CommandContext`, a wrapper class for events in JDA used in command processing.
 <br> A `CommandContext` is composed of a few things. </br>
-- A `List` of `ParsedArgument`s for getting the parsed arguments for a `Command`.
-- A `FeedbackHandler` for sending feedback when processing commands.
-- A `BuiltInExceptionProvider` for constructing built-in exceptions when processing commands.
-- An `Event` that the context wraps around for commands to process from.
+* A `List` of `ParsedArgument`s for getting the parsed arguments for a `Command`.
+* A `FeedbackHandler` for sending feedback when processing commands.
+* A `BuiltInExceptionProvider` for constructing built-in exceptions when processing commands.
+* An `Event` that the context wraps around for commands to process from.
 
 `CommandContext` has a generic type parameter `<E>`, which extends an `Event`. The `Event` works as the source of the `CommandContext`, and allows commands to know what type of event they're processing from. `CommandContext` is easily adaptable to any message-related event giving lots of freedom to command processing.
 
 Disparser has a few built-in extensions of `CommandContext`. 
-- `GuildMessageCommandContext` for processing commands from a `GuildMessageReceivedEvent` event.
-- `PrivateMessageCommandContext` for processing commands from a `PrivateMessageReceivedEvent` event.
-- `MessageCommandContext` for processing commands from a `MessageReceivedEvent` event which works as a combo of the `GuildMessageReceivedEvent` and `PrivateMessageReceivedEvent` events.
+* `GuildMessageCommandContext` for processing commands from a `GuildMessageReceivedEvent` event.
+* `PrivateMessageCommandContext` for processing commands from a `PrivateMessageReceivedEvent` event.
+* `MessageCommandContext` for processing commands from a `MessageReceivedEvent` event which works as a combo of the `GuildMessageReceivedEvent` and `PrivateMessageReceivedEvent` events.
 
 The genericity of `CommandContext` is inclusive because it allows for all commands to not resort to using the same message-based event and provides great freedom to command processing by being easily extensible.
 
