@@ -46,7 +46,7 @@ dependencies {
 <br> You can also download the source for this repository and build Disparser using the `gradlew build` command.</br>
 
 # Usage
-This section goes over the basics and foundations of Disparser's core features. 
+This section goes over the basics and foundations of Disparser's features. 
 <br> Disparser doesn't include many niche features but provides various built-in systems to make them easily implementable. </br>
 For a list of all of Disparser's features and capabilities, go to the Features section.
 ## CommandContext
