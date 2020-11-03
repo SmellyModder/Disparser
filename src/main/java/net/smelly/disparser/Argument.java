@@ -22,7 +22,7 @@ public interface Argument<T> {
 
 	/**
 	 * If this argument is optional.
-	 * <p> Optional arguments will let a {@link CommandHandler} treat this argument as optional. <p>
+	 * <p> Optional arguments should let a {@link net.smelly.disparser.context.handlers.AbstractCommandHandler} treat this argument as optional. <p>
 	 * <b> IMPORTANT: When this is true any command that uses this argument can have this argument's parsed result be null </b>
 	 *
 	 * @return If this argument is optional
