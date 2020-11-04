@@ -69,12 +69,12 @@ The genericity of `CommandContext` is inclusive because it allows for all comman
 ## Commands
 `Command` is the core class used in representing a command. `Command` makes use of `CommandContext` by providing an abstract void method called `processCommand()`, which takes in a `CommandContext` of the same type as the generic type parameter for the `Command`.
 
-A `Command` also contains a few other useful things. These include a `AliasesProperty`, a `PermissionsProperty`, an `UnmodifiableSet` of `CommandProperty`s, and an `UnmodifiableList` of `Argument`s.
+A `Command` also contains a few other useful things. These include an `AliasesProperty`, a `PermissionsProperty`, an `UnmodifiableSet` of `CommandProperty`s, and an `UnmodifiableList` of `Argument`s.
 
 `Command`s are immutable for respect to thread-safety, as Disparser's designed to allow for concurrency support. Because of this, changeable values about them shouldn't be stored in the `Command` and instead get stored in property maps, which Disparser has built-in support for doing. These property keys in `Command`s also work as annotation processors, and more on that later.
 
 The set of `CommandProperty`s in a `Command` help tell what `CommandProperty`s that `Command` has.
-The list of arguments in a `Command` help tell how a `CommandContext` should be created for that `Command` when parsing all the arguments into a list of `ParsedArguments`s.
+The list of arguments in a `Command` help tells how a `CommandContext` should be created for that `Command` when parsing all the arguments into a list of `ParsedArguments`s.
 
 Below is an example of a simple command that renames a `TextChannel`:
 ```Java
@@ -137,10 +137,175 @@ Now that we've gone over the core features in Disparser, we're now going to look
 
 These features may, of course, not be useful to everyone, but have many capabilities to them and are great for high-quality Discord bots.
 
-The command feedback system is excellent for bots that will be on many servers with different languages. The command feedback system provides a basic framework for localized command messages and is just great for sending command feedback in general.
+## Command Feedback
+The command feedback system is excellent for bots that will be on many servers with different languages.
+It provides a basic framework for localized command messages and is handy for sending command feedback in general.
 This system also ties into with the command exception system, as it allows you to make use of built-in exceptions and have them be localized, which becomes especially useful for making use of Disparser's built-in arguments and having the error message handling for them be localized.
 
-More about these features soon:tm:...
+There is also `FeedbackHandlerBuilder`, which is an interface for constructing a new `FeedbackHandler` for a `TextChannel`.
+<br>This interface is also a functional interface which means you can do `MyFeedbackHandler::new` for a new `FeedbackHandlerBuilder`.</br>
+
+Here is a basic example of a `FeedbackHandler`:
+```Java
+public final class TestFeedbackHandler implements FeedbackHandler {
+	private final MessageChannel channel;
+
+	public TestFeedbackHandler(MessageChannel channel) {
+		this.channel = channel;
+	}
+
+	@Override
+	public void sendFeedback(CommandMessage message) {
+		this.channel.sendMessage(message.getMessage(this.channel)).queue();
+	}
+
+	@Override
+	public void sendFeedback(MessageEmbed messageEmbed) {
+		this.channel.sendMessage(messageEmbed).queue();
+	}
+
+	@Override
+	public void sendSuccess(CommandMessage message) {
+		this.channel.sendMessage(MessageUtil.createSuccessfulMessage(message.getMessage(this.channel))).queue();
+	}
+
+	@Override
+	public void sendError(Exception exception) {
+		if (exception instanceof CommandSyntaxException) {
+			this.channel.sendMessage(MessageUtil.createErrorMessage(((CommandSyntaxException) exception).getCommandMessage().getMessage(this.channel))).queue();
+		} else {
+			this.channel.sendMessage(MessageUtil.createErrorMessage(exception.getMessage())).queue();
+		}
+	}
+}
+```
+
+`CommandMessage` is a fundamental interface of the feedback system as it allows for localized command feedback.
+<br>It has one method, `getMessage()`, which takes in a nullable `MessageChannel` and returns a string.</br>
+The `MessageChannel` parameter allows for strings sent by commands to be localized. This interface is also functional allowing for the creations of new `CommandMessage`s without having to have an implementation class. Although, it is advised you make an implementation class if you plan to have translatable messages.
+
+## Exception System
+The exception system is pretty simple, and the title sums it up. This system ties in very much with the feedback system.
+<br>The core purpose of the exception system is to allow for a simple, ergonomic, and localizable exception creation system. Disparser makes use of this internally to allow for its built-in arguments' error messages to be localizable, effectively allowing Disparser's built-in arguments to support languages other than English.</br>
+
+Disparser also comes with many built-in `CommandExceptionCreator` implementations. A `CommandExceptionCreator` is an interface with one method, `create()`, that creates an `Exception` matching the generic type of the interface.
+<br>For Disparser to have its built-in exceptions work properly for localization, the `BuiltInExceptionProvider` had to be created. This interface is large and has a method for each built-in exception creator used in Disparser's built-in arguments. As previously stated, this interface is pretty big, so only implement this on classes that will be fully localizing all of Disparser's built-in exception creators. If you only need to override a few, you should extend `DisparserExceptionProvider` and override the needed methods there, as that serves as the implementation class for `BuiltInExceptionProvider` </br>
+
+There is one last important feature of the exception system, the `BuiltInExceptionProviderBuilder` interface. This interface constructs a new `BuiltInExceptionProvider` for a `MessageChannel` using its `build()` method. Unlike `FeedbackHandlerBuilder`, this isn't necessary to properly use the object it builds as `FeedbackHandler` is created for a specific `MessageChannel`, meaning you could use the same `BuiltInExceptionProvider` over and over for executing commands and not have issues.
+
+Here is a simple example of a `DisparserExceptionProvider` implementation:
+```Java
+public final class TestExceptionProvider extends DisparserExceptionProvider {
+	private final MessageChannel channel;
+	private static final DynamicCommandExceptionCreator<String> COLOR_EXCEPTION = DynamicCommandExceptionCreator.createInstance(color -> {
+		return new TestTranslatableCommandMessage("command.exception.color", color);
+	});
+
+	public TestExceptionProvider(MessageChannel channel) {
+		this.channel = channel;
+	}
+
+	@Override
+	public DynamicCommandExceptionCreator<String> getInvalidColorException() {
+		return COLOR_EXCEPTION;
+	}
+}
+```
+
+## CommandMessage
+`CommandMessage` has already been talked about above, but this section will go over it a bit more. Simply put, the `CommandMessage` interface is a getter for a string for a nullable `MessageChannel`. There are many forms in which you could implement this interface. Some implementations to highlight are translatable messages, guild-based messages, text channel based messages, user-based messages, and much more.
+
+Here is a rather unclean implementation of `CommandMessage` for translatable messages:
+```Java
+public final class TestTranslatableCommandMessage implements CommandMessage {
+	private static final ConcurrentHashMap<Long, Language> MAP = new ConcurrentHashMap<>();
+
+	static {
+		MAP.put(735963087152349326L, Language.ENGLISH_UK);
+	}
+
+	private final String translatableString;
+	private final String invalidColor;
+
+	public TestTranslatableCommandMessage(String translatableString, String invalidColor) {
+		this.translatableString = translatableString;
+		this.invalidColor = invalidColor;
+	}
+
+	@Override
+	public String getMessage(@Nullable MessageChannel channel) {
+		return MAP.getOrDefault(channel != null ? channel instanceof TextChannel ? ((TextChannel) channel).getGuild().getIdLong() : 0L : 0L, Language.ENGLISH_US).translator.apply(this.translatableString) + this.invalidColor;
+	}
+
+	//Example, translations really shouldn't be done like this...
+	enum Language {
+		ENGLISH_US(s -> s.equals("command.exception.color") ? "Invalid Color: " : s),
+		ENGLISH_UK(s -> s.equals("command.exception.color") ? "Invalid Colour: " : s);
+
+		private final Function<String, String> translator;
+
+		Language(Function<String, String> translator) {
+			this.translator = translator;
+		}
+	}
+}
+```
+This is not a great way to go about handling translations, but this implementation does get the point across. A more robust system should get made to manage things like this if you plan to do translatable messages.
+
+## Command Properties/Annotations
+`Command` is an immutable class for thread-safety. Because of this, changable values for them must be stored externally and be thread-safe. Creating a system for managing values  about commands can become a hassle, so Disparser has command properties, which are like keys for a value type in a `Command`. A `CommandProperty` is a generic interface that serves as a key for a value type and a processor for an annotation. Every `CommandProperty` is tied to an annotation, to allow for existing commands' properties be modified without modifying the `Command` itself.
+
+An example of this would be:
+```Java
+@Aliases(value = {"example"}, mergeAliases = true)
+public static final SomeOtherCommand EXAMPLE = new SomeOtherCommand();
+```
+
+`CommandProperty` implementations should also be immutable for thread-safety. A `CommandProperty` has one method, `get()`, which gets a value from the property from a nullable annotation. This method allows `CommandProperty`s to not just serve as property keys, but also as annotation processors.
+There is also `CommandProperty.Value`, which is an extension of `AtomicReference` used to hold the value of a property.
+<br>Disparser has two built-in `CommandProperty` implementations; `AliasesProperty` and `PermissionsProperty`. `AliasesProperty` obviously is a property for aliases and `PermissionsProperty` is obviously a property for permissions.</br>
+
+See `AliasesProperty` and `PermissionsProperty` for good examples of a `CommandProperty` implementation.
+Disparser also has a built-in class for managing these properties called `CommandPropertyMap`. `CommandPropertyMap` is generic for a type of `CommandContext`. This class is a thread-safe map class in which the property values for commands get mapped.
+
+## Putting it all together
+Now that Disparser's features and capabilities have been gone over, there's one final big question to answer.
+<br>How does this all go together?</br>
+Putting all these features together and making full use of them is not that difficult. Disparser offers a few built-in classes that make use of all these great features, and it's highly recommended you refer to them when making classes for handling all these features. All of Disparser's built-in handler classes for commands are located in the `net.smelly.disparser.context.handlers.*` package.
+
+The abstract class for a command handler is called `AbstractCommandHandler`. This class is generic, and its typed parameters being `E` for an event type and `C` for a `CommandContext` type for the event. `AbstractCommandHandler` extends `ListenerAdapter` to get utilized as an event listener in JDA. It makes use of all of Disparser's features, making it a great class to extend off for custom command handlers. `AbstractCommandHandler` also makes use of Disparser's thread-safety, offering multi-threaded command processing.
+
+`AbstractCommandHandler` has many capabilities to it, as it makes use of all of Disparser's features as stated already. Because of this, things can become overcomplicated as not everyone wants to make use of all the features. Because of this, there is `AbstractCommandHandlerBuilder`. `AbstractCommandHandlerBuilder` works as an abstract generic builder class for an `AbstractCommandHandler` and comes with fields and methods used in building an `AbstractCommandHandler`.
+
+There are three extensions of `AbstractCommandHandler` built into Disparser, each with their own `AbstractCommandHandlerBuilder`.
+<br>`CommandHandler` for `MessageCommandContext`, `GuildCommandHandler` for `GuildMessageCommandContext`, and `PrivateCommandHandler` for `PrivateMessageCommandContext`.</br>
+
+Here is an example of a simple bot using these builders and adding the built `AbstractCommandHandler`s as event listeners:
+```Java
+public final class TestBot {
+	private static JDA BOT;
+
+	public static void main(String[] args) throws LoginException {
+		JDABuilder botBuilder = JDABuilder.create(args[0], GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS & ~GatewayIntent.getRaw(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_TYPING, GatewayIntent.DIRECT_MESSAGE_TYPING)));
+		botBuilder.setStatus(OnlineStatus.ONLINE);
+		botBuilder.setActivity(Activity.of(ActivityType.DEFAULT, "Disparsing!"));
+		botBuilder.addEventListeners(
+			new CommandHandler.Builder()
+				.setPrefix("c!")
+				.registerCommands(Commands.class)
+				.setFeedbackBuilder(TestFeedbackHandler::new)
+				.setExceptionProviderBuilder(TestExceptionProvider::new)
+				.setExecutorService(Executors.newFixedThreadPool(6, new DisparsingThreadFactory("Test")))
+				.build(),
+			new GuildCommandHandler.Builder()
+				.setPrefix("g!")
+				.registerCommands(Commands.ROLE_TEST_COMMAND, Commands.RENAME_CHANNEL_TEST)
+				.build()
+		);
+		BOT = botBuilder.build();
+	}
+}
+```
 
 # Features
 * Command Handlers for processing commands from messages.
