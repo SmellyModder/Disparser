@@ -28,7 +28,7 @@ public final class TestBot {
 						.setPrefix("c!")
 						.registerCommands(Commands.class)
 						.setFeedbackBuilder(TestFeedbackHandler::new)
-						.setExceptionProviderBuilder(TestExceptionProvider::new)
+						.setExceptionProviderBuilder(channel -> TestExceptionProvider.INSTANCE)
 						.setExecutorService(Executors.newFixedThreadPool(6, new DisparsingThreadFactory("Test")))
 						.build(),
 				new GuildCommandHandler.Builder()
