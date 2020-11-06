@@ -3,13 +3,13 @@
 
 <img align="right" src="https://cdn.discordapp.com/attachments/667088262287851551/740459139141992469/disparser_logo.png" height="200" width="200">
 
-# About Disparser
+# 📖 About
 Disparser is a multi-threaded command parser and executor for JDA, the Java Discord API.
 It allows for sufficient and performant usage of commands with multiple aliases, permission requirements, and various arguments.
 Disparser tries to not have that many niche things in it as possible but paves the way for people to implement them with ease, offering extensible and efficient command parsing for JDA.
 <br> *It is a WIP, so expect new features!* </br>
 
-# Installing
+# 📦 Installing
 Latest Stable Version: [![](https://cdn.discordapp.com/attachments/667088262287851551/765724389244534825/disparser-1.3.0.PNG)](https://jitpack.io/#SmellyModder/Disparser/1.3.0)
 <br>Disparser's master branch is frequently updated, making it unstable, so it's recommended you use one of the release tags on the repository here as they are stable.</br>
 ## Gradle
@@ -45,7 +45,7 @@ dependencies {
 ```
 <br> You can also download the source for this repository and build Disparser using the `gradlew build` command.</br>
 
-# Usage
+# 🛠️ Usage
 This section goes over the basics and foundations of Disparser's features. 
 <br> Disparser doesn't include many niche features but provides various built-in systems to make them easily implementable. </br>
 For a list of all of Disparser's features and capabilities, go to the Features section.
