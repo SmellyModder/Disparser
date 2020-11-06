@@ -14,6 +14,8 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 @FunctionalInterface
 public interface CommandMessage {
+	CommandMessage EMPTY = channel -> "";
+
 	/**
 	 * @param channel The channel to get this message for, can be null.
 	 * @return The string value of this message.
