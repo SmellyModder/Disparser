@@ -73,8 +73,12 @@ public class DisparserExceptionProvider implements BuiltInExceptionProvider {
 		return new FormattedCommandMessage("`%s` is not a valid color value!", number);
 	});
 
-	private static final BiDynamicCommandExceptionCreator<String, Integer> LENGTH_EXCEPTION = BiDynamicCommandExceptionCreator.createInstance((string, length) -> {
-		return new FormattedCommandMessage("`%s` exceeds the length of %o", string, length);
+	private static final BiDynamicCommandExceptionCreator<String, Integer> NOT_ENOUGH_CHARS_EXCEPTION = BiDynamicCommandExceptionCreator.createInstance((string, length) -> {
+		return new FormattedCommandMessage("`%s` doesn't meet the minimum character length of %o", string, length);
+	});
+
+	private static final BiDynamicCommandExceptionCreator<String, Integer> TOO_MANY_CHARS_EXCEPTION = BiDynamicCommandExceptionCreator.createInstance((string, length) -> {
+		return new FormattedCommandMessage("`%s` exceeds the max character length of %o", string, length);
 	});
 
 	private static final BiDynamicCommandExceptionCreator<Number, Number> VALUE_TOO_HIGH_EXCEPTION = BiDynamicCommandExceptionCreator.createInstance((value, max) -> {
@@ -234,8 +238,13 @@ public class DisparserExceptionProvider implements BuiltInExceptionProvider {
 	}
 
 	@Override
-	public BiDynamicCommandExceptionCreator<String, Integer> getLengthException() {
-		return LENGTH_EXCEPTION;
+	public BiDynamicCommandExceptionCreator<String, Integer> getTooLowStringLengthException() {
+		return NOT_ENOUGH_CHARS_EXCEPTION;
+	}
+
+	@Override
+	public BiDynamicCommandExceptionCreator<String, Integer> getTooHighStringLengthException() {
+		return TOO_MANY_CHARS_EXCEPTION;
 	}
 
 	@Override

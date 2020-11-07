@@ -4,7 +4,6 @@ import net.smelly.disparser.Argument;
 import net.smelly.disparser.ArgumentReader;
 import net.smelly.disparser.ParsedArgument;
 
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -14,10 +13,11 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class StringArgument implements Argument<String> {
-	@Nullable
-	private final Integer maxChars;
+	private final int minChars;
+	private final int maxChars;
 
-	private StringArgument(@Nullable Integer maxChars) {
+	private StringArgument(int minChars, int maxChars) {
+		this.minChars = minChars;
 		this.maxChars = maxChars;
 	}
 
@@ -25,23 +25,47 @@ public final class StringArgument implements Argument<String> {
 	 * @return The default instance.
 	 */
 	public static StringArgument get() {
-		return new StringArgument(null);
+		return new StringArgument(0, Integer.MAX_VALUE);
 	}
 
 	/**
-	 * @param maxChars - The max length of a string this argument can parse.
-	 * @return An instance that has a set max length for the strings it can parse.
+	 * Creates new {@link StringArgument} that has a minimum parsable string length.
+	 *
+	 * @param minChars Minimum amount of characters.
+	 * @return A new {@link StringArgument} that has a minimum parsable string length.
 	 */
-	public static StringArgument create(int maxChars) {
-		return new StringArgument(maxChars);
+	public static StringArgument getMin(int minChars) {
+		return new StringArgument(Math.max(0, minChars), Integer.MAX_VALUE);
+	}
+
+	/**
+	 * Creates new {@link StringArgument} that has a maximum parsable string length.
+	 *
+	 * @param maxChars Maximum amount of characters.
+	 * @return A new {@link StringArgument} that has a maximum parsable string length.
+	 */
+	public static StringArgument getMax(int maxChars) {
+		return new StringArgument(0, maxChars);
+	}
+
+	/**
+	 * Creates a new {@link StringArgument} that clamps the parsable string length.
+	 *
+	 * @param minChars Minimum amount of characters.
+	 * @param maxChars Maximum amount of characters allowed.
+	 * @return A new {@link StringArgument} that clamps the parsable string length.
+	 */
+	public static StringArgument getClamped(int minChars, int maxChars) {
+		return new StringArgument(Math.max(0, minChars), maxChars);
 	}
 
 	@Override
 	public ParsedArgument<String> parse(ArgumentReader reader) throws Exception {
 		String nextArgument = reader.nextArgument();
-		Integer maxChars = this.maxChars;
-		if (maxChars != null && nextArgument.length() > maxChars) {
-			throw reader.getExceptionProvider().getLengthException().create(nextArgument, maxChars);
+		if (nextArgument.length() > this.maxChars) {
+			throw reader.getExceptionProvider().getTooHighStringLengthException().create(nextArgument, this.maxChars);
+		} else if (nextArgument.length() < this.minChars) {
+			throw reader.getExceptionProvider().getTooLowStringLengthException().create(nextArgument, this.maxChars);
 		}
 		return ParsedArgument.parse(nextArgument);
 	}

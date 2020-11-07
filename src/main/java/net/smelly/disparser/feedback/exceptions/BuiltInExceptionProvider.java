@@ -48,7 +48,9 @@ public interface BuiltInExceptionProvider {
 
 	DynamicCommandExceptionCreator<String> getInvalidColorException();
 
-	BiDynamicCommandExceptionCreator<String, Integer> getLengthException();
+	BiDynamicCommandExceptionCreator<String, Integer> getTooLowStringLengthException();
+
+	BiDynamicCommandExceptionCreator<String, Integer> getTooHighStringLengthException();
 
 	BiDynamicCommandExceptionCreator<Number, Number> getValueTooHighException();
 
