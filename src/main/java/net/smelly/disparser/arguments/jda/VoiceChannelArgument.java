@@ -4,8 +4,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -43,7 +44,7 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 	}
 
 	@Override
-	public ParsedArgument<VoiceChannel> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<VoiceChannel> parse(MessageReader reader) throws CommandSyntaxException {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long parsedLong = Long.parseLong(arg);

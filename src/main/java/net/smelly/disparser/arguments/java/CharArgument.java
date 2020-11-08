@@ -1,8 +1,9 @@
 package net.smelly.disparser.arguments.java;
 
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -25,7 +26,7 @@ public final class CharArgument implements Argument<Character> {
 	}
 
 	@Override
-	public ParsedArgument<Character> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<Character> parse(MessageReader reader) throws CommandSyntaxException {
 		return ParsedArgument.parse(reader.nextChar());
 	}
 

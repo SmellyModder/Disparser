@@ -1,6 +1,7 @@
 package net.smelly.disparser.commands;
 
 import net.smelly.disparser.Command;
+import net.smelly.disparser.ConfiguredArgument;
 import net.smelly.disparser.arguments.java.URLArgument;
 import net.smelly.disparser.context.MessageCommandContext;
 
@@ -13,7 +14,7 @@ public final class URLTestCommand extends Command<MessageCommandContext> {
 	private static final String BOT_USER_AGENT = "DiscordBot (https://github.com/DV8FromTheWorld/JDA, 4.2.0_204)";
 
 	public URLTestCommand() {
-		super("url", URLArgument.get());
+		super("url", new ConfiguredArgument<>(URLArgument.get(), channel -> "image_url", channel -> "The URL to get an image from."));
 	}
 
 	@Override

@@ -1,8 +1,9 @@
 package net.smelly.disparser.arguments.java;
 
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -60,7 +61,7 @@ public final class FloatArgument implements Argument<Float> {
 	}
 
 	@Override
-	public ParsedArgument<Float> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<Float> parse(MessageReader reader) throws CommandSyntaxException {
 		float afloat = reader.nextFloat();
 		if (afloat > this.maximum) {
 			throw reader.getExceptionProvider().getValueTooHighException().create(afloat, this.maximum);

@@ -11,31 +11,33 @@ import java.util.function.Function;
 
 /**
  * Used to read a {@link Message} and parse {@link Argument}s from it.
- * <p> Stores the channel of the message and stores the message down into its individual components </p>
+ * <p> Stores a {@link Message} and its contents split by spaces. </p>
  *
  * @author Luke Tonon
  */
-public final class ArgumentReader {
+public final class MessageReader {
 	private final BuiltInExceptionProvider exceptionProvider;
 	private final Message message;
-	private final String[] messageComponents;
-	private int currentComponent;
+	private final String[] components;
+	private final int length;
+	private int index;
 
-	public ArgumentReader(BuiltInExceptionProvider exceptionProvider, Message message, String[] messageComponents) {
+	public MessageReader(BuiltInExceptionProvider exceptionProvider, Message message, String[] components) {
 		this.exceptionProvider = exceptionProvider;
 		this.message = message;
-		this.messageComponents = messageComponents;
+		this.components = components;
+		this.length = components.length;
 	}
 
 	/**
 	 * Creates an ArgumentReader for a {@link Message} with a {@link BuiltInExceptionProvider}.
 	 *
-	 * @param exceptionProvider The {@link BuiltInExceptionProvider} for this {@link ArgumentReader}.
-	 * @param message           The {@link Message} for this {@link ArgumentReader}.
-	 * @return {@link ArgumentReader} for the message.
+	 * @param exceptionProvider The {@link BuiltInExceptionProvider} for this {@link MessageReader}.
+	 * @param message           The {@link Message} for this {@link MessageReader}.
+	 * @return {@link MessageReader} for the message.
 	 */
-	public static ArgumentReader create(final BuiltInExceptionProvider exceptionProvider, final Message message) {
-		return new ArgumentReader(exceptionProvider, message, message.getContentRaw().split(" "));
+	public static MessageReader create(final BuiltInExceptionProvider exceptionProvider, final Message message) {
+		return new MessageReader(exceptionProvider, message, message.getContentRaw().split(" "));
 	}
 
 	/**
@@ -46,31 +48,38 @@ public final class ArgumentReader {
 	}
 
 	/**
-	 * @return The {@link Message} belonging to this {@link ArgumentReader}.
+	 * @return The {@link Message} belonging to this {@link MessageReader}.
 	 */
 	public Message getMessage() {
 		return this.message;
 	}
 
 	/**
-	 * @return - The split up message components for this {@link ArgumentReader}.
+	 * @return The split up message components for this {@link MessageReader}.
 	 */
-	public String[] getMessageComponents() {
-		return this.messageComponents;
+	public String[] getComponents() {
+		return this.components;
 	}
 
 	/**
-	 * @return - The current component index.
+	 * @return The length of the split message components. Subtract 1 for length of the arguments.
 	 */
-	public int getCurrentComponent() {
-		return this.currentComponent;
+	public int getLength() {
+		return this.length;
 	}
 
 	/**
-	 * @return - The current message component.
+	 * @return The current component index.
 	 */
-	public String getCurrentMessageComponent() {
-		return this.messageComponents[this.currentComponent];
+	public int getIndex() {
+		return this.index;
+	}
+
+	/**
+	 * @return The current message component.
+	 */
+	public String getCurrentComponent() {
+		return this.components[this.index];
 	}
 
 	public Integer nextInt() throws CommandSyntaxException {
@@ -146,39 +155,41 @@ public final class ArgumentReader {
 	 * @param <A>    - The type of the argument.
 	 * @return The object({@link A}) read from the reader.
 	 */
-	public <A> ParsedArgument<A> parseNextArgument(final Parser<A> parser) throws Exception {
+	public <A> ParsedArgument<A> parseNextArgument(Parser<A> parser) throws CommandSyntaxException {
 		return parser.parse(this.nextArgument());
 	}
 
 	/**
 	 * Tries to parse the next argument in the message.
-	 * If it fails to parse the next argument it will not shift the {@link #currentComponent} forward.
+	 * If it fails to parse the next argument it will not shift the {@link #index} forward.
 	 *
 	 * @param argument - The argument to try to parse.
 	 * @return The parsed argument. If it fails, the parsed argument's result will be null and an error message will be included in the parsed argument.
 	 */
 	public <A> ParsedArgument<A> tryToParseArgument(Argument<A> argument) {
-		int prevComponent = this.currentComponent;
+		int prevIndex = this.index;
 		try {
 			return argument.parse(this);
 		} catch (Exception exception) {
-			this.currentComponent -= (this.currentComponent - prevComponent);
+			this.index -= (this.index - prevIndex);
 			return ParsedArgument.empty();
 		}
 	}
 
 	/**
 	 * Gets the next argument in the message's components.
-	 * <p> Should ideally only be called once in {@link Argument#parse(ArgumentReader)}. </p>
+	 * <p> Should ideally only be called once in {@link Argument#parse(MessageReader)}. </p>
 	 *
 	 * @return The next argument.
 	 */
 	public String nextArgument() {
-		this.currentComponent++;
-		if (this.currentComponent > this.messageComponents.length - 1) {
-			throw new IndexOutOfBoundsException(this.currentComponent + MessageUtil.getOrdinalForInteger(this.currentComponent) + " component doesn't exist!");
+		if (this.hasNextArg()) {
+			this.index++;
+			return this.components[this.index];
+		} else {
+			this.index++;
+			throw new IndexOutOfBoundsException(this.index + MessageUtil.getOrdinalForInteger(this.index) + " component doesn't exist!");
 		}
-		return this.messageComponents[this.currentComponent];
 	}
 
 	/**
@@ -187,7 +198,7 @@ public final class ArgumentReader {
 	 * @return If the reader has a next argument in its components.
 	 */
 	public boolean hasNextArg() {
-		return this.currentComponent + 1 <= this.messageComponents.length - 1;
+		return this.index < this.length - 1;
 	}
 
 	@Nullable
@@ -197,6 +208,6 @@ public final class ArgumentReader {
 
 	@FunctionalInterface
 	public interface Parser<A> {
-		ParsedArgument<A> parse(String arg) throws Exception;
+		ParsedArgument<A> parse(String arg) throws CommandSyntaxException;
 	}
 }

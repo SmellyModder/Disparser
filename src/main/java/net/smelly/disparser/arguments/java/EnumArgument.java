@@ -1,8 +1,9 @@
 package net.smelly.disparser.arguments.java;
 
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -28,7 +29,7 @@ public final class EnumArgument<E extends Enum<?>> implements Argument<E> {
 	}
 
 	@Override
-	public ParsedArgument<E> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<E> parse(MessageReader reader) throws CommandSyntaxException {
 		return reader.parseNextArgument((arg) -> {
 			for (E type : this.values) {
 				if (type.toString().equalsIgnoreCase(arg)) {

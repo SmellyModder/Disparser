@@ -2,6 +2,7 @@ package net.smelly.disparser.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.smelly.disparser.Command;
+import net.smelly.disparser.ConfiguredArgument;
 import net.smelly.disparser.arguments.java.IntegerArgument;
 import net.smelly.disparser.context.MessageCommandContext;
 import net.smelly.disparser.feedback.FeedbackHandler;
@@ -19,7 +20,7 @@ public final class BigSumTestCommand extends Command<MessageCommandContext> {
 	private final ConcurrentLinkedQueue<Integer> queue = new ConcurrentLinkedQueue<>();
 
 	public BigSumTestCommand() {
-		super("sum", IntegerArgument.getMin(100000));
+		super("sum", ConfiguredArgument.named(IntegerArgument.getMin(100000), channel -> "iterations"));
 	}
 
 	@Override

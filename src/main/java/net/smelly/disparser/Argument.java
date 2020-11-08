@@ -1,65 +1,37 @@
 package net.smelly.disparser;
 
-import net.smelly.disparser.annotations.Optional;
+import net.smelly.disparser.feedback.CommandMessage;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * Implemented on classes to be used as arguments in {@link Command}.
+ * Implemented on classes to be used as arguments for parsing components of messages.
  *
  * @param <T> Type of this argument
  * @author Luke Tonon
+ * @see ConfiguredArgument
  */
 @ThreadSafe
 public interface Argument<T> {
 	/**
 	 * Parses the argument into a {@link ParsedArgument}
 	 *
-	 * @param reader - The {@link ArgumentReader} for this argument
-	 * @return - The parsed argument containing the parsed object and an error message if an error occurs
+	 * @param reader An {@link MessageReader} to use in parsing for this argument.
+	 * @return A {@link ParsedArgument} containing the parsed object or {@link ParsedArgument#empty()}.
+	 * @throws CommandSyntaxException If an exception occurs trying to parse the argument.
 	 */
-	ParsedArgument<T> parse(final ArgumentReader reader) throws Exception;
+	ParsedArgument<T> parse(MessageReader reader) throws CommandSyntaxException;
 
 	/**
-	 * If this argument is optional.
-	 * <p> Optional arguments should let a {@link net.smelly.disparser.context.handlers.AbstractCommandHandler} treat this argument as optional. <p>
-	 * <b> IMPORTANT: When this is true any command that uses this argument can have this argument's parsed result be null </b>
+	 * Creates a new {@link ConfiguredArgument} instance with a given name, description, and optional marker.
 	 *
-	 * @return If this argument is optional
+	 * @param name        The name for the {@link ConfiguredArgument}.
+	 * @param description The description for the {@link ConfiguredArgument}.
+	 * @param optional    If this {@link ConfiguredArgument} is optional.
+	 * @return A new {@link ConfiguredArgument} instance with a given name, description, and optional marker.
 	 */
-	default boolean isOptional() {
-		return this.getClass().getAnnotation(Optional.class) != null;
-	}
-
-	/**
-	 * Creates a new optional instance of this argument
-	 *
-	 * @return a new optional instance of this argument
-	 * @see Argument#asOptional(Argument)
-	 */
-	default Argument<T> asOptional() {
-		return Argument.asOptional(this);
-	}
-
-	/**
-	 * Creates a new instance of an argument that's optional
-	 *
-	 * @param <T>      - The argument's type
-	 * @param <A>      - The argument
-	 * @param argument - The argument to make a new instance of
-	 * @return A new instance of an argument that is optional
-	 */
-	static <T, A extends Argument<T>> Argument<T> asOptional(A argument) {
-		return new Argument<T>() {
-			@Override
-			public ParsedArgument<T> parse(ArgumentReader reader) throws Exception {
-				return argument.parse(reader);
-			}
-
-			@Override
-			public boolean isOptional() {
-				return true;
-			}
-		};
+	default ConfiguredArgument<T> withConfiguration(CommandMessage name, CommandMessage description, boolean optional) {
+		return new ConfiguredArgument<>(this, name, description, optional);
 	}
 }

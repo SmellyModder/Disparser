@@ -23,22 +23,22 @@ public abstract class Command<C extends CommandContext<?>> {
 	private final AliasesProperty aliasesProperty;
 	private final PermissionsProperty permissionsProperty;
 	private final UnmodifiableSet<CommandProperty<?, ?>> properties;
-	private final UnmodifiableList<Argument<?>> arguments;
+	private final UnmodifiableList<ConfiguredArgument<?>> arguments;
 
 	public Command(String name) {
-		this(name, new Argument[0]);
+		this(name, new ConfiguredArgument[0]);
 	}
 
-	public Command(String name, Argument<?>... args) {
+	public Command(String name, ConfiguredArgument<?>... args) {
 		this(new HashSet<>(Collections.singletonList(name)), new HashSet<>(Arrays.asList(Permission.EMPTY_PERMISSIONS)), args);
 	}
 
-	public Command(Set<String> aliases, Set<Permission> permissions, Argument<?>... args) {
+	public Command(Set<String> aliases, Set<Permission> permissions, ConfiguredArgument<?>... args) {
 		this.aliasesProperty = AliasesProperty.create(aliases);
 		this.permissionsProperty = PermissionsProperty.create(permissions);
-		List<Argument<?>> setupArguments = new ArrayList<>();
-		for (Argument<?> argument : args) {
-			setupArguments.add(argument.getClass().isAnnotationPresent(Optional.class) ? argument.asOptional() : argument);
+		List<ConfiguredArgument<?>> setupArguments = new ArrayList<>();
+		for (ConfiguredArgument<?> argument : args) {
+			setupArguments.add(argument.getArgument().getClass().isAnnotationPresent(Optional.class) ? ConfiguredArgument.optional(argument) : argument);
 		}
 		Set<CommandProperty<?, ?>> properties = new HashSet<>();
 		properties.add(this.aliasesProperty);
@@ -47,10 +47,10 @@ public abstract class Command<C extends CommandContext<?>> {
 		this.arguments = new UnmodifiableList<>(setupArguments);
 	}
 
-	public Command(AliasesProperty aliasesProperty, PermissionsProperty permissionsProperty, List<Argument<?>> arguments, Set<CommandProperty<?, ?>> properties) {
+	public Command(AliasesProperty aliasesProperty, PermissionsProperty permissionsProperty, List<ConfiguredArgument<?>> arguments, Set<CommandProperty<?, ?>> properties) {
 		this.aliasesProperty = aliasesProperty;
 		this.permissionsProperty = permissionsProperty;
-		this.arguments = (UnmodifiableList<Argument<?>>) UnmodifiableList.unmodifiableList(arguments);
+		this.arguments = (UnmodifiableList<ConfiguredArgument<?>>) UnmodifiableList.unmodifiableList(arguments);
 		this.properties = (UnmodifiableSet<CommandProperty<?, ?>>) UnmodifiableSet.unmodifiableSet(properties);
 	}
 
@@ -91,7 +91,7 @@ public abstract class Command<C extends CommandContext<?>> {
 	/**
 	 * @return This command's arguments.
 	 */
-	public final UnmodifiableList<Argument<?>> getArguments() {
+	public final UnmodifiableList<ConfiguredArgument<?>> getArguments() {
 		return this.arguments;
 	}
 }

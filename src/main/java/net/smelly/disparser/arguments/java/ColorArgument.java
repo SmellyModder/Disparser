@@ -1,7 +1,7 @@
 package net.smelly.disparser.arguments.java;
 
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
 import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
@@ -30,7 +30,7 @@ public final class ColorArgument implements Argument<Color> {
 	}
 
 	@Override
-	public ParsedArgument<Color> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<Color> parse(MessageReader reader) throws CommandSyntaxException {
 		ColorType colorType = reader.tryToParseArgument(this.colorTypeEnumArgument).getResult();
 		if (colorType != null) {
 			return ParsedArgument.parse(colorType.color);
@@ -38,7 +38,7 @@ public final class ColorArgument implements Argument<Color> {
 		try {
 			return ParsedArgument.parse(new Color(reader.nextInt()));
 		} catch (CommandSyntaxException e) {
-			throw reader.getExceptionProvider().getInvalidColorException().create(reader.getCurrentMessageComponent());
+			throw reader.getExceptionProvider().getInvalidColorException().create(reader.getCurrentComponent());
 		}
 	}
 

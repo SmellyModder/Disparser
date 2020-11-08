@@ -3,7 +3,6 @@ package net.smelly.disparser.feedback.exceptions;
 import net.dv8tion.jda.api.Permission;
 
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,13 +19,9 @@ public interface BuiltInExceptionProvider {
 
 	SimpleCommandExceptionCreator getNoArgumentsException();
 
-	SimpleCommandExceptionCreator getMissingArgumentException();
+	DynamicCommandExceptionCreator<String> getMissingArgumentException();
 
-	SimpleCommandExceptionCreator getMissingArgumentsException();
-
-	DynamicCommandExceptionCreator<Integer> getSpecificMissingArgumentException();
-
-	DynamicCommandExceptionCreator<List<Integer>> getSpecificMissingArgumentsException();
+	BiDynamicCommandExceptionCreator<Integer, Integer> getMissingArgumentsException();
 
 	DynamicCommandExceptionCreator<String> getInvalidIntegerException();
 

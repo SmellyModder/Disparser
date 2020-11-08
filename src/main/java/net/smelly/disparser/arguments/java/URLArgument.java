@@ -1,8 +1,9 @@
 package net.smelly.disparser.arguments.java;
 
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.concurrent.ThreadSafe;
 import java.net.MalformedURLException;
@@ -27,7 +28,7 @@ public final class URLArgument implements Argument<URL> {
 	}
 
 	@Override
-	public ParsedArgument<URL> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<URL> parse(MessageReader reader) throws CommandSyntaxException {
 		String next = reader.nextArgument();
 		if (next.startsWith("<") && next.endsWith(">")) {
 			next = next.substring(1, next.length() - 1);

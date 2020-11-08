@@ -8,12 +8,12 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * A container object for holding a parsed result from an {@link Argument}. Ideally similar to {@link java.util.Optional}
+ * A container object for holding a parsed result from an {@link Argument}. Very similar to {@link java.util.Optional}
  * <p>
  * {@link #result} should <b> always </b> be null when a parsing error occurs.
  * </p>
  *
- * @param <A> - The type for this parsed argument.
+ * @param <A> The type for this parsed argument.
  * @author Luke Tonon
  */
 public final class ParsedArgument<A> {

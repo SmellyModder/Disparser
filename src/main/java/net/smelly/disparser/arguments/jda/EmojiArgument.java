@@ -2,8 +2,9 @@ package net.smelly.disparser.arguments.jda;
 
 import net.dv8tion.jda.api.entities.Activity;
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.concurrent.ThreadSafe;
 import java.nio.charset.StandardCharsets;
@@ -82,7 +83,7 @@ public final class EmojiArgument implements Argument<Activity.Emoji> {
 	}
 
 	@Override
-	public ParsedArgument<Activity.Emoji> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<Activity.Emoji> parse(MessageReader reader) throws CommandSyntaxException {
 		String string = reader.nextArgument();
 		List<Activity.Emoji> emojiCount = getEmojis(string);
 		if (emojiCount.size() == 1) {
@@ -128,7 +129,7 @@ public final class EmojiArgument implements Argument<Activity.Emoji> {
 		}
 
 		@Override
-		public ParsedArgument<List<Activity.Emoji>> parse(ArgumentReader reader) throws Exception {
+		public ParsedArgument<List<Activity.Emoji>> parse(MessageReader reader) throws CommandSyntaxException {
 			String string = reader.nextArgument();
 			List<Activity.Emoji> emojis = new ArrayList<>(getEmojis(string));
 			Matcher matcher = CUSTOM_EMOJI_PATTERN.matcher(string);

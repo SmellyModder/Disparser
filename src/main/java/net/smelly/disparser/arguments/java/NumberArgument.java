@@ -1,8 +1,9 @@
 package net.smelly.disparser.arguments.java;
 
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.concurrent.ThreadSafe;
 import java.text.NumberFormat;
@@ -65,7 +66,7 @@ public final class NumberArgument implements Argument<Number> {
 	}
 
 	@Override
-	public ParsedArgument<Number> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<Number> parse(MessageReader reader) throws CommandSyntaxException {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				Number number = NUMBER_FORMAT.parse(arg);

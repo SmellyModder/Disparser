@@ -1,6 +1,7 @@
 package net.smelly.disparser.commands;
 
 import net.smelly.disparser.Command;
+import net.smelly.disparser.ConfiguredArgument;
 import net.smelly.disparser.arguments.java.EnumArgument;
 import net.smelly.disparser.context.MessageCommandContext;
 import net.smelly.disparser.feedback.CommandMessage;
@@ -12,7 +13,7 @@ public final class EnumTestCommand extends Command<MessageCommandContext> {
 	private static final SimpleCommandExceptionCreator Z_EXCEPTION = new SimpleCommandExceptionCreator(channel -> "Z is evil, it cannot be used!");
 
 	public EnumTestCommand() {
-		super("enum", EnumArgument.get(TestEnum.class));
+		super("enum", ConfiguredArgument.named(EnumArgument.get(TestEnum.class), channel -> "type"));
 	}
 
 	@Override

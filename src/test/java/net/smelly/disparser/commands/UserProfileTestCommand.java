@@ -2,13 +2,14 @@ package net.smelly.disparser.commands;
 
 import net.dv8tion.jda.api.entities.User;
 import net.smelly.disparser.Command;
+import net.smelly.disparser.ConfiguredArgument;
 import net.smelly.disparser.arguments.jda.UserArgument;
 import net.smelly.disparser.context.MessageCommandContext;
 
 public final class UserProfileTestCommand extends Command<MessageCommandContext> {
 
 	public UserProfileTestCommand() {
-		super("user", UserArgument.get());
+		super("user", ConfiguredArgument.named(UserArgument.get(), channel -> "user"));
 	}
 
 	@Override

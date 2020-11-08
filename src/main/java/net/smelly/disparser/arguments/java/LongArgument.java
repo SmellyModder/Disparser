@@ -1,8 +1,9 @@
 package net.smelly.disparser.arguments.java;
 
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -60,7 +61,7 @@ public final class LongArgument implements Argument<Long> {
 	}
 
 	@Override
-	public ParsedArgument<Long> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<Long> parse(MessageReader reader) throws CommandSyntaxException {
 		long along = reader.nextLong();
 		if (along > this.maximum) {
 			throw reader.getExceptionProvider().getValueTooHighException().create(along, this.maximum);

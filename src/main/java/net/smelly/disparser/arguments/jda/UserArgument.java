@@ -4,8 +4,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.entities.User;
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -47,7 +48,7 @@ public final class UserArgument implements Argument<User> {
 	}
 
 	@Override
-	public ParsedArgument<User> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<User> parse(MessageReader reader) throws CommandSyntaxException {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long id = Long.parseLong(arg);
@@ -75,7 +76,7 @@ public final class UserArgument implements Argument<User> {
 	}
 
 	@Nullable
-	private User findUserWithId(ArgumentReader reader, long id) {
+	private User findUserWithId(MessageReader reader, long id) {
 		if (this.jda != null) {
 			return this.jda.getUserById(id);
 		}

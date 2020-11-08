@@ -1,8 +1,9 @@
 package net.smelly.disparser.arguments;
 
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,7 +43,7 @@ public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argum
 	}
 
 	@Override
-	public ParsedArgument<Either<F, S>> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<Either<F, S>> parse(MessageReader reader) throws CommandSyntaxException {
 		ParsedArgument<F> first = reader.tryToParseArgument(this.firstArgument);
 		if (first.hasResult()) {
 			return ParsedArgument.parse(Either.first(first.getResult()));

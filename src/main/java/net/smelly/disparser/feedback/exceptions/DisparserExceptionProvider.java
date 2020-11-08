@@ -2,11 +2,8 @@ package net.smelly.disparser.feedback.exceptions;
 
 import net.dv8tion.jda.api.Permission;
 import net.smelly.disparser.feedback.FormattedCommandMessage;
-import net.smelly.disparser.util.MessageUtil;
 
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,19 +15,16 @@ import java.util.Set;
  */
 @ThreadSafe
 public class DisparserExceptionProvider implements BuiltInExceptionProvider {
-	public static final BuiltInExceptionProviderBuilder BUILDER = channel -> new DisparserExceptionProvider();
+	public static final DisparserExceptionProvider INSTANCE = new DisparserExceptionProvider();
+	public static final BuiltInExceptionProviderBuilder BUILDER = channel -> INSTANCE;
 
 	private static final DynamicCommandExceptionCreator<Set<Permission>> PERMISSIONS_EXCEPTION = DynamicCommandExceptionCreator.createInstance((permissions) -> new FormattedCommandMessage("You do not have permission to run this command! Required Permissions: %s", permissions));
 	private static final SimpleCommandExceptionCreator NO_ARGUMENTS_EXCEPTION = new SimpleCommandExceptionCreator(channel -> "No arguments are present!");
-	private static final SimpleCommandExceptionCreator MISSING_ARGUMENT_EXCEPTION = new SimpleCommandExceptionCreator(channel -> "An argument is missing");
-	private static final SimpleCommandExceptionCreator MISSING_ARGUMENTS_EXCEPTION = new SimpleCommandExceptionCreator(channel -> "Multiple arguments are missing, view this command's arguments!");
-	private static final DynamicCommandExceptionCreator<Integer> SPECIFIC_MISSING_ARGUMENT_EXCEPTION = DynamicCommandExceptionCreator.createInstance((arg) -> new FormattedCommandMessage("%s argument is missing", arg + MessageUtil.getOrdinalForInteger(arg)));
-	private static final DynamicCommandExceptionCreator<List<Integer>> SPECIFIC_MISSING_ARGUMENTS_EXCEPTION = DynamicCommandExceptionCreator.createInstance((missingArgs) -> {
-		List<String> ordinals = new ArrayList<>(missingArgs.size());
-		for (int arg : missingArgs) {
-			ordinals.add(arg + MessageUtil.getOrdinalForInteger(arg));
-		}
-		return channel -> MessageUtil.createFormattedSentenceOfCollection(ordinals) + " arguments are missing";
+	private static final DynamicCommandExceptionCreator<String> MISSING_ARGUMENT_EXCEPTION = DynamicCommandExceptionCreator.createInstance((argument) -> {
+		return new FormattedCommandMessage("Expected `%1$s` argument at next message argument!", argument);
+	});
+	private static final BiDynamicCommandExceptionCreator<Integer, Integer> MISSING_ARGUMENTS_EXCEPTION = BiDynamicCommandExceptionCreator.createInstance((mandatorySize, optionalSize) -> {
+		return new FormattedCommandMessage("Expected at least `%1$s` arguments!\nOptional Arguments Size: `%2$s`\nMandatory Arguments Size: `%1$s`", mandatorySize, optionalSize);
 	});
 
 	private static final DynamicCommandExceptionCreator<String> INVALID_INTEGER_EXCEPTION = DynamicCommandExceptionCreator.createInstance(integer -> {
@@ -168,23 +162,13 @@ public class DisparserExceptionProvider implements BuiltInExceptionProvider {
 	}
 
 	@Override
-	public SimpleCommandExceptionCreator getMissingArgumentException() {
+	public DynamicCommandExceptionCreator<String> getMissingArgumentException() {
 		return MISSING_ARGUMENT_EXCEPTION;
 	}
 
 	@Override
-	public SimpleCommandExceptionCreator getMissingArgumentsException() {
+	public BiDynamicCommandExceptionCreator<Integer, Integer> getMissingArgumentsException() {
 		return MISSING_ARGUMENTS_EXCEPTION;
-	}
-
-	@Override
-	public DynamicCommandExceptionCreator<Integer> getSpecificMissingArgumentException() {
-		return SPECIFIC_MISSING_ARGUMENT_EXCEPTION;
-	}
-
-	@Override
-	public DynamicCommandExceptionCreator<List<Integer>> getSpecificMissingArgumentsException() {
-		return SPECIFIC_MISSING_ARGUMENTS_EXCEPTION;
 	}
 
 	@Override

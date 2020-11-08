@@ -17,7 +17,7 @@ public class SimpleFeedbackHandler implements FeedbackHandler {
 	private final MessageChannel channel;
 
 	/**
-	 * Constructs a new {@link SimpleFeedbackHandler} with a {@link MessageChannel} from a {@link CommandContext}.
+	 * Constructs a new {@link SimpleFeedbackHandler} for a {@link MessageChannel}.
 	 *
 	 * @param channel {@link MessageChannel} to build the {@link FeedbackHandler}.
 	 */

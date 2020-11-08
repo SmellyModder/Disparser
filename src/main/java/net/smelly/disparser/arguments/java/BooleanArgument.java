@@ -1,7 +1,7 @@
 package net.smelly.disparser.arguments.java;
 
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
 
 import javax.annotation.concurrent.ThreadSafe;
@@ -25,7 +25,7 @@ public final class BooleanArgument implements Argument<Boolean> {
 	}
 
 	@Override
-	public ParsedArgument<Boolean> parse(ArgumentReader reader) {
+	public ParsedArgument<Boolean> parse(MessageReader reader) {
 		return ParsedArgument.parse(reader.nextBoolean());
 	}
 

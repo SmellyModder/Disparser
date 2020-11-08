@@ -4,8 +4,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -46,7 +47,7 @@ public final class RoleArgument implements Argument<Role> {
 	}
 
 	@Override
-	public ParsedArgument<Role> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<Role> parse(MessageReader reader) throws CommandSyntaxException {
 		return reader.parseNextArgument((arg) -> {
 			Guild guild = reader.getGuild();
 			try {

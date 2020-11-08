@@ -4,8 +4,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -42,7 +43,7 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 	}
 
 	@Override
-	public ParsedArgument<GuildChannel> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<GuildChannel> parse(MessageReader reader) throws CommandSyntaxException {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long parsedLong = Long.parseLong(arg);

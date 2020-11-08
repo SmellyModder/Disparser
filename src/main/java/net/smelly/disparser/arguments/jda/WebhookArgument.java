@@ -5,8 +5,9 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.entities.Webhook;
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -23,7 +24,7 @@ public final class WebhookArgument implements Argument<Webhook> {
 	@Nullable
 	private final JDA jda;
 
-	private WebhookArgument(JDA jda) {
+	private WebhookArgument(@Nullable JDA jda) {
 		this.jda = jda;
 	}
 
@@ -45,14 +46,18 @@ public final class WebhookArgument implements Argument<Webhook> {
 	}
 
 	@Override
-	public ParsedArgument<Webhook> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<Webhook> parse(MessageReader reader) throws CommandSyntaxException {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long parsedLong = Long.parseLong(arg);
-				Webhook foundWebhook = this.jda == null ? this.getWebhookById(reader.getMessage(), parsedLong) : this.jda.retrieveWebhookById(parsedLong).submit().get();
-				if (foundWebhook != null) {
-					return ParsedArgument.parse(foundWebhook);
-				} else {
+				try {
+					Webhook foundWebhook = this.jda == null ? this.getWebhookById(reader.getMessage(), parsedLong) : this.jda.retrieveWebhookById(parsedLong).submit().get();
+					if (foundWebhook != null) {
+						return ParsedArgument.parse(foundWebhook);
+					} else {
+						throw reader.getExceptionProvider().getWebhookNotFoundException().create(parsedLong);
+					}
+				} catch (ExecutionException | InterruptedException exception) {
 					throw reader.getExceptionProvider().getWebhookNotFoundException().create(parsedLong);
 				}
 			} catch (NumberFormatException exception) {

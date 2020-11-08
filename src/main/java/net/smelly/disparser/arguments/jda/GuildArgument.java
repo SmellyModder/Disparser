@@ -3,8 +3,9 @@ package net.smelly.disparser.arguments.jda;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.smelly.disparser.Argument;
-import net.smelly.disparser.ArgumentReader;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -30,7 +31,7 @@ public final class GuildArgument implements Argument<Guild> {
 	}
 
 	@Override
-	public ParsedArgument<Guild> parse(ArgumentReader reader) throws Exception {
+	public ParsedArgument<Guild> parse(MessageReader reader) throws CommandSyntaxException {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long id = Long.parseLong(arg);
