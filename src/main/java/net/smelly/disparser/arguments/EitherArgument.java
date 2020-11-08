@@ -15,10 +15,10 @@ import java.util.function.Function;
  * Due to this logic the second argument's error message will always be the error message displayed.
  * This is very useful for arguments that can be two types, such as a channel argument that can be for Text Channels or Voice Channels.
  *
- * @param <F>  - The first argument's type.
- * @param <S>  - The second argument's type.
- * @param <FA> - The first argument matching the type of F
- * @param <SA> - The second argument matching the type of S
+ * @param <F>  The first argument's type.
+ * @param <S>  The second argument's type.
+ * @param <FA> The first argument matching the type of F
+ * @param <SA> The second argument matching the type of S
  * @author Luke Tonon
  */
 @ThreadSafe
@@ -34,8 +34,8 @@ public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argum
 	/**
 	 * Constructs a new {@link EitherArgument} instance for two arguments.
 	 *
-	 * @param firstArgument  - The first argument.
-	 * @param secondArgument - The second argument.
+	 * @param firstArgument  The first argument.
+	 * @param secondArgument The second argument.
 	 * @return a new {@link EitherArgument} instance for two arguments.
 	 */
 	public static <F, S, FA extends Argument<F>, SA extends Argument<S>> EitherArgument<F, S, FA, SA> of(FA firstArgument, SA secondArgument) {
@@ -63,9 +63,9 @@ public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argum
 		}
 
 		/**
-		 * @param first - The first object to contain in the {@link Either}.
-		 * @param <F>   - The type of the first object.
-		 * @param <S>   - The type of the second object.
+		 * @param first The first object to contain in the {@link Either}.
+		 * @param <F>   The type of the first object.
+		 * @param <S>   The type of the second object.
 		 * @return A {@link Either} containing a first object.
 		 */
 		public static <F, S> Either<F, S> first(@Nonnull F first) {
@@ -73,9 +73,9 @@ public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argum
 		}
 
 		/**
-		 * @param second - The second object to contain in the {@link Either}.
-		 * @param <F>    - The type of the first object.
-		 * @param <S>    - The type of the second object.
+		 * @param second The second object to contain in the {@link Either}.
+		 * @param <F>    The type of the first object.
+		 * @param <S>    The type of the second object.
 		 * @return A {@link Either} containing a second object.
 		 */
 		public static <F, S> Either<F, S> second(@Nonnull S second) {
@@ -85,7 +85,7 @@ public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argum
 		/**
 		 * Converts an either instance to a type.
 		 *
-		 * @param function - The function for converting.
+		 * @param function The function for converting.
 		 * @return A new instance of a type converted from this either instance.
 		 */
 		public <T> T convertTo(Function<Either<F, S>, T> function) {

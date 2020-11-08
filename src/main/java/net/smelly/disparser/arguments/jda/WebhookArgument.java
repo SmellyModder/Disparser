@@ -14,8 +14,8 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.ExecutionException;
 
 /**
- * An argument that can parse webhooks by their ID.
- * Define a JDA to get the webhook from or leave null to use the JDA of the message that was sent.
+ * An argument that can parse {@link Webhook}s by their ID.
+ * Define a {@link JDA} to get a {@link Webhook} from or leave null to use the {@link JDA} of the message that was sent.
  *
  * @author Luke Tonon
  */
@@ -39,7 +39,7 @@ public final class WebhookArgument implements Argument<Webhook> {
 	/**
 	 * If you only want to get webhooks of the guild that the message was sent from then use {@link #get()}.
 	 *
-	 * @param jda - JDA to get the webhook from.
+	 * @param jda A {@link JDA} to get the {@link Webhook} from.
 	 * @return An instance of this argument with a JDA.
 	 */
 	public static WebhookArgument create(JDA jda) {

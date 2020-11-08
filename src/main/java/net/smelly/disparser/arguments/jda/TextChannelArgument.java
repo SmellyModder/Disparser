@@ -40,7 +40,7 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 	/**
 	 * If you only want to get text channels of the guild that the message was sent from then use {@link #get()}.
 	 *
-	 * @param jda - JDA to get the channel from.
+	 * @param jda A {@link JDA} to get the channel from.
 	 * @return An instance of this argument with a JDA.
 	 */
 	public static TextChannelArgument create(JDA jda) {

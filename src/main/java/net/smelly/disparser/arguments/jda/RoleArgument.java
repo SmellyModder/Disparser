@@ -39,7 +39,7 @@ public final class RoleArgument implements Argument<Role> {
 	/**
 	 * If you only want to get {@link Role}s of the {@link Guild} that the message was sent from then use {@link #get()}.
 	 *
-	 * @param jda - JDA to get the {@link Role} from.
+	 * @param jda A {@link JDA} to get the {@link Role} from.
 	 * @return An instance of this argument with a JDA.
 	 */
 	public static RoleArgument create(JDA jda) {

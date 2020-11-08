@@ -27,8 +27,8 @@ public final class ParsedArgument<A> {
 	}
 
 	/**
-	 * @param result - The result.
-	 * @param <A>    - The type of the result.
+	 * @param result The result.
+	 * @param <A>    The type of the result.
 	 * @return A new {@link ParsedArgument} that contains a non-null result.
 	 * @throws NullPointerException if value is null
 	 */
@@ -38,8 +38,8 @@ public final class ParsedArgument<A> {
 	}
 
 	/**
-	 * @param result - The result.
-	 * @param <A>    - The type of the result.
+	 * @param result The result.
+	 * @param <A>    The type of the result.
 	 * @return A new {@link ParsedArgument} that contains a nullable result.
 	 */
 	public static <A> ParsedArgument<A> parseNullable(@Nullable final A result) {
@@ -47,7 +47,7 @@ public final class ParsedArgument<A> {
 	}
 
 	/**
-	 * @param <A> - The type of the result.
+	 * @param <A> The type of the result.
 	 * @return A new {@link ParsedArgument} that contains a null result.
 	 */
 	@SuppressWarnings("unchecked")
@@ -82,7 +82,7 @@ public final class ParsedArgument<A> {
 	/**
 	 * Checks if this {@link ParsedArgument} has a parsed result and then accepts a consumer on the result.
 	 *
-	 * @param consumer - The consumer to accept on the result.
+	 * @param consumer The consumer to accept on the result.
 	 */
 	public void ifHasResult(Consumer<A> consumer) {
 		if (this.hasResult()) consumer.accept(this.result);

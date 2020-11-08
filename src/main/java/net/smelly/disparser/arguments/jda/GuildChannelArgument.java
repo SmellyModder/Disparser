@@ -36,7 +36,7 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 	/**
 	 * If you only want to get channels of the guild that the message was sent from then use {@link #get()}.
 	 *
-	 * @param jda - JDA to get the guild from.
+	 * @param jda A {@link JDA} to get the guild from.
 	 * @return An instance of this argument with a JDA.
 	 */
 	public static GuildChannelArgument create(JDA jda) {

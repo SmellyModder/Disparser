@@ -37,7 +37,7 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 	/**
 	 * If you only want to get voice channels of the guild that the message was sent from then use {@link #get()}.
 	 *
-	 * @param jda - JDA to get the channel from.
+	 * @param jda A {@link JDA} to get the channel from.
 	 * @return An instance of this argument with a JDA.
 	 */
 	public static VoiceChannelArgument create(JDA jda) {

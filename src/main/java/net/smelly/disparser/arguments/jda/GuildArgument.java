@@ -23,7 +23,7 @@ public final class GuildArgument implements Argument<Guild> {
 	}
 
 	/**
-	 * @param jda - The JDA to get the guild from.
+	 * @param jda A {@link JDA} to get the guild from.
 	 * @return An instance of this argument with a JDA.
 	 */
 	public static GuildArgument get(JDA jda) {

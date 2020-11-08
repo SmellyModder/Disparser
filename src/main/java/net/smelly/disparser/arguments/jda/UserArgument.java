@@ -40,7 +40,7 @@ public final class UserArgument implements Argument<User> {
 	/**
 	 * If you only want to get users of the guild that the message was sent from then use {@link #get()}.
 	 *
-	 * @param jda - JDA to get the user from.
+	 * @param jda A {@link JDA} to get the user from.
 	 * @return An instance of this argument with a JDA.
 	 */
 	public static UserArgument create(JDA jda) {

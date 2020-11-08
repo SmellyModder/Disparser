@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * A {@link ThreadFactory} implementation for pooled named threads for processing commands.
  * <p>This is the default {@link ThreadFactory} used by Disparser.</p>
+ *
  * @author Luke Tonon
  */
 @ThreadSafe
@@ -20,6 +21,7 @@ public final class DisparsingThreadFactory implements ThreadFactory {
 
 	/**
 	 * Constructor for a new {@link DisparsingThreadFactory}.
+	 *
 	 * @param workerSuffix The suffix to come after the "Disparser-Worker-" prefix for the naming of created threads with this factory.
 	 */
 	public DisparsingThreadFactory(String workerSuffix) {

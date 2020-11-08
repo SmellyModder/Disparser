@@ -14,6 +14,7 @@ import javax.annotation.concurrent.ThreadSafe;
 public interface CommandExceptionCreator<E extends Exception> {
 	/**
 	 * Creates the exception with no arguments.
+	 *
 	 * @return A default created exception.
 	 */
 	E create();
