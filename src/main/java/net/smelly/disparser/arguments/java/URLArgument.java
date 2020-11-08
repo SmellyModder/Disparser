@@ -16,6 +16,7 @@ import java.net.URL;
  */
 @ThreadSafe
 public final class URLArgument implements Argument<URL> {
+	private static final URLArgument DEFAULT = new URLArgument();
 
 	private URLArgument() {
 	}
@@ -24,7 +25,7 @@ public final class URLArgument implements Argument<URL> {
 	 * @return The default instance.
 	 */
 	public static URLArgument get() {
-		return new URLArgument();
+		return DEFAULT;
 	}
 
 	@Override
@@ -39,5 +40,4 @@ public final class URLArgument implements Argument<URL> {
 			throw reader.getExceptionProvider().getInvalidURLException().create(next);
 		}
 	}
-
 }

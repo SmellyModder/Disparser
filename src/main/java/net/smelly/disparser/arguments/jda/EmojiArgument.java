@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 public final class EmojiArgument implements Argument<Activity.Emoji> {
 	private static final Pattern UNICODE_EMOJI_PATTERN = Pattern.compile("[^\\p{L}\\p{N}\\p{P}\\p{Z}]", Pattern.UNICODE_CHARACTER_CLASS);
 	private static final Pattern CUSTOM_EMOJI_PATTERN = Pattern.compile("<(a?):(\\w+):(\\d+)>");
-
+	private static final EmojiArgument DEFAULT = new EmojiArgument(true);
 	private final boolean allowCustomEmotes;
 
 	private EmojiArgument(boolean allowCustomEmotes) {
@@ -36,7 +36,7 @@ public final class EmojiArgument implements Argument<Activity.Emoji> {
 	 * @return The default instance.
 	 */
 	public static EmojiArgument get() {
-		return new EmojiArgument(true);
+		return DEFAULT;
 	}
 
 	/**

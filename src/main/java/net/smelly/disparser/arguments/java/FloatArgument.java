@@ -14,6 +14,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class FloatArgument implements Argument<Float> {
+	private static final FloatArgument DEFAULT = new FloatArgument(Float.MIN_VALUE, Float.MAX_VALUE);
 	private final float minimum;
 	private final float maximum;
 
@@ -26,7 +27,7 @@ public final class FloatArgument implements Argument<Float> {
 	 * @return The default instance.
 	 */
 	public static FloatArgument get() {
-		return new FloatArgument(Float.MIN_VALUE, Float.MAX_VALUE);
+		return DEFAULT;
 	}
 
 	/**

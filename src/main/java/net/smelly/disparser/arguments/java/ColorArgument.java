@@ -16,6 +16,7 @@ import java.awt.*;
  */
 @ThreadSafe
 public final class ColorArgument implements Argument<Color> {
+	private static final ColorArgument DEFAULT = new ColorArgument();
 	private final EnumArgument<ColorType> colorTypeEnumArgument;
 
 	private ColorArgument() {
@@ -26,7 +27,7 @@ public final class ColorArgument implements Argument<Color> {
 	 * @return The default instance.
 	 */
 	public static ColorArgument get() {
-		return new ColorArgument();
+		return DEFAULT;
 	}
 
 	@Override

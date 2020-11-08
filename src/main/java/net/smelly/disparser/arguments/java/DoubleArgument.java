@@ -14,6 +14,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class DoubleArgument implements Argument<Double> {
+	private static final DoubleArgument DEFAULT = new DoubleArgument(Double.MIN_VALUE, Double.MAX_VALUE);
 	private final double minimum;
 	private final double maximum;
 
@@ -26,7 +27,7 @@ public final class DoubleArgument implements Argument<Double> {
 	 * @return The default instance.
 	 */
 	public static DoubleArgument get() {
-		return new DoubleArgument(Double.MIN_VALUE, Double.MAX_VALUE);
+		return DEFAULT;
 	}
 
 	/**

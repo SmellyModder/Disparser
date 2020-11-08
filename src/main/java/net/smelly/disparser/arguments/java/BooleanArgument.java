@@ -13,6 +13,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class BooleanArgument implements Argument<Boolean> {
+	private static final BooleanArgument DEFAULT = new BooleanArgument();
 
 	private BooleanArgument() {
 	}
@@ -21,12 +22,11 @@ public final class BooleanArgument implements Argument<Boolean> {
 	 * @return The default instance.
 	 */
 	public static BooleanArgument get() {
-		return new BooleanArgument();
+		return DEFAULT;
 	}
 
 	@Override
 	public ParsedArgument<Boolean> parse(MessageReader reader) {
 		return ParsedArgument.parse(reader.nextBoolean());
 	}
-
 }

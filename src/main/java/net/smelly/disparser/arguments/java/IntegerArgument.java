@@ -14,6 +14,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class IntegerArgument implements Argument<Integer> {
+	private static final IntegerArgument DEFAULT = new IntegerArgument(Integer.MIN_VALUE, Integer.MAX_VALUE);
 	private final int minimum;
 	private final int maximum;
 
@@ -26,7 +27,7 @@ public final class IntegerArgument implements Argument<Integer> {
 	 * @return The default instance.
 	 */
 	public static IntegerArgument get() {
-		return new IntegerArgument(Integer.MIN_VALUE, Integer.MAX_VALUE);
+		return DEFAULT;
 	}
 
 	/**

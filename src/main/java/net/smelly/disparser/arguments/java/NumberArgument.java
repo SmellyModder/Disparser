@@ -18,7 +18,7 @@ import java.text.ParseException;
 @ThreadSafe
 public final class NumberArgument implements Argument<Number> {
 	private static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
-
+	private static final NumberArgument DEFAULT = new NumberArgument(Double.MIN_VALUE, Double.MAX_VALUE);
 	private final double minimum;
 	private final double maximum;
 
@@ -31,7 +31,7 @@ public final class NumberArgument implements Argument<Number> {
 	 * @return The default instance.
 	 */
 	public static NumberArgument get() {
-		return new NumberArgument(Double.MIN_VALUE, Double.MAX_VALUE);
+		return DEFAULT;
 	}
 
 	/**

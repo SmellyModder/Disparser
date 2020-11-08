@@ -19,6 +19,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class VoiceChannelArgument implements Argument<VoiceChannel> {
+	private static final VoiceChannelArgument DEFAULT = new VoiceChannelArgument(null);
 	@Nullable
 	private final JDA jda;
 
@@ -30,7 +31,7 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 	 * @return A default instance.
 	 */
 	public static VoiceChannelArgument get() {
-		return new VoiceChannelArgument(null);
+		return DEFAULT;
 	}
 
 	/**

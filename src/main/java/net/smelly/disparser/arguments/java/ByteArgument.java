@@ -14,6 +14,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class ByteArgument implements Argument<Byte> {
+	private static final ByteArgument DEFAULT = new ByteArgument(Byte.MIN_VALUE, Byte.MAX_VALUE);
 	private final byte minimum;
 	private final byte maximum;
 
@@ -26,7 +27,7 @@ public final class ByteArgument implements Argument<Byte> {
 	 * @return The default instance.
 	 */
 	public static ByteArgument get() {
-		return new ByteArgument(Byte.MIN_VALUE, Byte.MAX_VALUE);
+		return DEFAULT;
 	}
 
 	/**

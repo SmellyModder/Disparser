@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 @ThreadSafe
 public final class RoleArgument implements Argument<Role> {
 	private static final Pattern MENTION_PATTERN = Pattern.compile("<@&(\\d+)>");
-
+	private static final RoleArgument DEFAULT = new RoleArgument(null);
 	@Nullable
 	private final JDA jda;
 
@@ -33,7 +33,7 @@ public final class RoleArgument implements Argument<Role> {
 	 * @return A default instance.
 	 */
 	public static RoleArgument get() {
-		return new RoleArgument(null);
+		return DEFAULT;
 	}
 
 	/**

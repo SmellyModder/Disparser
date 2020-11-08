@@ -14,6 +14,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class LongArgument implements Argument<Long> {
+	private static final LongArgument DEFAULT = new LongArgument(Long.MIN_VALUE, Long.MAX_VALUE);
 	private final long minimum;
 	private final long maximum;
 
@@ -26,7 +27,7 @@ public final class LongArgument implements Argument<Long> {
 	 * @return The default instance.
 	 */
 	public static LongArgument get() {
-		return new LongArgument(Long.MIN_VALUE, Long.MAX_VALUE);
+		return DEFAULT;
 	}
 
 	/**

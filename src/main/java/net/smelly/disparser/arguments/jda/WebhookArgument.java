@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutionException;
  */
 @ThreadSafe
 public final class WebhookArgument implements Argument<Webhook> {
+	private static final WebhookArgument DEFAULT = new WebhookArgument(null);
 	@Nullable
 	private final JDA jda;
 
@@ -32,7 +33,7 @@ public final class WebhookArgument implements Argument<Webhook> {
 	 * @return A default instance.
 	 */
 	public static WebhookArgument get() {
-		return new WebhookArgument(null);
+		return DEFAULT;
 	}
 
 	/**

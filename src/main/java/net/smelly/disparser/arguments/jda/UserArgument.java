@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 @ThreadSafe
 public final class UserArgument implements Argument<User> {
 	private static final Pattern MENTION_PATTERN = Pattern.compile("^<@!?(\\d+)>$");
-
+	private static final UserArgument DEFAULT = new UserArgument(null);
 	@Nullable
 	private final JDA jda;
 
@@ -34,7 +34,7 @@ public final class UserArgument implements Argument<User> {
 	 * @return A default instance.
 	 */
 	public static UserArgument get() {
-		return new UserArgument(null);
+		return DEFAULT;
 	}
 
 	/**

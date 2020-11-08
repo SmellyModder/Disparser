@@ -14,6 +14,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class ShortArgument implements Argument<Short> {
+	private static final ShortArgument DEFAULT = new ShortArgument(Short.MIN_VALUE, Short.MAX_VALUE);
 	private final short minimum;
 	private final short maximum;
 
@@ -26,7 +27,7 @@ public final class ShortArgument implements Argument<Short> {
 	 * @return The default instance.
 	 */
 	public static ShortArgument get() {
-		return new ShortArgument(Short.MIN_VALUE, Short.MAX_VALUE);
+		return DEFAULT;
 	}
 
 	/**

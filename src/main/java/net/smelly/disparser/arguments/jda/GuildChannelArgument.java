@@ -18,6 +18,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class GuildChannelArgument implements Argument<GuildChannel> {
+	private static final GuildChannelArgument DEFAULT = new GuildChannelArgument(null);
 	@Nullable
 	private final JDA jda;
 
@@ -29,7 +30,7 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 	 * @return A default instance.
 	 */
 	public static GuildChannelArgument get() {
-		return new GuildChannelArgument(null);
+		return DEFAULT;
 	}
 
 	/**

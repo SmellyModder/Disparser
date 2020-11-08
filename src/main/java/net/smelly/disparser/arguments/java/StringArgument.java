@@ -14,6 +14,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class StringArgument implements Argument<String> {
+	private static final StringArgument DEFAULT = new StringArgument(0, Integer.MAX_VALUE);
 	private final int minChars;
 	private final int maxChars;
 
@@ -26,7 +27,7 @@ public final class StringArgument implements Argument<String> {
 	 * @return The default instance.
 	 */
 	public static StringArgument get() {
-		return new StringArgument(0, Integer.MAX_VALUE);
+		return DEFAULT;
 	}
 
 	/**

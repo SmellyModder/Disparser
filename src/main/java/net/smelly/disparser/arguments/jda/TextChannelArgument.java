@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 @ThreadSafe
 public final class TextChannelArgument implements Argument<TextChannel> {
 	private static final Pattern MENTION_PATTERN = Pattern.compile("^<#(\\d+)>$");
-
+	private static final TextChannelArgument DEFAULT = new TextChannelArgument(null);
 	@Nullable
 	private final JDA jda;
 
@@ -34,7 +34,7 @@ public final class TextChannelArgument implements Argument<TextChannel> {
 	 * @return A default instance.
 	 */
 	public static TextChannelArgument get() {
-		return new TextChannelArgument(null);
+		return DEFAULT;
 	}
 
 	/**

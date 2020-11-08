@@ -14,6 +14,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class CharArgument implements Argument<Character> {
+	private static final CharArgument DEFAULT = new CharArgument();
 
 	private CharArgument() {
 	}
@@ -22,12 +23,11 @@ public final class CharArgument implements Argument<Character> {
 	 * @return The default instance.
 	 */
 	public static CharArgument get() {
-		return new CharArgument();
+		return DEFAULT;
 	}
 
 	@Override
 	public ParsedArgument<Character> parse(MessageReader reader) throws CommandSyntaxException {
 		return ParsedArgument.parse(reader.nextChar());
 	}
-
 }
