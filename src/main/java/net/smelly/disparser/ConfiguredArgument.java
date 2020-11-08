@@ -39,9 +39,10 @@ public class ConfiguredArgument<T> {
 
 	/**
 	 * Creates a new {@link ConfiguredArgument} for a given {@link Argument} and name.
+	 *
 	 * @param argument An {@link Argument} to configure.
-	 * @param name A {@link CommandMessage} to configure as the name of the given {@link Argument}.
-	 * @param <T> The type of the {@link Argument} result.
+	 * @param name     A {@link CommandMessage} to configure as the name of the given {@link Argument}.
+	 * @param <T>      The type of the {@link Argument} result.
 	 * @return A new {@link ConfiguredArgument} for a given {@link Argument} and name.
 	 */
 	public static <T> ConfiguredArgument<T> named(Argument<T> argument, CommandMessage name) {
@@ -50,9 +51,10 @@ public class ConfiguredArgument<T> {
 
 	/**
 	 * Creates a new optional {@link ConfiguredArgument} for a given {@link Argument} and name.
+	 *
 	 * @param argument An {@link Argument} to configure.
-	 * @param name A {@link CommandMessage} to configure as the name of the given {@link Argument}.
-	 * @param <T> The type of the {@link Argument} result.
+	 * @param name     A {@link CommandMessage} to configure as the name of the given {@link Argument}.
+	 * @param <T>      The type of the {@link Argument} result.
 	 * @return A new optional {@link ConfiguredArgument} for a given {@link Argument} and name.
 	 */
 	public static <T> ConfiguredArgument<T> namedOptional(Argument<T> argument, CommandMessage name) {
@@ -61,8 +63,9 @@ public class ConfiguredArgument<T> {
 
 	/**
 	 * Creates a new optional {@link ConfiguredArgument} for a given {@link ConfiguredArgument}.
+	 *
 	 * @param configuredArgument A {@link ConfiguredArgument} to create an optional instance for.
-	 * @param <T> The type of the {@link Argument} result.
+	 * @param <T>                The type of the {@link Argument} result.
 	 * @return A new optional {@link ConfiguredArgument} for a given {@link ConfiguredArgument}.
 	 */
 	public static <T> ConfiguredArgument<T> optional(ConfiguredArgument<T> configuredArgument) {
