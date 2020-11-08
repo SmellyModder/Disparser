@@ -321,7 +321,6 @@ public final class TestBot {
 * A simple annotation system for easier registration of commands.
 * A `EitherArgument` class for parsing either arguments.
 * An optional system for arguments, allowing some arguments to not always have to be parsed.
-* An `InfoCommand` class for easier making of info/help commands. (Currently removed in master branch, but will return.)
 
 ## Upcoming Features
 * Compound Arguments. Compound Arguments are arguments that include multiple arguments or parameters in themselves, this allows for more complex use and using a system for parsing objects without needing certain information across many commands.
