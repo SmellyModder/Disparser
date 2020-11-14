@@ -1,13 +1,14 @@
 package net.smelly.disparser.context.handlers;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.smelly.disparser.Command;
 import net.smelly.disparser.context.CommandContext;
 import net.smelly.disparser.feedback.FeedbackHandler;
 import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
-import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProviderBuilder;
+import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
 import net.smelly.disparser.feedback.exceptions.DisparserExceptionProvider;
 import net.smelly.disparser.properties.CommandProperty;
 import net.smelly.disparser.properties.CommandPropertyMap;
@@ -43,20 +44,20 @@ public abstract class AbstractCommandHandler<E extends Event, C extends CommandC
 	protected final ConcurrentHashMap<String, Command<C>> aliasMap = new ConcurrentHashMap<>();
 	protected final CommandPropertyMap<C> commandPropertyMap;
 	protected final Function<E, String> prefixFunction;
+	protected final Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction;
 	protected final FeedbackHandlerBuilder feedbackHandlerBuilder;
-	protected final BuiltInExceptionProviderBuilder exceptionProviderBuilder;
 	protected final ExecutorService executorService;
 
-	public AbstractCommandHandler(CommandPropertyMap<C> commandPropertyMap, Function<E, String> prefixFunction, FeedbackHandlerBuilder feedbackHandlerBuilder, BuiltInExceptionProviderBuilder exceptionProviderBuilder, ExecutorService executorService) {
+	public AbstractCommandHandler(CommandPropertyMap<C> commandPropertyMap, Function<E, String> prefixFunction, FeedbackHandlerBuilder feedbackHandlerBuilder, Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction, ExecutorService executorService) {
 		this.commandPropertyMap = commandPropertyMap;
 		this.prefixFunction = prefixFunction;
 		this.feedbackHandlerBuilder = feedbackHandlerBuilder;
-		this.exceptionProviderBuilder = exceptionProviderBuilder;
+		this.exceptionProviderFunction = exceptionProviderFunction;
 		this.executorService = executorService;
 	}
 
-	public AbstractCommandHandler(String prefix, FeedbackHandlerBuilder feedbackHandlerBuilder, BuiltInExceptionProviderBuilder exceptionProviderBuilder) {
-		this(CommandPropertyMap.createEmpty(), guild -> prefix, feedbackHandlerBuilder, exceptionProviderBuilder, Executors.newSingleThreadExecutor());
+	public AbstractCommandHandler(String prefix, FeedbackHandlerBuilder feedbackHandlerBuilder, Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction) {
+		this(CommandPropertyMap.createEmpty(), guild -> prefix, feedbackHandlerBuilder, exceptionProviderFunction, Executors.newSingleThreadExecutor());
 	}
 
 	/**
@@ -134,14 +135,14 @@ public abstract class AbstractCommandHandler<E extends Event, C extends CommandC
 	}
 
 	/**
-	 * Gets this handler's {@link BuiltInExceptionProviderBuilder}.
+	 * Gets this handler's {@link Function} for getting a {@link BuiltInExceptionProvider} for a {@link MessageChannel}.
 	 * This is used for creating a {@link net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider} to be used for creating exceptions for a text channel.
-	 * <p> This is {@link DisparserExceptionProvider#BUILDER} by default. </p>
+	 * <p> This is {@link DisparserExceptionProvider#GETTER} by default. </p>
 	 *
-	 * @return The {@link BuiltInExceptionProviderBuilder} for this {@link AbstractCommandHandler}.
+	 * @return The {@link Function} for getting a {@link BuiltInExceptionProvider} for a {@link MessageChannel} for this {@link AbstractCommandHandler}.
 	 */
-	public final BuiltInExceptionProviderBuilder getExceptionProviderBuilder() {
-		return this.exceptionProviderBuilder;
+	public final Function<MessageChannel, BuiltInExceptionProvider> getExceptionProviderFunction() {
+		return this.exceptionProviderFunction;
 	}
 
 	/**

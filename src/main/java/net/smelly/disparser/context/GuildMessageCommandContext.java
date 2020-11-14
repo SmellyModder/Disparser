@@ -11,7 +11,6 @@ import net.smelly.disparser.ParsedArgument;
 import net.smelly.disparser.feedback.FeedbackHandler;
 import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
 import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
-import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProviderBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,15 +35,15 @@ public final class GuildMessageCommandContext extends CommandContext<GuildMessag
 	 * Attempts to create a {@link GuildMessageCommandContext} for a {@link GuildMessageReceivedEvent} and {@link Command}.
 	 * <p>If an error occurs trying to create the {@link GuildMessageCommandContext} then {@link Optional#empty()} will be returned.</p>
 	 *
-	 * @param event                    A {@link GuildMessageReceivedEvent} to create this {@link GuildMessageCommandContext} for.
-	 * @param command                  A {@link Command} to create this {@link GuildMessageCommandContext} for.
-	 * @param permissions              A {@link Set} of {@link Permission}s to test on the author of the event.
-	 * @param feedbackHandlerBuilder   A {@link FeedbackHandlerBuilder} to construct a new {@link FeedbackHandler}.
-	 * @param exceptionProviderBuilder A {@link BuiltInExceptionProviderBuilder} to construct a new {@link BuiltInExceptionProvider}.
+	 * @param event                  A {@link GuildMessageReceivedEvent} to create this {@link GuildMessageCommandContext} for.
+	 * @param command                A {@link Command} to create this {@link GuildMessageCommandContext} for.
+	 * @param permissions            A {@link Set} of {@link Permission}s to test on the author of the event.
+	 * @param feedbackHandlerBuilder A {@link FeedbackHandlerBuilder} to construct a new {@link FeedbackHandler}.
+	 * @param exceptionProvider      A {@link BuiltInExceptionProvider} to get built-in exception creators from.
 	 * @return {@link Optional#empty()} if an error occurred trying to create the {@link GuildMessageCommandContext}, otherwise an {@link Optional} containing the created {@link GuildMessageCommandContext}.
 	 */
-	public static Optional<GuildMessageCommandContext> create(GuildMessageReceivedEvent event, Command<GuildMessageCommandContext> command, Set<Permission> permissions, FeedbackHandlerBuilder feedbackHandlerBuilder, BuiltInExceptionProviderBuilder exceptionProviderBuilder) {
-		GuildMessageCommandContext commandContext = new GuildMessageCommandContext(event, new ArrayList<>(), feedbackHandlerBuilder.build(event.getChannel()), exceptionProviderBuilder.build(event.getChannel()));
+	public static Optional<GuildMessageCommandContext> create(GuildMessageReceivedEvent event, Command<GuildMessageCommandContext> command, Set<Permission> permissions, FeedbackHandlerBuilder feedbackHandlerBuilder, BuiltInExceptionProvider exceptionProvider) {
+		GuildMessageCommandContext commandContext = new GuildMessageCommandContext(event, new ArrayList<>(), feedbackHandlerBuilder.build(event.getChannel()), exceptionProvider);
 
 		Member member = event.getMember();
 		if (member == null) return Optional.empty();

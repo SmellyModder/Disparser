@@ -8,7 +8,6 @@ import net.smelly.disparser.ParsedArgument;
 import net.smelly.disparser.feedback.FeedbackHandler;
 import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
 import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
-import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProviderBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,15 +32,15 @@ public final class MessageCommandContext extends CommandContext<MessageReceivedE
 	 * Attempts to create a {@link MessageCommandContext} for a {@link MessageReceivedEvent} and {@link Command}.
 	 * <p>If an error occurs trying to create the {@link MessageCommandContext} then {@link Optional#empty()} will be returned.</p>
 	 *
-	 * @param event                    A {@link MessageReceivedEvent} to create this {@link MessageCommandContext} for.
-	 * @param command                  A {@link Command} to create this {@link MessageCommandContext} for.
-	 * @param permissions              A {@link Set} of {@link Permission}s to test on the author of the event.
-	 * @param feedbackHandlerBuilder   A {@link FeedbackHandlerBuilder} to construct a new {@link FeedbackHandler}.
-	 * @param exceptionProviderBuilder A {@link BuiltInExceptionProviderBuilder} to construct a new {@link BuiltInExceptionProvider}.
+	 * @param event                  A {@link MessageReceivedEvent} to create this {@link MessageCommandContext} for.
+	 * @param command                A {@link Command} to create this {@link MessageCommandContext} for.
+	 * @param permissions            A {@link Set} of {@link Permission}s to test on the author of the event.
+	 * @param feedbackHandlerBuilder A {@link FeedbackHandlerBuilder} to construct a new {@link FeedbackHandler}.
+	 * @param exceptionProvider      A {@link BuiltInExceptionProvider} to get built-in exception creators from.
 	 * @return {@link Optional#empty()} if an error occurred trying to create the {@link MessageCommandContext}, otherwise an {@link Optional} containing the created {@link MessageCommandContext}.
 	 */
-	public static Optional<MessageCommandContext> create(MessageReceivedEvent event, Command<MessageCommandContext> command, Set<Permission> permissions, FeedbackHandlerBuilder feedbackHandlerBuilder, BuiltInExceptionProviderBuilder exceptionProviderBuilder) {
-		MessageCommandContext commandContext = new MessageCommandContext(event, new ArrayList<>(), feedbackHandlerBuilder.build(event.getChannel()), exceptionProviderBuilder.build(event.getChannel()));
+	public static Optional<MessageCommandContext> create(MessageReceivedEvent event, Command<MessageCommandContext> command, Set<Permission> permissions, FeedbackHandlerBuilder feedbackHandlerBuilder, BuiltInExceptionProvider exceptionProvider) {
+		MessageCommandContext commandContext = new MessageCommandContext(event, new ArrayList<>(), feedbackHandlerBuilder.build(event.getChannel()), exceptionProvider);
 
 		if (commandContext.isFromGuild()) {
 			Member member = event.getMember();

@@ -1,10 +1,12 @@
 package net.smelly.disparser.feedback.exceptions;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.smelly.disparser.feedback.FormattedCommandMessage;
 
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * This class is an implementation class of {@link BuiltInExceptionProvider} for all the built-in {@link CommandExceptionCreator}s used in creating exceptions for the built-in Disparser arguments.
@@ -16,7 +18,7 @@ import java.util.Set;
 @ThreadSafe
 public class DisparserExceptionProvider implements BuiltInExceptionProvider {
 	public static final DisparserExceptionProvider INSTANCE = new DisparserExceptionProvider();
-	public static final BuiltInExceptionProviderBuilder BUILDER = channel -> INSTANCE;
+	public static final Function<MessageChannel, BuiltInExceptionProvider> GETTER = channel -> INSTANCE;
 
 	private static final DynamicCommandExceptionCreator<Set<Permission>> PERMISSIONS_EXCEPTION = DynamicCommandExceptionCreator.createInstance((permissions) -> new FormattedCommandMessage("You do not have permission to run this command! Required Permissions: %s", permissions));
 	private static final SimpleCommandExceptionCreator NO_ARGUMENTS_EXCEPTION = new SimpleCommandExceptionCreator(channel -> "No arguments are present!");

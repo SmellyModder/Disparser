@@ -1,5 +1,6 @@
 package net.smelly.disparser.context.handlers;
 
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.Event;
 import net.smelly.disparser.Command;
 import net.smelly.disparser.annotations.Aliases;
@@ -8,7 +9,7 @@ import net.smelly.disparser.annotations.Permissions;
 import net.smelly.disparser.concurrent.DisparsingThreadFactory;
 import net.smelly.disparser.context.CommandContext;
 import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
-import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProviderBuilder;
+import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
 import net.smelly.disparser.feedback.exceptions.DisparserExceptionProvider;
 import net.smelly.disparser.properties.AliasesProperty;
 import net.smelly.disparser.properties.CommandPropertyMap;
@@ -43,7 +44,7 @@ public abstract class AbstractCommandHandlerBuilder<E extends Event, C extends C
 	protected final Map<Command<C>, CommandPropertyMap.PropertyMap> commandPropertyMap = new HashMap<>();
 	protected Function<E, String> prefixFunction = event -> "!";
 	protected FeedbackHandlerBuilder feedbackHandlerBuilder = FeedbackHandlerBuilder.SIMPLE_BUILDER;
-	protected BuiltInExceptionProviderBuilder exceptionProviderBuilder = DisparserExceptionProvider.BUILDER;
+	protected Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction = DisparserExceptionProvider.GETTER;
 	protected ExecutorService executorService = Executors.newSingleThreadExecutor(new DisparsingThreadFactory("Default"));
 
 	/**
@@ -180,14 +181,14 @@ public abstract class AbstractCommandHandlerBuilder<E extends Event, C extends C
 	}
 
 	/**
-	 * Sets a {@link BuiltInExceptionProviderBuilder} for the {@link CommandHandler}.
+	 * Sets a {@link Function} for getting a {@link BuiltInExceptionProvider} for a {@link MessageChannel} for the {@link CommandHandler}.
 	 *
-	 * @param exceptionProviderBuilder The {@link BuiltInExceptionProviderBuilder} to set.
+	 * @param exceptionProviderFunction The {@link Function} to set.
 	 * @return This builder.
 	 */
 	@SuppressWarnings("unchecked")
-	public B setExceptionProviderBuilder(BuiltInExceptionProviderBuilder exceptionProviderBuilder) {
-		this.exceptionProviderBuilder = exceptionProviderBuilder;
+	public B setExceptionProviderBuilder(Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction) {
+		this.exceptionProviderFunction = exceptionProviderFunction;
 		return (B) this;
 	}
 

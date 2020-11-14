@@ -11,7 +11,6 @@ import java.util.Set;
  *
  * @author Luke Tonon
  * @see DisparserExceptionProvider
- * @see BuiltInExceptionProviderBuilder
  */
 @ThreadSafe
 public interface BuiltInExceptionProvider {

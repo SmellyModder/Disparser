@@ -1,12 +1,13 @@
 package net.smelly.disparser.context.handlers;
 
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.smelly.disparser.Command;
 import net.smelly.disparser.context.CommandContext;
 import net.smelly.disparser.context.PrivateMessageCommandContext;
 import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
-import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProviderBuilder;
+import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
 import net.smelly.disparser.properties.CommandPropertyMap;
 
 import javax.annotation.Nonnull;
@@ -23,8 +24,8 @@ import java.util.function.Function;
  */
 public class PrivateCommandHandler extends AbstractCommandHandler<PrivateMessageReceivedEvent, PrivateMessageCommandContext> {
 
-	public PrivateCommandHandler(CommandPropertyMap<PrivateMessageCommandContext> commandPropertyMap, Function<PrivateMessageReceivedEvent, String> prefixFunction, FeedbackHandlerBuilder feedbackHandlerBuilder, BuiltInExceptionProviderBuilder exceptionProviderBuilder, ExecutorService executorService) {
-		super(commandPropertyMap, prefixFunction, feedbackHandlerBuilder, exceptionProviderBuilder, executorService);
+	public PrivateCommandHandler(CommandPropertyMap<PrivateMessageCommandContext> commandPropertyMap, Function<PrivateMessageReceivedEvent, String> prefixFunction, FeedbackHandlerBuilder feedbackHandlerBuilder, Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction, ExecutorService executorService) {
+		super(commandPropertyMap, prefixFunction, feedbackHandlerBuilder, exceptionProviderFunction, executorService);
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class PrivateCommandHandler extends AbstractCommandHandler<PrivateMessage
 				if (firstComponent.startsWith(prefix)) {
 					Command<PrivateMessageCommandContext> command = this.aliasMap.get(firstComponent.substring(prefix.length()));
 					if (command != null) {
-						Optional<PrivateMessageCommandContext> commandContext = PrivateMessageCommandContext.create(event, command, this.feedbackHandlerBuilder, this.exceptionProviderBuilder);
+						Optional<PrivateMessageCommandContext> commandContext = PrivateMessageCommandContext.create(event, command, this.feedbackHandlerBuilder, this.exceptionProviderFunction.apply(event.getChannel()));
 						commandContext.ifPresent(context -> {
 							try {
 								command.processCommand(context);
@@ -78,7 +79,7 @@ public class PrivateCommandHandler extends AbstractCommandHandler<PrivateMessage
 		 */
 		@Override
 		public PrivateCommandHandler build() {
-			PrivateCommandHandler commandHandler = new PrivateCommandHandler(CommandPropertyMap.create(this.commandPropertyMap), this.prefixFunction, this.feedbackHandlerBuilder, this.exceptionProviderBuilder, this.executorService);
+			PrivateCommandHandler commandHandler = new PrivateCommandHandler(CommandPropertyMap.create(this.commandPropertyMap), this.prefixFunction, this.feedbackHandlerBuilder, this.exceptionProviderFunction, this.executorService);
 			commandHandler.aliasMap.putAll(this.aliasMap);
 			return commandHandler;
 		}
