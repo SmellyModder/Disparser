@@ -6,7 +6,10 @@
  * <p>
  * {@link net.smelly.disparser.annotations}
  * {@link net.smelly.disparser.arguments}
+ * {@link net.smelly.disparser.concurrent}
+ * {@link net.smelly.disparser.context}
  * {@link net.smelly.disparser.feedback}
+ * {@link net.smelly.disparser.properties}
  * {@link net.smelly.disparser.util}
  * </p>
  *
