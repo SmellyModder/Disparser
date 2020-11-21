@@ -4,10 +4,7 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
- * A container object for holding a parsed result from an {@link Argument}. Very similar to {@link java.util.Optional}
- * <p>
- * {@link #result} should <b> always </b> be null when a parsing error occurs.
- * </p>
+ * A container object for holding a parsed result from an {@link Argument}.
  *
  * @param <A> The type for this parsed argument.
  * @author Luke Tonon
@@ -25,7 +22,7 @@ public final class ParsedArgument<A> {
 	 * @return A new {@link ParsedArgument} that contains a non-null result.
 	 * @throws NullPointerException if value is null
 	 */
-	public static <A> ParsedArgument<A> parse(@Nonnull final A result) {
+	public static <A> ParsedArgument<A> parse(@Nonnull A result) {
 		Objects.requireNonNull(result);
 		return new ParsedArgument<>(result);
 	}
