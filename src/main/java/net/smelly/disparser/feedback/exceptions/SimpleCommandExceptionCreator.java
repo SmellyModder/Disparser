@@ -8,11 +8,11 @@ import javax.annotation.concurrent.ThreadSafe;
  * A simple class for sending an exception with a message.
  *
  * @author Luke Tonon
- * @see CommandExceptionCreator
- * @see CommandSyntaxException
+ * @see ExceptionCreator
+ * @see CommandException
  */
 @ThreadSafe
-public final class SimpleCommandExceptionCreator implements CommandExceptionCreator<CommandSyntaxException> {
+public final class SimpleCommandExceptionCreator implements ExceptionCreator<CommandException> {
 	private final CommandMessage message;
 
 	public SimpleCommandExceptionCreator(CommandMessage message) {
@@ -20,10 +20,10 @@ public final class SimpleCommandExceptionCreator implements CommandExceptionCrea
 	}
 
 	/**
-	 * @return Creates a new {@link CommandSyntaxException} with this creator's message.
+	 * @return Creates a new {@link CommandException} with this creator's message.
 	 */
 	@Override
-	public CommandSyntaxException create() {
-		return new CommandSyntaxException(this.message);
+	public CommandException create() {
+		return new CommandException(this.message);
 	}
 }

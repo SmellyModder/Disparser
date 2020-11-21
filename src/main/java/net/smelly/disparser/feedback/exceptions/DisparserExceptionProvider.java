@@ -2,14 +2,16 @@ package net.smelly.disparser.feedback.exceptions;
 
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.smelly.disparser.context.tree.DisparsingNode;
 import net.smelly.disparser.feedback.FormattedCommandMessage;
 
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
 
 /**
- * This class is an implementation class of {@link BuiltInExceptionProvider} for all the built-in {@link CommandExceptionCreator}s used in creating exceptions for the built-in Disparser arguments.
+ * This class is an implementation class of {@link BuiltInExceptionProvider} for all the built-in {@link ExceptionCreator}s used in creating exceptions for the built-in Disparser arguments.
  * All of these fields are used internally in Disparser.
  *
  * @author Luke Tonon
@@ -22,11 +24,33 @@ public class DisparserExceptionProvider implements BuiltInExceptionProvider {
 
 	private static final DynamicCommandExceptionCreator<Set<Permission>> PERMISSIONS_EXCEPTION = DynamicCommandExceptionCreator.createInstance((permissions) -> new FormattedCommandMessage("You do not have permission to run this command! Required Permissions: %s", permissions));
 	private static final SimpleCommandExceptionCreator NO_ARGUMENTS_EXCEPTION = new SimpleCommandExceptionCreator(channel -> "No arguments are present!");
-	private static final DynamicCommandExceptionCreator<String> MISSING_ARGUMENT_EXCEPTION = DynamicCommandExceptionCreator.createInstance((argument) -> {
-		return new FormattedCommandMessage("Expected `%1$s` argument at next message argument!", argument);
+
+	private static final DynamicCommandExceptionCreator<String> UNEXPECTED_ERROR_EXCEPTION = DynamicCommandExceptionCreator.createInstance((exceptionMessage) -> {
+		return new FormattedCommandMessage("An unexpected error occurred when parsing the command: %s", exceptionMessage);
 	});
-	private static final BiDynamicCommandExceptionCreator<Integer, Integer> MISSING_ARGUMENTS_EXCEPTION = BiDynamicCommandExceptionCreator.createInstance((mandatorySize, optionalSize) -> {
-		return new FormattedCommandMessage("Expected at least `%1$s` arguments!\nOptional Arguments Size: `%2$s`\nMandatory Arguments Size: `%1$s`", mandatorySize, optionalSize);
+
+	private static final TriDynamicCommandExceptionCreator<MessageChannel, Collection<? extends DisparsingNode<?, ?>>, Integer> INCOMPLETE_COMMAND_EXCEPTION = TriDynamicCommandExceptionCreator.createInstance((channel, nodes, index) -> {
+		return new FormattedCommandMessage("Incomplete command. Expected an argument of a possible `%1$s` types after message index `%2$s`", nodes.size(), index);
+	});
+
+	private static final DynamicCommandExceptionCreator<Integer> EXPECTED_ARGUMENT_EXCEPTION = DynamicCommandExceptionCreator.createInstance((index) -> {
+		return new FormattedCommandMessage("Expected argument at message index `%s`", index);
+	});
+
+	private static final DynamicCommandExceptionCreator<String> REQUIREMENT_FAILED_EXCEPTION = DynamicCommandExceptionCreator.createInstance((reason) -> {
+		return reason.isEmpty() ? channel -> "The requirements were not met to parse this command." : channel -> reason;
+	});
+
+	private static final BiDynamicCommandExceptionCreator<String, Integer> INVALID_COMMAND_ARGUMENT_EXCEPTION = BiDynamicCommandExceptionCreator.createInstance((arg, index) -> {
+		return new FormattedCommandMessage("`%1$s` is not a valid command argument at message index `%2$s`", arg, index);
+	});
+
+	private static final TriDynamicCommandExceptionCreator<String, String, Integer> ARGUMENT_ERROR_EXCEPTION = TriDynamicCommandExceptionCreator.createInstance((name, cause, index) -> {
+		return new FormattedCommandMessage("`%1$s` argument at message index `%2$s` encountered an error:\n%3$s", name, index, cause);
+	});
+
+	private static final DynamicCommandExceptionCreator<String> INVALID_BOOLEAN_EXCEPTION = DynamicCommandExceptionCreator.createInstance(integer -> {
+		return new FormattedCommandMessage("`%s` is not a valid boolean, expected true or false", integer);
 	});
 
 	private static final DynamicCommandExceptionCreator<String> INVALID_INTEGER_EXCEPTION = DynamicCommandExceptionCreator.createInstance(integer -> {
@@ -164,13 +188,38 @@ public class DisparserExceptionProvider implements BuiltInExceptionProvider {
 	}
 
 	@Override
-	public DynamicCommandExceptionCreator<String> getMissingArgumentException() {
-		return MISSING_ARGUMENT_EXCEPTION;
+	public TriDynamicCommandExceptionCreator<MessageChannel, Collection<? extends DisparsingNode<?, ?>>, Integer> getIncompleteCommandException() {
+		return INCOMPLETE_COMMAND_EXCEPTION;
 	}
 
 	@Override
-	public BiDynamicCommandExceptionCreator<Integer, Integer> getMissingArgumentsException() {
-		return MISSING_ARGUMENTS_EXCEPTION;
+	public DynamicCommandExceptionCreator<String> getUnexpectedErrorException() {
+		return UNEXPECTED_ERROR_EXCEPTION;
+	}
+
+	@Override
+	public DynamicCommandExceptionCreator<Integer> getExpectedArgumentException() {
+		return EXPECTED_ARGUMENT_EXCEPTION;
+	}
+
+	@Override
+	public DynamicCommandExceptionCreator<String> getRequirementFailedException() {
+		return REQUIREMENT_FAILED_EXCEPTION;
+	}
+
+	@Override
+	public BiDynamicCommandExceptionCreator<String, Integer> getInvalidCommandArgumentException() {
+		return INVALID_COMMAND_ARGUMENT_EXCEPTION;
+	}
+
+	@Override
+	public TriDynamicCommandExceptionCreator<String, String, Integer> getArgumentErrorException() {
+		return ARGUMENT_ERROR_EXCEPTION;
+	}
+
+	@Override
+	public DynamicCommandExceptionCreator<String> getInvalidBooleanException() {
+		return INVALID_BOOLEAN_EXCEPTION;
 	}
 
 	@Override

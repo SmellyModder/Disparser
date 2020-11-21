@@ -3,8 +3,9 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -61,8 +62,9 @@ public final class LongArgument implements Argument<Long> {
 		return new LongArgument(Long.MIN_VALUE, max);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<Long> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<Long> parse(MessageReader reader) throws CommandException {
 		long along = reader.nextLong();
 		if (along > this.maximum) {
 			throw reader.getExceptionProvider().getValueTooHighException().create(along, this.maximum);
@@ -70,5 +72,26 @@ public final class LongArgument implements Argument<Long> {
 			throw reader.getExceptionProvider().getValueTooHighException().create(along, this.minimum);
 		}
 		return ParsedArgument.parse(along);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		LongArgument that = (LongArgument) o;
+		return this.minimum == that.minimum && this.maximum == that.maximum;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * Long.hashCode(this.minimum) + Long.hashCode(this.maximum);
+	}
+
+	@Override
+	public String toString() {
+		return "LongArgument{" +
+				"minimum=" + (this.minimum == Long.MIN_VALUE ? "undefined" : this.minimum) +
+				", maximum=" + (this.maximum == Long.MAX_VALUE ? "undefined" : this.maximum) +
+				'}';
 	}
 }

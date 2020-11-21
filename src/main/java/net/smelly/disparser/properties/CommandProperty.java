@@ -89,5 +89,11 @@ public interface CommandProperty<T, A extends Annotation> {
 			return prev;
 		}
 
+		@Override
+		public String toString() {
+			return "CommandProperty$Value{" +
+					"value=" + this.get() +
+					'}';
+		}
 	}
 }

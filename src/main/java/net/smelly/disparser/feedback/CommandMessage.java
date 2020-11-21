@@ -2,6 +2,7 @@ package net.smelly.disparser.feedback;
 
 import net.dv8tion.jda.api.entities.MessageChannel;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -20,5 +21,6 @@ public interface CommandMessage {
 	 * @param channel The channel to get this message for, can be null.
 	 * @return The string value of this message.
 	 */
+	@Nonnull
 	String getMessage(@Nullable MessageChannel channel);
 }

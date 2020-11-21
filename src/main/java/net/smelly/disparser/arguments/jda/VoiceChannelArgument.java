@@ -6,10 +6,12 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Objects;
 
 /**
  * An argument that can parse voice channels by their ID.
@@ -44,8 +46,9 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 		return new VoiceChannelArgument(jda);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<VoiceChannel> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<VoiceChannel> parse(MessageReader reader) throws CommandException {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long parsedLong = Long.parseLong(arg);
@@ -64,5 +67,25 @@ public final class VoiceChannelArgument implements Argument<VoiceChannel> {
 	@Nullable
 	private VoiceChannel getVoiceChannelById(Message message, long parsedLong) {
 		return message.isFromGuild() ? message.getGuild().getVoiceChannelById(parsedLong) : null;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		VoiceChannelArgument that = (VoiceChannelArgument) o;
+		return Objects.equals(this.jda, that.jda);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.jda);
+	}
+
+	@Override
+	public String toString() {
+		return "VoiceChannelArgument{" +
+				"jda=" + (this.jda != null ? this.jda : "undefined") +
+				'}';
 	}
 }

@@ -3,8 +3,9 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -61,8 +62,9 @@ public final class StringArgument implements Argument<String> {
 		return new StringArgument(Math.max(0, minChars), maxChars);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<String> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<String> parse(MessageReader reader) throws CommandException {
 		String nextArgument = reader.nextArgument();
 		if (nextArgument.length() > this.maxChars) {
 			throw reader.getExceptionProvider().getTooHighStringLengthException().create(nextArgument, this.maxChars);
@@ -70,5 +72,26 @@ public final class StringArgument implements Argument<String> {
 			throw reader.getExceptionProvider().getTooLowStringLengthException().create(nextArgument, this.maxChars);
 		}
 		return ParsedArgument.parse(nextArgument);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		StringArgument that = (StringArgument) o;
+		return this.minChars == that.minChars && this.maxChars == that.maxChars;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * this.minChars + this.maxChars;
+	}
+
+	@Override
+	public String toString() {
+		return "StringArgument{" +
+				"minChars=" + (this.minChars == 0 ? "undefined" : this.minChars) +
+				", maxChars=" + (this.maxChars == Integer.MAX_VALUE ? "undefined" : this.maxChars) +
+				'}';
 	}
 }

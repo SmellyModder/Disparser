@@ -3,6 +3,7 @@ package net.smelly.disparser.feedback;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -22,6 +23,7 @@ public final class TestTranslatableCommandMessage implements CommandMessage {
 		this.invalidColor = invalidColor;
 	}
 
+	@Nonnull
 	@Override
 	public String getMessage(@Nullable MessageChannel channel) {
 		return MAP.getOrDefault(channel != null ? channel instanceof TextChannel ? ((TextChannel) channel).getGuild().getIdLong() : 0L : 0L, Language.ENGLISH_US).translator.apply(this.translatableString) + this.invalidColor;

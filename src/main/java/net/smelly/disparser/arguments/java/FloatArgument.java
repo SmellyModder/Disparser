@@ -3,12 +3,13 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * A simple argument for parsing bytes.
+ * A simple argument for parsing floats.
  *
  * @author Luke Tonon
  */
@@ -61,14 +62,36 @@ public final class FloatArgument implements Argument<Float> {
 		return new FloatArgument(Float.MIN_VALUE, max);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<Float> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<Float> parse(MessageReader reader) throws CommandException {
 		float afloat = reader.nextFloat();
 		if (afloat > this.maximum) {
 			throw reader.getExceptionProvider().getValueTooHighException().create(afloat, this.maximum);
 		} else if (afloat < this.minimum) {
-			throw reader.getExceptionProvider().getValueTooHighException().create(afloat, this.minimum);
+			throw reader.getExceptionProvider().getValueTooLowException().create(afloat, this.minimum);
 		}
 		return ParsedArgument.parse(afloat);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		FloatArgument that = (FloatArgument) o;
+		return this.minimum == that.minimum && this.maximum == that.maximum;
+	}
+
+	@Override
+	public int hashCode() {
+		return (int) (31 * this.minimum + this.maximum);
+	}
+
+	@Override
+	public String toString() {
+		return "FloatArgument{" +
+				"minimum=" + (this.minimum == Float.MIN_VALUE ? "undefined" : this.minimum) +
+				", maximum=" + (this.maximum == Float.MAX_VALUE ? "undefined" : this.maximum) +
+				'}';
 	}
 }

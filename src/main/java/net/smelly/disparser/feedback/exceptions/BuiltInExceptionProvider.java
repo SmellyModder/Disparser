@@ -1,12 +1,15 @@
 package net.smelly.disparser.feedback.exceptions;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.smelly.disparser.context.tree.DisparsingNode;
 
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Collection;
 import java.util.Set;
 
 /**
- * An interface holding getters for all the built-in Disparser {@link CommandExceptionCreator}s.
+ * An interface holding getters for all the built-in Disparser {@link ExceptionCreator}s.
  * <p>Implement this only on classes that will need to override all getters for the built-in exceptions. In other words, just extend {@link DisparserExceptionProvider} when you don't need to override all these methods. </p>
  *
  * @author Luke Tonon
@@ -18,9 +21,19 @@ public interface BuiltInExceptionProvider {
 
 	SimpleCommandExceptionCreator getNoArgumentsException();
 
-	DynamicCommandExceptionCreator<String> getMissingArgumentException();
+	TriDynamicCommandExceptionCreator<MessageChannel, Collection<? extends DisparsingNode<?, ?>>, Integer> getIncompleteCommandException();
 
-	BiDynamicCommandExceptionCreator<Integer, Integer> getMissingArgumentsException();
+	DynamicCommandExceptionCreator<String> getUnexpectedErrorException();
+
+	DynamicCommandExceptionCreator<Integer> getExpectedArgumentException();
+
+	DynamicCommandExceptionCreator<String> getRequirementFailedException();
+
+	BiDynamicCommandExceptionCreator<String, Integer> getInvalidCommandArgumentException();
+
+	TriDynamicCommandExceptionCreator<String, String, Integer> getArgumentErrorException();
+
+	DynamicCommandExceptionCreator<String> getInvalidBooleanException();
 
 	DynamicCommandExceptionCreator<String> getInvalidIntegerException();
 

@@ -3,10 +3,11 @@ package net.smelly.disparser;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
-import net.smelly.disparser.util.MessageUtil;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -37,7 +38,7 @@ public final class MessageReader {
 	 * @return {@link MessageReader} for the message.
 	 */
 	public static MessageReader create(final BuiltInExceptionProvider exceptionProvider, final Message message) {
-		return new MessageReader(exceptionProvider, message, message.getContentRaw().split(" "));
+		return new MessageReader(exceptionProvider, message, message.getContentRaw().split("\\s+"));
 	}
 
 	/**
@@ -82,7 +83,7 @@ public final class MessageReader {
 		return this.components[this.index];
 	}
 
-	public Integer nextInt() throws CommandSyntaxException {
+	public Integer nextInt() throws CommandException {
 		String nextArg = this.nextArgument();
 		try {
 			return Integer.parseInt(nextArg);
@@ -91,7 +92,7 @@ public final class MessageReader {
 		}
 	}
 
-	public Long nextLong() throws CommandSyntaxException {
+	public Long nextLong() throws CommandException {
 		String nextArg = this.nextArgument();
 		try {
 			return Long.parseLong(nextArg);
@@ -100,7 +101,7 @@ public final class MessageReader {
 		}
 	}
 
-	public Character nextChar() throws CommandSyntaxException {
+	public Character nextChar() throws CommandException {
 		String nextArg = this.nextArgument();
 		if (nextArg.length() > 1) {
 			throw this.exceptionProvider.getInvalidCharException().create(nextArg);
@@ -108,7 +109,7 @@ public final class MessageReader {
 		return nextArg.charAt(0);
 	}
 
-	public Short nextShort() throws CommandSyntaxException {
+	public Short nextShort() throws CommandException {
 		String nextArg = this.nextArgument();
 		try {
 			return Short.parseShort(nextArg);
@@ -117,7 +118,7 @@ public final class MessageReader {
 		}
 	}
 
-	public Byte nextByte() throws CommandSyntaxException {
+	public Byte nextByte() throws CommandException {
 		String nextArg = this.nextArgument();
 		try {
 			return Byte.parseByte(nextArg);
@@ -126,7 +127,7 @@ public final class MessageReader {
 		}
 	}
 
-	public Float nextFloat() throws CommandSyntaxException {
+	public Float nextFloat() throws CommandException {
 		String nextArg = this.nextArgument();
 		try {
 			return Float.parseFloat(nextArg);
@@ -135,7 +136,7 @@ public final class MessageReader {
 		}
 	}
 
-	public Double nextDouble() throws CommandSyntaxException {
+	public Double nextDouble() throws CommandException {
 		String nextArg = this.nextArgument();
 		try {
 			return Double.parseDouble(nextArg);
@@ -144,8 +145,14 @@ public final class MessageReader {
 		}
 	}
 
-	public boolean nextBoolean() {
-		return Boolean.parseBoolean(this.nextArgument());
+	public boolean nextBoolean() throws CommandException {
+		String nextArg = this.nextArgument();
+		if (nextArg.equalsIgnoreCase("true")) {
+			return true;
+		} else if (nextArg.equalsIgnoreCase("false")) {
+			return false;
+		}
+		throw this.exceptionProvider.getInvalidBooleanException().create(nextArg);
 	}
 
 	/**
@@ -155,25 +162,8 @@ public final class MessageReader {
 	 * @param <A>    - The type of the argument.
 	 * @return The object({@link A}) read from the reader.
 	 */
-	public <A> ParsedArgument<A> parseNextArgument(Parser<A> parser) throws CommandSyntaxException {
+	public <A> ParsedArgument<A> parseNextArgument(Parser<A> parser) throws CommandException {
 		return parser.parse(this.nextArgument());
-	}
-
-	/**
-	 * Tries to parse the next argument in the message.
-	 * If it fails to parse the next argument it will not shift the {@link #index} forward.
-	 *
-	 * @param argument - The argument to try to parse.
-	 * @return The parsed argument. If it fails, the parsed argument's result will be null and an error message will be included in the parsed argument.
-	 */
-	public <A> ParsedArgument<A> tryToParseArgument(Argument<A> argument) {
-		int prevIndex = this.index;
-		try {
-			return argument.parse(this);
-		} catch (Exception exception) {
-			this.index -= (this.index - prevIndex);
-			return ParsedArgument.empty();
-		}
 	}
 
 	/**
@@ -182,14 +172,21 @@ public final class MessageReader {
 	 *
 	 * @return The next argument.
 	 */
-	public String nextArgument() {
+	public String nextArgument() throws CommandException {
 		if (this.hasNextArg()) {
 			this.index++;
 			return this.components[this.index];
 		} else {
 			this.index++;
-			throw new IndexOutOfBoundsException(this.index + MessageUtil.getOrdinalForInteger(this.index) + " component doesn't exist!");
+			throw this.exceptionProvider.getExpectedArgumentException().create(this.index);
 		}
+	}
+
+	public String lastArgument() throws CommandException {
+		if (this.index <= 0) {
+			throw this.exceptionProvider.getExpectedArgumentException().create(this.index - 1);
+		}
+		return this.components[--this.index];
 	}
 
 	/**
@@ -206,8 +203,23 @@ public final class MessageReader {
 		return this.message.isFromGuild() ? this.message.getGuild() : null;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		MessageReader reader = (MessageReader) o;
+		return this.length == reader.length && Arrays.equals(Arrays.copyOfRange(this.components, 1, this.components.length), Arrays.copyOfRange(reader.components, 1, reader.components.length));
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Objects.hash(this.length);
+		result = 31 * result + Arrays.hashCode(Arrays.copyOfRange(this.components, 1, this.components.length));
+		return result;
+	}
+
 	@FunctionalInterface
 	public interface Parser<A> {
-		ParsedArgument<A> parse(String arg) throws CommandSyntaxException;
+		ParsedArgument<A> parse(String arg) throws CommandException;
 	}
 }

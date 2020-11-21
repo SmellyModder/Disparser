@@ -17,6 +17,7 @@ import net.smelly.disparser.properties.PermissionsProperty;
 import org.apache.commons.collections4.set.UnmodifiableSet;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -39,9 +40,10 @@ import java.util.function.Function;
  * @see GuildCommandHandler.Builder
  * @see PrivateCommandHandler.Builder
  */
+@NotThreadSafe
 public abstract class AbstractCommandHandlerBuilder<E extends Event, C extends CommandContext<E>, H extends AbstractCommandHandler<E, C>, B extends AbstractCommandHandlerBuilder<E, C, H, B>> {
-	protected final Map<String, Command<C>> aliasMap = new HashMap<>();
-	protected final Map<Command<C>, CommandPropertyMap.PropertyMap> commandPropertyMap = new HashMap<>();
+	protected final Map<String, Command<E, C>> aliasMap = new HashMap<>();
+	protected final Map<Command<E, C>, CommandPropertyMap.PropertyMap> commandPropertyMap = new HashMap<>();
 	protected Function<E, String> prefixFunction = event -> "!";
 	protected FeedbackHandlerBuilder feedbackHandlerBuilder = FeedbackHandlerBuilder.SIMPLE_BUILDER;
 	protected Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction = DisparserExceptionProvider.GETTER;
@@ -55,7 +57,7 @@ public abstract class AbstractCommandHandlerBuilder<E extends Event, C extends C
 	 * @return This builder.
 	 */
 	@SuppressWarnings("unchecked")
-	public B registerCommand(String alias, Command<C> command) {
+	public B registerCommand(String alias, Command<E, C> command) {
 		this.aliasMap.put(alias, command);
 		return (B) this;
 	}
@@ -67,7 +69,7 @@ public abstract class AbstractCommandHandlerBuilder<E extends Event, C extends C
 	 * @return This builder.
 	 */
 	@SuppressWarnings("unchecked")
-	public B registerCommand(Command<C> command) {
+	public B registerCommand(Command<E, C> command) {
 		this.aliasMap.entrySet().removeIf(entry -> entry.getValue() == command);
 		AliasesProperty aliasesProperty = command.getAliasesProperty();
 		UnmodifiableSet<String> aliases = aliasesProperty.get(null);
@@ -88,7 +90,7 @@ public abstract class AbstractCommandHandlerBuilder<E extends Event, C extends C
 	 * @return This builder.
 	 */
 	@SuppressWarnings("unchecked")
-	public B registerCommand(Command<C> command, @Nullable Aliases aliases, @Nullable Permissions permissions) {
+	public B registerCommand(Command<E, C> command, @Nullable Aliases aliases, @Nullable Permissions permissions) {
 		AliasesProperty aliasesProperty = command.getAliasesProperty();
 		UnmodifiableSet<String> commandAliases = aliasesProperty.get(aliases);
 		this.aliasMap.entrySet().removeIf(entry -> entry.getValue() == command);
@@ -108,8 +110,8 @@ public abstract class AbstractCommandHandlerBuilder<E extends Event, C extends C
 	 */
 	@SuppressWarnings("unchecked")
 	@SafeVarargs
-	public final B registerCommands(Command<C>... commands) {
-		for (Command<C> command : commands) {
+	public final B registerCommands(Command<E, C>... commands) {
+		for (Command<E, C> command : commands) {
 			this.registerCommand(command);
 		}
 		return (B) this;
@@ -130,10 +132,10 @@ public abstract class AbstractCommandHandlerBuilder<E extends Event, C extends C
 				if ((field.getModifiers() & Modifier.STATIC) == Modifier.STATIC) {
 					field.setAccessible(true);
 					Object object = field.get(null);
-					if (object instanceof Command<?>) {
+					if (object instanceof Command<?, ?>) {
 						Context context = field.getAnnotation(Context.class);
 						if (context == null || this.getContextClass().isAssignableFrom(context.value())) {
-							this.registerCommand((Command<C>) object, field.getAnnotation(Aliases.class), field.getAnnotation(Permissions.class));
+							this.registerCommand((Command<E, C>) object, field.getAnnotation(Aliases.class), field.getAnnotation(Permissions.class));
 						}
 					}
 				}

@@ -41,14 +41,14 @@ import java.util.function.Function;
  */
 @ThreadSafe
 public abstract class AbstractCommandHandler<E extends Event, C extends CommandContext<E>> extends ListenerAdapter {
-	protected final ConcurrentHashMap<String, Command<C>> aliasMap = new ConcurrentHashMap<>();
-	protected final CommandPropertyMap<C> commandPropertyMap;
+	protected final ConcurrentHashMap<String, Command<E, C>> aliasMap = new ConcurrentHashMap<>();
+	protected final CommandPropertyMap<E, C> commandPropertyMap;
 	protected final Function<E, String> prefixFunction;
 	protected final Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction;
 	protected final FeedbackHandlerBuilder feedbackHandlerBuilder;
 	protected final ExecutorService executorService;
 
-	public AbstractCommandHandler(CommandPropertyMap<C> commandPropertyMap, Function<E, String> prefixFunction, FeedbackHandlerBuilder feedbackHandlerBuilder, Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction, ExecutorService executorService) {
+	public AbstractCommandHandler(CommandPropertyMap<E, C> commandPropertyMap, Function<E, String> prefixFunction, FeedbackHandlerBuilder feedbackHandlerBuilder, Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction, ExecutorService executorService) {
 		this.commandPropertyMap = commandPropertyMap;
 		this.prefixFunction = prefixFunction;
 		this.feedbackHandlerBuilder = feedbackHandlerBuilder;
@@ -65,7 +65,7 @@ public abstract class AbstractCommandHandler<E extends Event, C extends CommandC
 	 *
 	 * @param commands The {@link Collection} of {@link Command}s to register.
 	 */
-	protected void registerCommands(Collection<Command<C>> commands) {
+	protected void registerCommands(Collection<Command<E, C>> commands) {
 		commands.forEach(this::registerCommand);
 	}
 
@@ -74,7 +74,7 @@ public abstract class AbstractCommandHandler<E extends Event, C extends CommandC
 	 *
 	 * @param command The {@link Command} to register.
 	 */
-	protected void registerCommand(Command<C> command) {
+	protected void registerCommand(Command<E, C> command) {
 		this.commandPropertyMap.putCommand(command);
 	}
 
@@ -85,7 +85,7 @@ public abstract class AbstractCommandHandler<E extends Event, C extends CommandC
 	 * @param map     The {@link Map} to put for this {@link Command}'s properties.
 	 */
 	@SuppressWarnings("unchecked")
-	protected void registerCommand(Command<C> command, Map<CommandProperty<?, ?>, CommandProperty.Value<?>> map) {
+	protected void registerCommand(Command<E, C> command, Map<CommandProperty<?, ?>, CommandProperty.Value<?>> map) {
 		this.aliasMap.entrySet().removeIf(entry -> entry.getValue() == command);
 		for (String alias : (Set<String>) map.computeIfAbsent(command.getAliasesProperty(), (key) -> CommandProperty.Value.create(command.getAliasesProperty())).get()) {
 			this.aliasMap.put(alias, command);
@@ -99,7 +99,7 @@ public abstract class AbstractCommandHandler<E extends Event, C extends CommandC
 	 *
 	 * @return This handler's {@link CommandPropertyMap}.
 	 */
-	public final CommandPropertyMap<C> getCommandPropertyMap() {
+	public final CommandPropertyMap<E, C> getCommandPropertyMap() {
 		return this.commandPropertyMap;
 	}
 
@@ -109,7 +109,7 @@ public abstract class AbstractCommandHandler<E extends Event, C extends CommandC
 	 * @param command The {@link Command} to get the permissions for.
 	 * @return The permissions for the given {@link Command}.
 	 */
-	public final UnmodifiableSet<Permission> getPermissions(Command<C> command) {
+	public final UnmodifiableSet<Permission> getPermissions(Command<E, C> command) {
 		return this.commandPropertyMap.getPropertyMap(command).get(command.getPermissionsProperty()).get();
 	}
 

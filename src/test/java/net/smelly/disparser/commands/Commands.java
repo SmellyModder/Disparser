@@ -13,36 +13,39 @@ public final class Commands {
 	@Aliases(value = {"test_complex", "multi"}, mergeAliases = true)
 	public static final ComplexTestCommand COMPLEX_TEST = new ComplexTestCommand();
 
-	@Aliases(value = {"enum_test"}, mergeAliases = true)
+	@Aliases(value = "enum_test", mergeAliases = true)
 	public static final EnumTestCommand ENUM_TEST = new EnumTestCommand();
 
 	@Context(GuildMessageCommandContext.class)
 	@Permissions(Permission.ADMINISTRATOR)
-	@Aliases(value = {"rename_test"}, mergeAliases = true)
+	@Aliases(value = "rename_test", mergeAliases = true)
 	public static final RenameChannelTestCommand RENAME_CHANNEL_TEST = new RenameChannelTestCommand();
 
-	@Aliases(value = {"pfp"}, mergeAliases = true)
+	@Aliases(value = "pfp", mergeAliases = true)
 	public static final UserProfileTestCommand USER_PROFILE_TEST = new UserProfileTestCommand();
 
-	@Aliases(value = {"number_test"}, mergeAliases = true)
+	@Aliases(value = "number_test", mergeAliases = true)
 	public static final NumberTestCommand NUMBER_TEST = new NumberTestCommand();
 
-	@Aliases(value = {"color_test"}, mergeAliases = true)
+	@Aliases(value = "color_test", mergeAliases = true)
 	public static final ColorTestCommand COLOR_TEST = new ColorTestCommand();
 
-	@Aliases(value = {"url_test"}, mergeAliases = true)
+	@Aliases(value = "url_test", mergeAliases = true)
 	public static final URLTestCommand URL_TEST = new URLTestCommand();
 
-	@Aliases(value = {"emoji_test"}, mergeAliases = true)
+	@Aliases(value = "emoji_test", mergeAliases = true)
 	public static final EmojiTestCommand EMOJI_TEST_COMMAND = new EmojiTestCommand();
 
 	@Context(GuildMessageCommandContext.class)
-	@Aliases(value = {"role_test"}, mergeAliases = true)
+	@Aliases(value = "role_test", mergeAliases = true)
 	public static final RoleTestCommand ROLE_TEST_COMMAND = new RoleTestCommand();
 
-	@Aliases(value = {"sum_test"}, mergeAliases = true)
+	@Aliases(value = "sum_test", mergeAliases = true)
 	public static final BigSumTestCommand SUM_TEST_COMMAND = new BigSumTestCommand();
 
-	@Aliases(value = {"normal_test"}, mergeAliases = true)
+	@Aliases(value = "boolean_test", mergeAliases = true)
+	public static final BooleanTestCommand BOOLEAN_TEST_COMMAND = new BooleanTestCommand();
+
+	@Aliases(value = "normal_test", mergeAliases = true)
 	public static final TestCommand TEST_COMMAND = new TestCommand();
 }

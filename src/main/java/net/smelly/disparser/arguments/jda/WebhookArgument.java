@@ -7,10 +7,12 @@ import net.dv8tion.jda.api.entities.Webhook;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -46,8 +48,9 @@ public final class WebhookArgument implements Argument<Webhook> {
 		return new WebhookArgument(jda);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<Webhook> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<Webhook> parse(MessageReader reader) throws CommandException {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long parsedLong = Long.parseLong(arg);
@@ -70,5 +73,25 @@ public final class WebhookArgument implements Argument<Webhook> {
 	@Nullable
 	private Webhook getWebhookById(Message message, long parsedLong) throws ExecutionException, InterruptedException {
 		return message.getType() == MessageType.DEFAULT ? message.getJDA().retrieveWebhookById(parsedLong).submit().get() : null;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		WebhookArgument that = (WebhookArgument) o;
+		return Objects.equals(this.jda, that.jda);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.jda);
+	}
+
+	@Override
+	public String toString() {
+		return "WebhookArgument{" +
+				"jda=" + (this.jda != null ? this.jda : "undefined") +
+				'}';
 	}
 }

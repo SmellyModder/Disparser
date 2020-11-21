@@ -1,17 +1,23 @@
 package net.smelly.disparser.context.handlers;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.smelly.disparser.Command;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.context.CommandContext;
+import net.smelly.disparser.context.CommandContextBuilder;
 import net.smelly.disparser.context.GuildMessageCommandContext;
+import net.smelly.disparser.feedback.FeedbackHandler;
 import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
 import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 import net.smelly.disparser.properties.CommandPropertyMap;
+import org.apache.commons.collections4.set.UnmodifiableSet;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 
@@ -24,7 +30,7 @@ import java.util.function.Function;
  */
 public class GuildCommandHandler extends AbstractCommandHandler<GuildMessageReceivedEvent, GuildMessageCommandContext> {
 
-	public GuildCommandHandler(CommandPropertyMap<GuildMessageCommandContext> commandPropertyMap, Function<GuildMessageReceivedEvent, String> prefixFunction, FeedbackHandlerBuilder feedbackHandlerBuilder, Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction, ExecutorService executorService) {
+	public GuildCommandHandler(CommandPropertyMap<GuildMessageReceivedEvent, GuildMessageCommandContext> commandPropertyMap, Function<GuildMessageReceivedEvent, String> prefixFunction, FeedbackHandlerBuilder feedbackHandlerBuilder, Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction, ExecutorService executorService) {
 		super(commandPropertyMap, prefixFunction, feedbackHandlerBuilder, exceptionProviderFunction, executorService);
 	}
 
@@ -35,17 +41,30 @@ public class GuildCommandHandler extends AbstractCommandHandler<GuildMessageRece
 				String firstComponent = event.getMessage().getContentRaw().split(" ")[0];
 				String prefix = this.getPrefix(event);
 				if (firstComponent.startsWith(prefix)) {
-					Command<GuildMessageCommandContext> command = this.aliasMap.get(firstComponent.substring(prefix.length()));
+					Command<GuildMessageReceivedEvent, GuildMessageCommandContext> command = this.aliasMap.get(firstComponent.substring(prefix.length()));
 					if (command != null) {
-						Optional<GuildMessageCommandContext> commandContext = GuildMessageCommandContext.create(event, command, this.getPermissions(command), this.feedbackHandlerBuilder, this.exceptionProviderFunction.apply(event.getChannel()));
-						commandContext.ifPresent(context -> {
-							try {
-								command.processCommand(context);
-							} catch (Exception exception) {
-								context.getFeedbackHandler().sendError(exception);
-								exception.printStackTrace();
+						Member member = event.getMember();
+						MessageChannel channel = event.getChannel();
+						FeedbackHandler feedbackHandler = this.feedbackHandlerBuilder.build(channel);
+						BuiltInExceptionProvider provider = this.exceptionProviderFunction.apply(channel);
+						UnmodifiableSet<Permission> permissions = this.getPermissions(command);
+						if (member != null && !member.hasPermission(permissions)) {
+							feedbackHandler.sendError(provider.getMissingPermissionsException().create(permissions));
+						} else {
+							GuildMessageCommandContext.Builder builder = (GuildMessageCommandContext.Builder) CommandContextBuilder.disparseRoot(new GuildMessageCommandContext.Builder(event, this.commandPropertyMap.getPropertyMap(command), channel, feedbackHandler, provider, MessageReader.create(provider, event.getMessage())), command.getRootNode());
+							if (builder.getException() != null) {
+								feedbackHandler.sendError(builder.getException());
+							} else if (builder.getConsumer() != null) {
+								try {
+									command.processCommand(builder.build(), builder.getConsumer());
+								} catch (CommandException commandException) {
+									feedbackHandler.sendError(commandException);
+								} catch (Exception exception) {
+									exception.printStackTrace();
+									feedbackHandler.sendError(exception);
+								}
 							}
-						});
+						}
 					}
 				}
 			});

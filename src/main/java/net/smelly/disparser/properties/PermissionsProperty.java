@@ -64,4 +64,11 @@ public final class PermissionsProperty implements CommandProperty<UnmodifiableSe
 		}
 		return this.permissions;
 	}
+
+	@Override
+	public String toString() {
+		return "PermissionsProperty{" +
+				"permissions=" + this.permissions +
+				'}';
+	}
 }

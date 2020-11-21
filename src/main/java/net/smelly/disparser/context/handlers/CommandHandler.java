@@ -1,16 +1,22 @@
 package net.smelly.disparser.context.handlers;
 
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.smelly.disparser.Command;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.context.CommandContext;
+import net.smelly.disparser.context.CommandContextBuilder;
 import net.smelly.disparser.context.MessageCommandContext;
+import net.smelly.disparser.feedback.FeedbackHandler;
 import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
 import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 import net.smelly.disparser.properties.CommandPropertyMap;
+import org.apache.commons.collections4.set.UnmodifiableSet;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 
@@ -23,7 +29,7 @@ import java.util.function.Function;
  */
 public class CommandHandler extends AbstractCommandHandler<MessageReceivedEvent, MessageCommandContext> {
 
-	public CommandHandler(CommandPropertyMap<MessageCommandContext> commandPropertyMap, Function<MessageReceivedEvent, String> prefixFunction, FeedbackHandlerBuilder feedbackHandlerBuilder, Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction, ExecutorService executorService) {
+	public CommandHandler(CommandPropertyMap<MessageReceivedEvent, MessageCommandContext> commandPropertyMap, Function<MessageReceivedEvent, String> prefixFunction, FeedbackHandlerBuilder feedbackHandlerBuilder, Function<MessageChannel, BuiltInExceptionProvider> exceptionProviderFunction, ExecutorService executorService) {
 		super(commandPropertyMap, prefixFunction, feedbackHandlerBuilder, exceptionProviderFunction, executorService);
 	}
 
@@ -34,17 +40,30 @@ public class CommandHandler extends AbstractCommandHandler<MessageReceivedEvent,
 				String firstComponent = event.getMessage().getContentRaw().split(" ")[0];
 				String prefix = this.getPrefix(event);
 				if (firstComponent.startsWith(prefix)) {
-					Command<MessageCommandContext> command = this.aliasMap.get(firstComponent.substring(prefix.length()));
+					Command<MessageReceivedEvent, MessageCommandContext> command = this.aliasMap.get(firstComponent.substring(prefix.length()));
 					if (command != null) {
-						Optional<MessageCommandContext> commandContext = MessageCommandContext.create(event, command, this.getPermissions(command), this.feedbackHandlerBuilder, this.exceptionProviderFunction.apply(event.getChannel()));
-						commandContext.ifPresent(context -> {
-							try {
-								command.processCommand(context);
-							} catch (Exception exception) {
-								context.getFeedbackHandler().sendError(exception);
-								exception.printStackTrace();
+						MessageChannel channel = event.getChannel();
+						FeedbackHandler feedbackHandler = this.feedbackHandlerBuilder.build(channel);
+						BuiltInExceptionProvider provider = this.exceptionProviderFunction.apply(channel);
+						Member member = event.getMember();
+						UnmodifiableSet<Permission> permissions = this.getPermissions(command);
+						if (member != null && !member.hasPermission(permissions)) {
+							feedbackHandler.sendError(provider.getMissingPermissionsException().create(permissions));
+						} else {
+							MessageCommandContext.Builder builder = (MessageCommandContext.Builder) CommandContextBuilder.disparseRoot(new MessageCommandContext.Builder(event, this.commandPropertyMap.getPropertyMap(command), channel, feedbackHandler, provider, MessageReader.create(provider, event.getMessage())), command.getRootNode());
+							if (builder.getException() != null) {
+								feedbackHandler.sendError(builder.getException());
+							} else if (builder.getConsumer() != null) {
+								try {
+									command.processCommand(builder.build(), builder.getConsumer());
+								} catch (CommandException commandException) {
+									feedbackHandler.sendError(commandException);
+								} catch (Exception exception) {
+									exception.printStackTrace();
+									feedbackHandler.sendError(exception);
+								}
 							}
-						});
+						}
 					}
 				}
 			});

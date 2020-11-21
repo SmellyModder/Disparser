@@ -3,8 +3,9 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import java.awt.*;
 
@@ -30,16 +31,18 @@ public final class ColorArgument implements Argument<Color> {
 		return DEFAULT;
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<Color> parse(MessageReader reader) throws CommandSyntaxException {
-		ColorType colorType = reader.tryToParseArgument(this.colorTypeEnumArgument).getResult();
-		if (colorType != null) {
-			return ParsedArgument.parse(colorType.color);
-		}
+	public ParsedArgument<Color> parse(MessageReader reader) throws CommandException {
 		try {
-			return ParsedArgument.parse(new Color(reader.nextInt()));
-		} catch (CommandSyntaxException e) {
-			throw reader.getExceptionProvider().getInvalidColorException().create(reader.getCurrentComponent());
+			return ParsedArgument.parse(this.colorTypeEnumArgument.parse(reader).getResult().color);
+		} catch (CommandException enumException) {
+			try {
+				reader.lastArgument();
+				return ParsedArgument.parse(new Color(reader.nextInt()));
+			} catch (CommandException e) {
+				throw reader.getExceptionProvider().getInvalidColorException().create(reader.getCurrentComponent());
+			}
 		}
 	}
 
@@ -65,5 +68,10 @@ public final class ColorArgument implements Argument<Color> {
 		ColorType(Color color) {
 			this.color = color;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "ColorArgument{}";
 	}
 }

@@ -1,20 +1,16 @@
 package net.smelly.disparser.context;
 
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.smelly.disparser.Command;
+import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
 import net.smelly.disparser.feedback.FeedbackHandler;
-import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
 import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
+import net.smelly.disparser.properties.CommandPropertyMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * An extension of {@link CommandContext} for the {@link MessageReceivedEvent} event.
@@ -24,36 +20,8 @@ import java.util.Set;
  */
 public final class MessageCommandContext extends CommandContext<MessageReceivedEvent> {
 
-	public MessageCommandContext(MessageReceivedEvent event, List<ParsedArgument<?>> parsedArguments, FeedbackHandler feedbackHandler, BuiltInExceptionProvider exceptionProvider) {
-		super(event, parsedArguments, feedbackHandler, exceptionProvider);
-	}
-
-	/**
-	 * Attempts to create a {@link MessageCommandContext} for a {@link MessageReceivedEvent} and {@link Command}.
-	 * <p>If an error occurs trying to create the {@link MessageCommandContext} then {@link Optional#empty()} will be returned.</p>
-	 *
-	 * @param event                  A {@link MessageReceivedEvent} to create this {@link MessageCommandContext} for.
-	 * @param command                A {@link Command} to create this {@link MessageCommandContext} for.
-	 * @param permissions            A {@link Set} of {@link Permission}s to test on the author of the event.
-	 * @param feedbackHandlerBuilder A {@link FeedbackHandlerBuilder} to construct a new {@link FeedbackHandler}.
-	 * @param exceptionProvider      A {@link BuiltInExceptionProvider} to get built-in exception creators from.
-	 * @return {@link Optional#empty()} if an error occurred trying to create the {@link MessageCommandContext}, otherwise an {@link Optional} containing the created {@link MessageCommandContext}.
-	 */
-	public static Optional<MessageCommandContext> create(MessageReceivedEvent event, Command<MessageCommandContext> command, Set<Permission> permissions, FeedbackHandlerBuilder feedbackHandlerBuilder, BuiltInExceptionProvider exceptionProvider) {
-		MessageCommandContext commandContext = new MessageCommandContext(event, new ArrayList<>(), feedbackHandlerBuilder.build(event.getChannel()), exceptionProvider);
-
-		if (commandContext.isFromGuild()) {
-			Member member = event.getMember();
-			if (member == null) return Optional.empty();
-
-			BuiltInExceptionProvider builtInExceptionProvider = commandContext.getExceptionProvider();
-			if (!member.hasPermission(permissions)) {
-				commandContext.getFeedbackHandler().sendError(builtInExceptionProvider.getMissingPermissionsException().create(permissions));
-				return Optional.empty();
-			}
-		}
-
-		return CommandContext.disparseArguments(commandContext, event.getMessage(), command.getArguments());
+	public MessageCommandContext(MessageReceivedEvent event, Map<Integer, ParsedArgument<?>> parsedArguments, CommandPropertyMap.PropertyMap propertyMap, FeedbackHandler feedbackHandler, BuiltInExceptionProvider exceptionProvider) {
+		super(event, parsedArguments, propertyMap, feedbackHandler, exceptionProvider);
 	}
 
 	/**
@@ -137,4 +105,16 @@ public final class MessageCommandContext extends CommandContext<MessageReceivedE
 		return this.event.isWebhookMessage();
 	}
 
+	public static class Builder extends CommandContextBuilder<MessageReceivedEvent, MessageCommandContext> {
+
+		public Builder(MessageReceivedEvent event, CommandPropertyMap.PropertyMap propertyMap, MessageChannel channel, FeedbackHandler feedbackHandler, BuiltInExceptionProvider exceptionProvider, MessageReader reader) {
+			super(event, propertyMap, channel, feedbackHandler, exceptionProvider, reader);
+		}
+
+		@Override
+		public MessageCommandContext build() {
+			return new MessageCommandContext(this.getEvent(), this.getArguments(), this.getPropertyMap(), this.getFeedbackHandler(), this.getExceptionProvider());
+		}
+
+	}
 }

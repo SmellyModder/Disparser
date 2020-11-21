@@ -3,8 +3,9 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -61,8 +62,9 @@ public final class IntegerArgument implements Argument<Integer> {
 		return new IntegerArgument(Integer.MIN_VALUE, max);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<Integer> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<Integer> parse(MessageReader reader) throws CommandException {
 		int integer = reader.nextInt();
 		if (integer > this.maximum) {
 			throw reader.getExceptionProvider().getValueTooHighException().create(integer, this.maximum);
@@ -70,5 +72,26 @@ public final class IntegerArgument implements Argument<Integer> {
 			throw reader.getExceptionProvider().getValueTooHighException().create(integer, this.minimum);
 		}
 		return ParsedArgument.parse(integer);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		IntegerArgument that = (IntegerArgument) o;
+		return this.minimum == that.minimum && this.maximum == that.maximum;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * this.minimum + this.maximum;
+	}
+
+	@Override
+	public String toString() {
+		return "IntegerArgument{" +
+				"minimum=" + (this.minimum == Integer.MIN_VALUE ? "undefined" : this.minimum) +
+				", maximum=" + (this.maximum == Integer.MAX_VALUE ? "undefined" : this.maximum) +
+				'}';
 	}
 }

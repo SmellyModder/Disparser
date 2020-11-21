@@ -3,11 +3,12 @@ package net.smelly.disparser.arguments;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -42,13 +43,18 @@ public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argum
 		return new EitherArgument<>(firstArgument, secondArgument);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<Either<F, S>> parse(MessageReader reader) throws CommandSyntaxException {
-		ParsedArgument<F> first = reader.tryToParseArgument(this.firstArgument);
-		if (first.hasResult()) {
-			return ParsedArgument.parse(Either.first(first.getResult()));
+	public ParsedArgument<Either<F, S>> parse(MessageReader reader) throws CommandException {
+		int prevIndex = reader.getIndex();
+		try {
+			return ParsedArgument.parse(Either.first(this.firstArgument.parse(reader).getResult()));
+		} catch (CommandException e) {
+			if (prevIndex < reader.getIndex()) {
+				reader.lastArgument();
+			}
+			return ParsedArgument.parse(Either.second(this.secondArgument.parse(reader).getResult()));
 		}
-		return ParsedArgument.parse(Either.second(this.secondArgument.parse(reader).getResult()));
 	}
 
 	public static final class Either<F, S> {
@@ -91,5 +97,26 @@ public final class EitherArgument<F, S, FA extends Argument<F>, SA extends Argum
 		public <T> T convertTo(Function<Either<F, S>, T> function) {
 			return function.apply(this);
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		EitherArgument<?, ?, ?, ?> that = (EitherArgument<?, ?, ?, ?>) o;
+		return Objects.equals(this.firstArgument, that.firstArgument) && Objects.equals(this.secondArgument, that.secondArgument);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.firstArgument, this.secondArgument);
+	}
+
+	@Override
+	public String toString() {
+		return "EitherArgument{" +
+				"firstArgument=" + this.firstArgument +
+				", secondArgument=" + this.secondArgument +
+				'}';
 	}
 }

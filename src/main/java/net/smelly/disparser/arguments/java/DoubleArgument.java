@@ -3,8 +3,9 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -61,8 +62,9 @@ public final class DoubleArgument implements Argument<Double> {
 		return new DoubleArgument(Double.MIN_VALUE, max);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<Double> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<Double> parse(MessageReader reader) throws CommandException {
 		double adouble = reader.nextDouble();
 		if (adouble > this.maximum) {
 			throw reader.getExceptionProvider().getValueTooHighException().create(adouble, this.maximum);
@@ -70,5 +72,26 @@ public final class DoubleArgument implements Argument<Double> {
 			throw reader.getExceptionProvider().getValueTooHighException().create(adouble, this.minimum);
 		}
 		return ParsedArgument.parse(adouble);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		DoubleArgument that = (DoubleArgument) o;
+		return this.maximum == that.maximum && this.minimum == that.minimum;
+	}
+
+	@Override
+	public int hashCode() {
+		return (int) (31 * this.minimum + this.maximum);
+	}
+
+	@Override
+	public String toString() {
+		return "DoubleArgument{" +
+				"minimum=" + (this.minimum == Double.MIN_VALUE ? "undefined" : this.minimum) +
+				", maximum=" + (this.maximum == Double.MAX_VALUE ? "undefined" : this.maximum) +
+				'}';
 	}
 }

@@ -12,7 +12,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 @SuppressWarnings("serial")
-public class CommandSyntaxException extends Exception {
+public class CommandException extends Exception {
 	private final CommandMessage message;
 
 	/**
@@ -20,8 +20,18 @@ public class CommandSyntaxException extends Exception {
 	 *
 	 * @param message Message for the exception, {@link #getMessage()}.
 	 */
-	public CommandSyntaxException(CommandMessage message) {
-		super(message.getMessage(null), null, true, false);
+	public CommandException(CommandMessage message) {
+		this(message, false);
+	}
+
+	/**
+	 * A simple constructor that sets a message for this exception.
+	 *
+	 * @param message          Message for the exception, {@link #getMessage()}.
+	 * @param enableStacktrace If stack traces should be enabled for this exception.
+	 */
+	public CommandException(CommandMessage message, boolean enableStacktrace) {
+		super(message.getMessage(null), null, true, enableStacktrace);
 		this.message = message;
 	}
 
@@ -31,7 +41,7 @@ public class CommandSyntaxException extends Exception {
 	}
 
 	/**
-	 * @return The {@link CommandMessage} belonging to this {@link CommandSyntaxException}.
+	 * @return The {@link CommandMessage} belonging to this {@link CommandException}.
 	 */
 	public CommandMessage getCommandMessage() {
 		return this.message;

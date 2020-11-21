@@ -7,15 +7,15 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.util.function.Function;
 
 /**
- * This class contains a function for creating a {@link CommandSyntaxException}.
- * The function takes in a generic type object and uses it to create a {@link CommandMessage} to be used for creating a {@link CommandSyntaxException}.
- * This class can store an object internally to be re-used for creating a {@link CommandSyntaxException}.
+ * This class contains a function for creating a {@link CommandException}.
+ * The function takes in a generic type object and uses it to create a {@link CommandMessage} to be used for creating a {@link CommandException}.
+ * This class can store an object internally to be re-used for creating a {@link CommandException}.
  *
  * @author Luke Tonon
- * @see CommandExceptionCreator
+ * @see ExceptionCreator
  */
 @ThreadSafe
-public class DynamicCommandExceptionCreator<T> implements CommandExceptionCreator<CommandSyntaxException> {
+public class DynamicCommandExceptionCreator<T> implements ExceptionCreator<CommandException> {
 	private final Function<T, CommandMessage> function;
 	@Nullable
 	private final T object;
@@ -34,11 +34,11 @@ public class DynamicCommandExceptionCreator<T> implements CommandExceptionCreato
 	}
 
 	@Override
-	public CommandSyntaxException create() {
-		return new CommandSyntaxException(this.function.apply(this.object));
+	public CommandException create() {
+		return new CommandException(this.function.apply(this.object));
 	}
 
-	public CommandSyntaxException create(T object) {
-		return new CommandSyntaxException(this.function.apply(object));
+	public CommandException create(T object) {
+		return new CommandException(this.function.apply(object));
 	}
 }

@@ -63,4 +63,11 @@ public final class AliasesProperty implements CommandProperty<UnmodifiableSet<St
 		}
 		return this.aliases;
 	}
+
+	@Override
+	public String toString() {
+		return "AliasesProperty{" +
+				"aliases=" + this.aliases +
+				'}';
+	}
 }

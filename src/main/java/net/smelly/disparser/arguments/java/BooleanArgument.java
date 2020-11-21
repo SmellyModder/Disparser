@@ -3,7 +3,9 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -25,8 +27,14 @@ public final class BooleanArgument implements Argument<Boolean> {
 		return DEFAULT;
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<Boolean> parse(MessageReader reader) {
+	public ParsedArgument<Boolean> parse(MessageReader reader) throws CommandException {
 		return ParsedArgument.parse(reader.nextBoolean());
+	}
+
+	@Override
+	public String toString() {
+		return "BooleanArgument{}";
 	}
 }

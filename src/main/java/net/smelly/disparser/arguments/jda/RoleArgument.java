@@ -6,10 +6,12 @@ import net.dv8tion.jda.api.entities.Role;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,8 +48,9 @@ public final class RoleArgument implements Argument<Role> {
 		return new RoleArgument(jda);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<Role> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<Role> parse(MessageReader reader) throws CommandException {
 		return reader.parseNextArgument((arg) -> {
 			Guild guild = reader.getGuild();
 			try {
@@ -79,5 +82,25 @@ public final class RoleArgument implements Argument<Role> {
 	@Nullable
 	private Role findRole(@Nullable Guild guild, long id) {
 		return this.jda != null ? this.jda.getRoleById(id) : guild != null ? guild.getRoleById(id) : null;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		RoleArgument that = (RoleArgument) o;
+		return Objects.equals(this.jda, that.jda);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.jda);
+	}
+
+	@Override
+	public String toString() {
+		return "RoleArgument{" +
+				"jda=" + (this.jda != null ? this.jda : "undefined") +
+				'}';
 	}
 }

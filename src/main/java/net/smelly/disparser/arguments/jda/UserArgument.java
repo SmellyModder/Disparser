@@ -6,10 +6,12 @@ import net.dv8tion.jda.api.entities.User;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,8 +49,9 @@ public final class UserArgument implements Argument<User> {
 		return new UserArgument(jda);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<User> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<User> parse(MessageReader reader) throws CommandException {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long id = Long.parseLong(arg);
@@ -81,5 +84,25 @@ public final class UserArgument implements Argument<User> {
 			return this.jda.getUserById(id);
 		}
 		return reader.getMessage().getType() == MessageType.DEFAULT ? reader.getMessage().getJDA().getUserById(id) : null;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		UserArgument that = (UserArgument) o;
+		return Objects.equals(this.jda, that.jda);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.jda);
+	}
+
+	@Override
+	public String toString() {
+		return "UserArgument{" +
+				"jda=" + (this.jda != null ? this.jda : "undefined") +
+				'}';
 	}
 }

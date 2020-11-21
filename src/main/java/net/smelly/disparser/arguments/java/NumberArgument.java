@@ -3,8 +3,9 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -17,7 +18,7 @@ import java.text.ParseException;
  */
 @ThreadSafe
 public final class NumberArgument implements Argument<Number> {
-	private static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
+	private static final ThreadLocal<NumberFormat> NUMBER_FORMAT = ThreadLocal.withInitial(NumberFormat::getInstance);
 	private static final NumberArgument DEFAULT = new NumberArgument(Double.MIN_VALUE, Double.MAX_VALUE);
 	private final double minimum;
 	private final double maximum;
@@ -65,11 +66,12 @@ public final class NumberArgument implements Argument<Number> {
 		return new NumberArgument(Double.MIN_VALUE, max);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<Number> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<Number> parse(MessageReader reader) throws CommandException {
 		return reader.parseNextArgument((arg) -> {
 			try {
-				Number number = NUMBER_FORMAT.parse(arg);
+				Number number = NUMBER_FORMAT.get().parse(arg);
 				double adouble = number.doubleValue();
 				if (adouble > this.maximum) {
 					throw reader.getExceptionProvider().getValueTooHighException().create(adouble, this.maximum);
@@ -81,5 +83,26 @@ public final class NumberArgument implements Argument<Number> {
 				throw reader.getExceptionProvider().getInvalidNumberException().create(arg);
 			}
 		});
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		NumberArgument that = (NumberArgument) o;
+		return this.minimum == that.minimum && this.maximum == that.maximum;
+	}
+
+	@Override
+	public int hashCode() {
+		return (int) (31 * this.minimum + this.maximum);
+	}
+
+	@Override
+	public String toString() {
+		return "NumberArgument{" +
+				"minimum=" + (this.minimum == Double.MIN_VALUE ? "undefined" : this.minimum) +
+				", maximum=" + (this.maximum == Double.MAX_VALUE ? "undefined" : this.maximum) +
+				'}';
 	}
 }

@@ -2,7 +2,7 @@ package net.smelly.disparser.feedback;
 
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 import net.smelly.disparser.util.MessageUtil;
 
 public final class TestFeedbackHandler implements FeedbackHandler {
@@ -29,8 +29,8 @@ public final class TestFeedbackHandler implements FeedbackHandler {
 
 	@Override
 	public void sendError(Exception exception) {
-		if (exception instanceof CommandSyntaxException) {
-			this.channel.sendMessage(MessageUtil.createErrorMessage(((CommandSyntaxException) exception).getCommandMessage().getMessage(this.channel))).queue();
+		if (exception instanceof CommandException) {
+			this.channel.sendMessage(MessageUtil.createErrorMessage(((CommandException) exception).getCommandMessage().getMessage(this.channel))).queue();
 		} else {
 			this.channel.sendMessage(MessageUtil.createErrorMessage(exception.getMessage())).queue();
 		}

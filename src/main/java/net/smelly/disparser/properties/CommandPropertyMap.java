@@ -1,5 +1,6 @@
 package net.smelly.disparser.properties;
 
+import net.dv8tion.jda.api.events.Event;
 import net.smelly.disparser.Command;
 import net.smelly.disparser.context.CommandContext;
 
@@ -20,8 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see Command
  */
 @ThreadSafe
-public final class CommandPropertyMap<C extends CommandContext<?>> {
-	private final ConcurrentHashMap<Command<C>, PropertyMap> commandPropertyMap = new ConcurrentHashMap<>();
+public final class CommandPropertyMap<E extends Event, C extends CommandContext<E>> {
+	private final ConcurrentHashMap<Command<E, C>, PropertyMap> commandPropertyMap = new ConcurrentHashMap<>();
 
 	private CommandPropertyMap() {
 	}
@@ -31,7 +32,7 @@ public final class CommandPropertyMap<C extends CommandContext<?>> {
 	 *
 	 * @return An empty {@link CommandPropertyMap} instance.
 	 */
-	public static <C extends CommandContext<?>> CommandPropertyMap<C> createEmpty() {
+	public static <E extends Event, C extends CommandContext<E>> CommandPropertyMap<E, C> createEmpty() {
 		return new CommandPropertyMap<>();
 	}
 
@@ -40,8 +41,8 @@ public final class CommandPropertyMap<C extends CommandContext<?>> {
 	 *
 	 * @return An {@link CommandPropertyMap} instance with a map put all onto it.
 	 */
-	public static <C extends CommandContext<?>> CommandPropertyMap<C> create(Map<Command<C>, PropertyMap> map) {
-		CommandPropertyMap<C> commandPropertyMap = new CommandPropertyMap<>();
+	public static <E extends Event, C extends CommandContext<E>> CommandPropertyMap<E, C> create(Map<Command<E, C>, PropertyMap> map) {
+		CommandPropertyMap<E, C> commandPropertyMap = new CommandPropertyMap<>();
 		commandPropertyMap.commandPropertyMap.putAll(map);
 		return commandPropertyMap;
 	}
@@ -53,7 +54,7 @@ public final class CommandPropertyMap<C extends CommandContext<?>> {
 	 * @param command The {@link Command} to put.
 	 * @return A {@link PropertyMap} containing the default property values of the {@link Command}.
 	 */
-	public PropertyMap putCommand(Command<C> command) {
+	public PropertyMap putCommand(Command<E, C> command) {
 		PropertyMap propertyMap = this.getAndClearPropertyMap(command);
 		for (CommandProperty<?, ?> property : command.getProperties()) {
 			propertyMap.putUnsafe(property, property.get(null));
@@ -71,7 +72,7 @@ public final class CommandPropertyMap<C extends CommandContext<?>> {
 	 * @return A {@link PropertyMap} containing the default property values of the {@link Command}.
 	 * @see #putCommand(Command)
 	 */
-	public <T, A extends Annotation, P extends CommandProperty<T, A>> void putCommandAnnotated(Command<C> command, P property, @Nullable A annotation) {
+	public <T, A extends Annotation, P extends CommandProperty<T, A>> void putCommandAnnotated(Command<E, C> command, P property, @Nullable A annotation) {
 		Set<CommandProperty<?, ?>> properties = command.getProperties();
 		if (properties.contains(property)) {
 			PropertyMap propertyMap = this.getAndClearPropertyMap(command);
@@ -92,7 +93,7 @@ public final class CommandPropertyMap<C extends CommandContext<?>> {
 	 * @param command The {@link Command} to get the {@link PropertyMap} for.
 	 * @return A {@link PropertyMap} for a given {@link Command}.
 	 */
-	public PropertyMap getPropertyMap(Command<C> command) {
+	public PropertyMap getPropertyMap(Command<E, C> command) {
 		return this.commandPropertyMap.computeIfAbsent(command, (key) -> {
 			PropertyMap propertyMap = new PropertyMap();
 			for (CommandProperty<?, ?> property : command.getProperties()) {
@@ -109,7 +110,7 @@ public final class CommandPropertyMap<C extends CommandContext<?>> {
 	 * @param command The {@link Command} to get the cleared {@link PropertyMap} for.
 	 * @return An empty {@link PropertyMap} for a given {@link Command}.
 	 */
-	public PropertyMap getAndClearPropertyMap(Command<C> command) {
+	public PropertyMap getAndClearPropertyMap(Command<E, C> command) {
 		PropertyMap propertyMap = this.getPropertyMap(command);
 		propertyMap.clear();
 		return propertyMap;
@@ -125,7 +126,7 @@ public final class CommandPropertyMap<C extends CommandContext<?>> {
 	 * @param <P>      The type of the property.
 	 * @return The {@link CommandProperty.Value} for a given {@link Command} and {@link CommandProperty}.
 	 */
-	public <T, P extends CommandProperty<T, ?>> CommandProperty.Value<T> getPropertyValue(Command<C> command, P property) {
+	public <T, P extends CommandProperty<T, ?>> CommandProperty.Value<T> getPropertyValue(Command<E, C> command, P property) {
 		return this.getPropertyMap(command).get(property);
 	}
 

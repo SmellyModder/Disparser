@@ -3,8 +3,9 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -61,8 +62,9 @@ public final class ByteArgument implements Argument<Byte> {
 		return new ByteArgument(Byte.MIN_VALUE, max);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<Byte> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<Byte> parse(MessageReader reader) throws CommandException {
 		byte abyte = reader.nextByte();
 		if (abyte > this.maximum) {
 			throw reader.getExceptionProvider().getValueTooHighException().create(abyte, this.maximum);
@@ -70,5 +72,26 @@ public final class ByteArgument implements Argument<Byte> {
 			throw reader.getExceptionProvider().getValueTooLowException().create(abyte, this.minimum);
 		}
 		return ParsedArgument.parse(abyte);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		ByteArgument that = (ByteArgument) o;
+		return this.minimum == that.minimum && this.maximum == that.maximum;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * this.minimum + this.maximum;
+	}
+
+	@Override
+	public String toString() {
+		return "ByteArgument{" +
+				"minimum=" + (this.minimum == Byte.MIN_VALUE ? "undefined" : this.minimum) +
+				", maximum=" + (this.maximum == Byte.MAX_VALUE ? "undefined" : this.maximum) +
+				'}';
 	}
 }

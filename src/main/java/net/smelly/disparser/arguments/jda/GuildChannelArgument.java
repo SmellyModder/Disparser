@@ -6,10 +6,12 @@ import net.dv8tion.jda.api.entities.Message;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Objects;
 
 /**
  * An argument that can parse guilds by their ID for a JDA or the message sent's guild.
@@ -43,8 +45,9 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 		return new GuildChannelArgument(jda);
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<GuildChannel> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<GuildChannel> parse(MessageReader reader) throws CommandException {
 		return reader.parseNextArgument((arg) -> {
 			try {
 				long parsedLong = Long.parseLong(arg);
@@ -63,5 +66,25 @@ public final class GuildChannelArgument implements Argument<GuildChannel> {
 	@Nullable
 	private GuildChannel getGuildChannelById(Message message, long parsedLong) {
 		return message.isFromGuild() ? message.getGuild().getGuildChannelById(parsedLong) : null;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		GuildChannelArgument that = (GuildChannelArgument) o;
+		return Objects.equals(this.jda, that.jda);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.jda);
+	}
+
+	@Override
+	public String toString() {
+		return "GuildChannelArgument{" +
+				"jda=" + (this.jda != null ? this.jda : "undefined") +
+				'}';
 	}
 }

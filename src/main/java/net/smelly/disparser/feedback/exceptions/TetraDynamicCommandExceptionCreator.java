@@ -5,15 +5,15 @@ import net.smelly.disparser.feedback.CommandMessage;
 import javax.annotation.Nullable;
 
 /**
- * This class contains a {@link TetraDynamicCommandExceptionCreator.TetraFunction} for creating a {@link CommandSyntaxException}.
- * The function takes in four generic type objects and uses them to create a {@link CommandMessage} to be used for creating a {@link CommandSyntaxException}.
- * This class can store the four generic objects internally to be re-used for creating a {@link CommandSyntaxException}.
+ * This class contains a {@link TetraDynamicCommandExceptionCreator.TetraFunction} for creating a {@link CommandException}.
+ * The function takes in four generic type objects and uses them to create a {@link CommandMessage} to be used for creating a {@link CommandException}.
+ * This class can store the four generic objects internally to be re-used for creating a {@link CommandException}.
  * <p> Simply put, this class is a quadruple version of {@link DynamicCommandExceptionCreator}. </p>
  *
  * @author Luke Tonon
  * @see DynamicCommandExceptionCreator
  */
-public class TetraDynamicCommandExceptionCreator<T, U, V, W> implements CommandExceptionCreator<CommandSyntaxException> {
+public class TetraDynamicCommandExceptionCreator<T, U, V, W> implements ExceptionCreator<CommandException> {
 	private final TetraFunction<T, U, V, W> function;
 	@Nullable
 	private final T first;
@@ -41,12 +41,12 @@ public class TetraDynamicCommandExceptionCreator<T, U, V, W> implements CommandE
 	}
 
 	@Override
-	public CommandSyntaxException create() {
-		return new CommandSyntaxException(this.function.apply(this.first, this.second, this.third, this.fourth));
+	public CommandException create() {
+		return new CommandException(this.function.apply(this.first, this.second, this.third, this.fourth));
 	}
 
-	public CommandSyntaxException create(T first, U second, V third, W fourth) {
-		return new CommandSyntaxException(this.function.apply(first, second, third, fourth));
+	public CommandException create(T first, U second, V third, W fourth) {
+		return new CommandException(this.function.apply(first, second, third, fourth));
 	}
 
 	public interface TetraFunction<T, U, V, W> {

@@ -6,16 +6,16 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * This class contains a {@link TriFunction} for creating a {@link CommandSyntaxException}.
- * The function takes in three generic type objects and uses them to create a {@link CommandMessage} to be used for creating a {@link CommandSyntaxException}.
- * This class can store the three generic objects internally to be re-used for creating a {@link CommandSyntaxException}.
+ * This class contains a {@link TriFunction} for creating a {@link CommandException}.
+ * The function takes in three generic type objects and uses them to create a {@link CommandMessage} to be used for creating a {@link CommandException}.
+ * This class can store the three generic objects internally to be re-used for creating a {@link CommandException}.
  * <p> Simply put, this class is a triple version of {@link DynamicCommandExceptionCreator}. </p>
  *
  * @author Luke Tonon
  * @see DynamicCommandExceptionCreator
  */
 @ThreadSafe
-public class TriDynamicCommandExceptionCreator<T, U, V> implements CommandExceptionCreator<CommandSyntaxException> {
+public class TriDynamicCommandExceptionCreator<T, U, V> implements ExceptionCreator<CommandException> {
 	private final TriFunction<T, U, V> function;
 	@Nullable
 	private final T first;
@@ -40,12 +40,12 @@ public class TriDynamicCommandExceptionCreator<T, U, V> implements CommandExcept
 	}
 
 	@Override
-	public CommandSyntaxException create() {
-		return new CommandSyntaxException(this.function.apply(this.first, this.second, this.third));
+	public CommandException create() {
+		return new CommandException(this.function.apply(this.first, this.second, this.third));
 	}
 
-	public CommandSyntaxException create(T first, U second, V third) {
-		return new CommandSyntaxException(this.function.apply(first, second, third));
+	public CommandException create(T first, U second, V third) {
+		return new CommandException(this.function.apply(first, second, third));
 	}
 
 	public interface TriFunction<T, U, V> {

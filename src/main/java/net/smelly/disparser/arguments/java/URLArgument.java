@@ -3,8 +3,9 @@ package net.smelly.disparser.arguments.java;
 import net.smelly.disparser.Argument;
 import net.smelly.disparser.MessageReader;
 import net.smelly.disparser.ParsedArgument;
-import net.smelly.disparser.feedback.exceptions.CommandSyntaxException;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,8 +29,9 @@ public final class URLArgument implements Argument<URL> {
 		return DEFAULT;
 	}
 
+	@Nonnull
 	@Override
-	public ParsedArgument<URL> parse(MessageReader reader) throws CommandSyntaxException {
+	public ParsedArgument<URL> parse(MessageReader reader) throws CommandException {
 		String next = reader.nextArgument();
 		if (next.startsWith("<") && next.endsWith(">")) {
 			next = next.substring(1, next.length() - 1);
@@ -39,5 +41,10 @@ public final class URLArgument implements Argument<URL> {
 		} catch (MalformedURLException e) {
 			throw reader.getExceptionProvider().getInvalidURLException().create(next);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "URLArgument{}";
 	}
 }
