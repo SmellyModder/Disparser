@@ -9,6 +9,7 @@ import net.smelly.disparser.context.Requirement;
 import net.smelly.disparser.feedback.CommandMessage;
 import net.smelly.disparser.feedback.exceptions.CommandException;
 
+import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.LinkedHashMap;
 
@@ -20,6 +21,7 @@ import java.util.LinkedHashMap;
  * @author Luke Tonon
  * @see DisparsingNode
  */
+@Immutable
 public final class RootNode<E extends Event, C extends CommandContext<E>> extends DisparsingNode<E, C> {
 
 	public RootNode(LinkedHashMap<CommandMessage, DisparsingNode<E, C>> children, Requirement<E> requirement, ContextConsumer<C> consumer) {
