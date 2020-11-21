@@ -33,7 +33,7 @@ public final class TestBot {
 						.build(),
 				new GuildCommandHandler.Builder()
 						.setPrefix("g!")
-						.registerCommands(Commands.ROLE_TEST_COMMAND, Commands.RENAME_CHANNEL_TEST)
+						.registerCommands(Commands.class)
 						.build()
 		);
 		BOT = botBuilder.build();
