@@ -7,6 +7,7 @@ import net.smelly.disparser.context.Requirement;
 import net.smelly.disparser.feedback.CommandMessage;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,6 +27,7 @@ public abstract class DisparsingNodeBuilder<E extends Event, C extends CommandCo
 	protected final CommandMessage name;
 	protected Map<CommandMessage, DisparsingNodeBuilder<E, C, ?>> children = new LinkedHashMap<>();
 	protected Requirement<E> requirement = Requirement.none();
+	@Nullable
 	protected ContextConsumer<C> consumer;
 
 	public DisparsingNodeBuilder(CommandMessage name) {
@@ -90,7 +92,7 @@ public abstract class DisparsingNodeBuilder<E extends Event, C extends CommandCo
 	 * @return This builder.
 	 */
 	@SuppressWarnings("unchecked")
-	public B consumes(ContextConsumer<C> consumer) {
+	public B consumes(@Nullable ContextConsumer<C> consumer) {
 		this.consumer = consumer;
 		return (B) this;
 	}
