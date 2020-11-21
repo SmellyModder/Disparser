@@ -2,6 +2,7 @@ package net.smelly.disparser.feedback;
 
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.smelly.disparser.feedback.exceptions.CommandException;
 import net.smelly.disparser.util.MessageUtil;
 
 import javax.annotation.concurrent.ThreadSafe;
@@ -63,7 +64,11 @@ public class SimpleFeedbackHandler implements FeedbackHandler {
 	 */
 	@Override
 	public void sendError(Exception exception) {
-		String message = exception.getMessage();
-		this.sendFeedback(MessageUtil.createErrorMessage(message != null ? message : "Unknown"));
+		if (exception instanceof CommandException) {
+			this.channel.sendMessage(MessageUtil.createErrorMessage(((CommandException) exception).getCommandMessage().getMessage(this.channel))).queue();
+		} else {
+			String message = exception.getMessage();
+			this.channel.sendMessage(MessageUtil.createErrorMessage(message != null ? message : "Unknown")).queue();
+		}
 	}
 }

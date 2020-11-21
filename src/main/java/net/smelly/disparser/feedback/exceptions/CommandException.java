@@ -2,6 +2,7 @@ package net.smelly.disparser.feedback.exceptions;
 
 import net.smelly.disparser.feedback.CommandMessage;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -43,6 +44,7 @@ public class CommandException extends Exception {
 	/**
 	 * @return The {@link CommandMessage} belonging to this {@link CommandException}.
 	 */
+	@Nonnull
 	public CommandMessage getCommandMessage() {
 		return this.message;
 	}
