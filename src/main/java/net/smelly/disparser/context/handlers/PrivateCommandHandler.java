@@ -13,6 +13,7 @@ import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
 import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
 import net.smelly.disparser.feedback.exceptions.CommandException;
 import net.smelly.disparser.properties.CommandPropertyMap;
+import net.smelly.disparser.util.MessageUtil;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.ExecutorService;
@@ -35,7 +36,7 @@ public class PrivateCommandHandler extends AbstractCommandHandler<PrivateMessage
 	public void onPrivateMessageReceived(@Nonnull PrivateMessageReceivedEvent event) {
 		if (!this.executorService.isShutdown()) {
 			this.executorService.execute(() -> {
-				String firstComponent = event.getMessage().getContentRaw().split(" ")[0];
+				String firstComponent = MessageUtil.getFirstComponent(event.getMessage().getContentRaw());
 				String prefix = this.getPrefix(event);
 				if (firstComponent.startsWith(prefix)) {
 					Command<PrivateMessageReceivedEvent, PrivateMessageCommandContext> command = this.aliasMap.get(firstComponent.substring(prefix.length()));

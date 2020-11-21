@@ -15,6 +15,7 @@ import net.smelly.disparser.feedback.FeedbackHandlerBuilder;
 import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
 import net.smelly.disparser.feedback.exceptions.CommandException;
 import net.smelly.disparser.properties.CommandPropertyMap;
+import net.smelly.disparser.util.MessageUtil;
 import org.apache.commons.collections4.set.UnmodifiableSet;
 
 import javax.annotation.Nonnull;
@@ -38,7 +39,7 @@ public class GuildCommandHandler extends AbstractCommandHandler<GuildMessageRece
 	public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
 		if (!this.executorService.isShutdown()) {
 			this.executorService.execute(() -> {
-				String firstComponent = event.getMessage().getContentRaw().split(" ")[0];
+				String firstComponent = MessageUtil.getFirstComponent(event.getMessage().getContentRaw());
 				String prefix = this.getPrefix(event);
 				if (firstComponent.startsWith(prefix)) {
 					Command<GuildMessageReceivedEvent, GuildMessageCommandContext> command = this.aliasMap.get(firstComponent.substring(prefix.length()));

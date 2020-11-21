@@ -78,4 +78,22 @@ public final class MessageUtil {
 		}
 		return builder.toString();
 	}
+
+	/**
+	 * Searches for the first part of a string. (i.e. All the characters until a whitespace is found)
+	 * <p>This is useful for getting the first part of a message.</p>
+	 *
+	 * @param message A string to get the first part of.
+	 * @return The first part of the string.
+	 */
+	public static String getFirstComponent(String message) {
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < message.length(); i++) {
+			char character = message.charAt(i);
+			if (!Character.isWhitespace(character)) {
+				builder.append(character);
+			} else break;
+		}
+		return builder.toString();
+	}
 }
