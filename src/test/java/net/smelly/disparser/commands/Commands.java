@@ -58,6 +58,10 @@ public final class Commands {
 	public static final BooleanTestCommand BOOLEAN_TEST_COMMAND = new BooleanTestCommand();
 
 	@Context(MessageCommandContext.class)
+	@Aliases(value = "ping_test", mergeAliases = true)
+	public static final PingTestCommand PING_TEST_COMMAND = new PingTestCommand();
+
+	@Context(MessageCommandContext.class)
 	@Aliases(value = "normal_test", mergeAliases = true)
 	public static final TestCommand TEST_COMMAND = new TestCommand();
 }

@@ -17,7 +17,7 @@ import javax.security.auth.login.LoginException;
 import java.util.concurrent.Executors;
 
 public final class TestBot {
-	private static JDA BOT;
+	public static JDA BOT;
 
 	public static void main(String[] args) throws LoginException {
 		JDABuilder botBuilder = JDABuilder.create(args[0], GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS & ~GatewayIntent.getRaw(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_TYPING, GatewayIntent.DIRECT_MESSAGE_TYPING)));
