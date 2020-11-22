@@ -6,7 +6,7 @@
 # 📖 About
 Disparser is a multi-threaded command parser and executor for JDA, the Java Discord API.
 It allows for sufficient and performant usage of commands with multiple aliases, permission requirements, and various arguments.
-Disparser tries to not have that many niche things in it as possible but paves the way for people to implement them with ease, offering extensible and efficient command parsing for JDA.
+Disparser tries to not have that many niche things in it as possible but paves the way for people to implement them with ease, offering extensible and efficient command parsing for bots.
 <br> *It is a WIP, so expect new features!* </br>
 
 # 📦 Installing
