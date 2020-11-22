@@ -158,8 +158,8 @@ public final class MessageReader {
 	/**
 	 * Used to convert strings to non-primitive type arguments.
 	 *
-	 * @param parser - A {@link Function} to parse the next string argument to an {@link ParsedArgument}.
-	 * @param <A>    - The type of the argument.
+	 * @param parser A {@link Function} to parse the next string argument to an {@link ParsedArgument}.
+	 * @param <A>    The type of the argument.
 	 * @return The object({@link A}) read from the reader.
 	 */
 	public <A> ParsedArgument<A> parseNextArgument(Parser<A> parser) throws CommandException {
