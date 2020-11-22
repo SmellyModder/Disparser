@@ -8,7 +8,7 @@ import net.smelly.disparser.context.tree.RootNode;
 import net.smelly.disparser.feedback.FormattedCommandMessage;
 
 public final class PingTestCommand extends Command<MessageReceivedEvent, MessageCommandContext> {
-	public static final RootNode<MessageReceivedEvent, MessageCommandContext> NODE = RootNode.Builder.create(MessageCommandContext.class)
+	private static final RootNode<MessageReceivedEvent, MessageCommandContext> NODE = RootNode.Builder.create(MessageCommandContext.class)
 		.consumes(context -> {
 			TestBot.BOT.getRestPing().queue(ping -> {
 				context.getFeedbackHandler().sendFeedback(new FormattedCommandMessage("Ping: `%d ms`", ping));
