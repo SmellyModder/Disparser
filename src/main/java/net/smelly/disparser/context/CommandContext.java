@@ -10,8 +10,7 @@ import net.smelly.disparser.properties.CommandPropertyMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.Map;
-import java.util.Objects;
+import java.util.List;
 
 /**
  * A class that works as a wrapper around an event that's used in executing commands.
@@ -32,13 +31,13 @@ import java.util.Objects;
  */
 @NotThreadSafe
 public class CommandContext<E extends Event> {
-	protected final Map<Integer, ParsedArgument<?>> parsedArguments;
+	protected final List<ParsedArgument<?>> parsedArguments;
 	protected final CommandPropertyMap.PropertyMap propertyMap;
 	protected final FeedbackHandler feedbackHandler;
 	protected final BuiltInExceptionProvider exceptionProvider;
 	protected final E event;
 
-	public CommandContext(E event, Map<Integer, ParsedArgument<?>> parsedArguments, CommandPropertyMap.PropertyMap propertyMap, FeedbackHandler feedbackHandler, BuiltInExceptionProvider exceptionProvider) {
+	public CommandContext(E event, List<ParsedArgument<?>> parsedArguments, CommandPropertyMap.PropertyMap propertyMap, FeedbackHandler feedbackHandler, BuiltInExceptionProvider exceptionProvider) {
 		this.event = event;
 		this.parsedArguments = parsedArguments;
 		this.propertyMap = propertyMap;
@@ -52,7 +51,7 @@ public class CommandContext<E extends Event> {
 	 * @return This context's {@link #parsedArguments}.
 	 */
 	@Nonnull
-	public Map<Integer, ParsedArgument<?>> getParsedArguments() {
+	public List<ParsedArgument<?>> getParsedArguments() {
 		return this.parsedArguments;
 	}
 
@@ -96,13 +95,13 @@ public class CommandContext<E extends Event> {
 	 * @param argument The index of the argument.
 	 * @param <A>      The type of the {@link ParsedArgument}.
 	 * @return The {@link ParsedArgument} for an index.
-	 * @throws NullPointerException If there is no {@link ParsedArgument} at the given index.
+	 * @throws IndexOutOfBoundsException If there is no {@link ParsedArgument} at the given index.
 	 * @throws ClassCastException   If the argument type at that index doesn't match the argument type specified.
 	 */
 	@Nonnull
 	@SuppressWarnings("unchecked")
 	public <A> ParsedArgument<A> getParsedArgument(int argument) {
-		return Objects.requireNonNull((ParsedArgument<A>) this.parsedArguments.get(argument), "No argument is present at index " + argument);
+		return (ParsedArgument<A>) this.parsedArguments.get(argument);
 	}
 
 	/**
@@ -111,7 +110,7 @@ public class CommandContext<E extends Event> {
 	 * @param argument The index of the {@link ParsedArgument} to get its {@link ParsedArgument#getResult()}.
 	 * @param <A>      The type of the {@link ParsedArgument#getResult()}.
 	 * @return The {@link ParsedArgument#getResult()} for an index.
-	 * @throws NullPointerException If there is no {@link ParsedArgument} at the given index.
+	 * @throws IndexOutOfBoundsException If there is no {@link ParsedArgument} at the given index.
 	 * @throws ClassCastException   If the value type at that index doesn't match the type specified.
 	 * @see #getParsedArgument(int)
 	 */

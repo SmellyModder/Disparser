@@ -10,7 +10,7 @@ import net.smelly.disparser.properties.CommandPropertyMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
+import java.util.List;
 
 /**
  * An extension of {@link CommandContext} for the {@link MessageReceivedEvent} event.
@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public final class MessageCommandContext extends CommandContext<MessageReceivedEvent> {
 
-	public MessageCommandContext(MessageReceivedEvent event, Map<Integer, ParsedArgument<?>> parsedArguments, CommandPropertyMap.PropertyMap propertyMap, FeedbackHandler feedbackHandler, BuiltInExceptionProvider exceptionProvider) {
+	public MessageCommandContext(MessageReceivedEvent event, List<ParsedArgument<?>> parsedArguments, CommandPropertyMap.PropertyMap propertyMap, FeedbackHandler feedbackHandler, BuiltInExceptionProvider exceptionProvider) {
 		super(event, parsedArguments, propertyMap, feedbackHandler, exceptionProvider);
 	}
 

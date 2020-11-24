@@ -8,7 +8,7 @@ import net.smelly.disparser.feedback.FeedbackHandler;
 import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
 import net.smelly.disparser.properties.CommandPropertyMap;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * An extension of {@link CommandContext} for the {@link PrivateMessageReceivedEvent} event.
@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public final class PrivateMessageCommandContext extends CommandContext<PrivateMessageReceivedEvent> {
 
-	public PrivateMessageCommandContext(PrivateMessageReceivedEvent event, Map<Integer, ParsedArgument<?>> parsedArguments, CommandPropertyMap.PropertyMap propertyMap, FeedbackHandler feedbackHandler, BuiltInExceptionProvider exceptionProvider) {
+	public PrivateMessageCommandContext(PrivateMessageReceivedEvent event, List<ParsedArgument<?>> parsedArguments, CommandPropertyMap.PropertyMap propertyMap, FeedbackHandler feedbackHandler, BuiltInExceptionProvider exceptionProvider) {
 		super(event, parsedArguments, propertyMap, feedbackHandler, exceptionProvider);
 	}
 

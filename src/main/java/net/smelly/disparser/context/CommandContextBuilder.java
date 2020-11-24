@@ -11,11 +11,10 @@ import net.smelly.disparser.feedback.exceptions.BuiltInExceptionProvider;
 import net.smelly.disparser.feedback.exceptions.CommandException;
 import net.smelly.disparser.properties.CommandPropertyMap;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * An abstract builder class for {@link CommandContext}s.
@@ -27,7 +26,7 @@ import java.util.Map;
  */
 @NotThreadSafe
 public abstract class CommandContextBuilder<E extends Event, C extends CommandContext<E>> {
-	private final Map<Integer, ParsedArgument<?>> arguments = new HashMap<>();
+	private final List<ParsedArgument<?>> arguments = new LinkedList<>();
 	private final CommandPropertyMap.PropertyMap propertyMap;
 	private final E event;
 	private final MessageChannel channel;
@@ -38,7 +37,6 @@ public abstract class CommandContextBuilder<E extends Event, C extends CommandCo
 	private ContextConsumer<C> consumer;
 	@Nullable
 	private Exception exception;
-	private int nextArg;
 
 	public CommandContextBuilder(E event, CommandPropertyMap.PropertyMap propertyMap, MessageChannel channel, FeedbackHandler feedbackHandler, BuiltInExceptionProvider exceptionProvider, MessageReader reader) {
 		this.event = event;
@@ -201,11 +199,11 @@ public abstract class CommandContextBuilder<E extends Event, C extends CommandCo
 	}
 
 	/**
-	 * Gets this builder's {@link #arguments} {@link Map}.
+	 * Gets this builder's {@link #arguments}.
 	 *
-	 * @return This builder's {@link #arguments} {@link Map}.
+	 * @return This builder's {@link #arguments}.
 	 */
-	public Map<Integer, ParsedArgument<?>> getArguments() {
+	public List<ParsedArgument<?>> getArguments() {
 		return this.arguments;
 	}
 
@@ -215,20 +213,20 @@ public abstract class CommandContextBuilder<E extends Event, C extends CommandCo
 	 * @param argument A {@link ParsedArgument} to add to this builder.
 	 * @return This builder.
 	 */
-	public CommandContextBuilder<E, C> addArgument(ParsedArgument<?> argument) {
-		this.arguments.put(this.nextArg++, argument);
+	public CommandContextBuilder<E, C> addArgument(@Nonnull ParsedArgument<?> argument) {
+		this.arguments.add(argument);
 		return this;
 	}
 
 	/**
 	 * Gets a {@link ParsedArgument} at an index.
-	 * <p>Can return null.</p>
 	 *
 	 * @param argument Index to get the {@link ParsedArgument} by.
 	 * @param <A>      The type of the {@link ParsedArgument}'s return value.
+	 * @throws IndexOutOfBoundsException If there is no {@link ParsedArgument} at the given index.
 	 * @return A {@link ParsedArgument} at an index.
 	 */
-	@Nullable
+	@Nonnull
 	@SuppressWarnings("unchecked")
 	public <A> ParsedArgument<A> getArgument(int argument) {
 		return (ParsedArgument<A>) this.arguments.get(argument);
